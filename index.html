@@ -3,68 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Histórico | Monteclaro SAS</title>
+    <title>Panel Socios | Monteclaro</title>
     <style>
         :root { --principal: #2638bf; --secundario: #000000; --blanco: #ffffff; --gris: #b2b8bf; }
         body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 900px; margin: auto; }
+        .container { max-width: 950px; margin: auto; }
         .header { background: var(--principal); color: var(--blanco); padding: 20px; border-radius: 15px 15px 0 0; display: flex; align-items: center; gap: 20px; }
         .logo-box { width: 70px; height: 70px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .section { background: var(--blanco); padding: 20px; border-radius: 0 0 15px 15px; border: 1px solid var(--gris); }
-        h2 { color: var(--principal); border-left: 5px solid var(--principal); padding-left: 15px; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th { text-align: left; background: var(--secundario); color: white; padding: 12px; font-size: 0.8rem; }
+        /* FILTROS MEJORADOS */
+        .filtros { display: flex; gap: 10px; margin-bottom: 20px; background: #e9ecef; padding: 15px; border-radius: 8px; flex-wrap: wrap; }
+        .filtros-group { display: flex; flex-direction: column; flex: 1; min-width: 150px; }
+        label { font-size: 0.75rem; font-weight: bold; color: var(--principal); margin-bottom: 5px; text-transform: uppercase; }
+        .filtros select, .filtros input { padding: 10px; border: 1px solid var(--gris); border-radius: 6px; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; background: var(--secundario); color: white; padding: 12px; font-size: 0.8rem; text-transform: uppercase; }
         td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-        
         .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.7rem; }
         .pendiente { background: #ffeaa7; color: #d35400; }
         .completado { background: #d1f7d1; color: #1a5c37; }
-        .historico { color: #888; font-style: italic; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="logo-box"><img src="MONTECLARO1.png" alt="Logo" style="width: 90%;"></div>
-            <div><h1>MONTECLARO SAS</h1><p>Historial de Gestión Interna</p></div>
+            <div><h1>MONTECLARO SAS</h1><p>Gestión Interna de Socios</p></div>
         </div>
 
         <div class="section">
-            <h2>📊 Bitácora de Actividades</h2>
+            <div class="filtros">
+                <div class="filtros-group">
+                    <label>Mes de Gestión</label>
+                    <input type="month" id="filtroFecha" onchange="filtrar()">
+                </div>
+                <div class="filtros-group">
+                    <label>Responsable</label>
+                    <select id="filtroResp" onchange="filtrar()">
+                        <option value="TODOS">Todos los socios</option>
+                        <option value="Socio A">Socio A</option>
+                        <option value="Socio B">Socio B</option>
+                    </select>
+                </div>
+                <div class="filtros-group">
+                    <label>Estado</label>
+                    <select id="filtroEstado" onchange="filtrar()">
+                        <option value="TODOS">Todos los estados</option>
+                        <option value="PENDIENTE">Pendientes</option>
+                        <option value="COMPLETADO">Completados</option>
+                    </select>
+                </div>
+            </div>
+
             <table>
                 <thead>
                     <tr><th>Fecha</th><th>Actividad</th><th>Responsable</th><th>Estado</th></tr>
                 </thead>
-                <tbody id="tabla-actividades">
-                    </tbody>
+                <tbody id="tabla-actividades"></tbody>
             </table>
         </div>
     </div>
 
     <script>
-        // --- ESTA ES TU "BASE DE DATOS" EN GITHUB ---
-        // Para agregar una actividad, solo copia la última línea y pégala abajo.
+        // --- BASE DE DATOS INTERNA ---
         const actividades = [
-            { fecha: "2026-01-04", tarea: "Creación de panel administrativo", resp: "Socio A", estado: "COMPLETADO" },
-            { fecha: "2026-01-05", tarea: "Subir logo corporativo", resp: "Socio A", estado: "COMPLETADO" },
-            { fecha: "2026-01-05", tarea: "Revisión convenios Financial Group", resp: "Socio B", estado: "PENDIENTE" },
-            { fecha: "2026-01-06", tarea: "Gestion Produccion", resp: "Socio B", estado: "PENDIENTE" },
-            // <-- PEGA AQUÍ LA NUEVA LÍNEA
+            { fecha: "2026-01-04", tarea: "Diseño de identidad visual", resp: "Socio A", estado: "COMPLETADO" },
+            { fecha: "2026-01-05", tarea: "Carga de logo MONTECLARO1.png", resp: "Socio A", estado: "COMPLETADO" },
+            { fecha: "2026-01-05", tarea: "Trámite inicial Financial Group", resp: "Socio B", estado: "PENDIENTE" },
+            { fecha: "2026-01-10", tarea: "Seguimiento crédito Familia Pérez", resp: "Socio B", estado: "PENDIENTE" }
         ];
 
-        const tabla = document.getElementById('tabla-actividades');
-        
-        // Renderizamos de la más nueva a la más antigua
-        actividades.reverse().forEach(item => {
-            const fila = `<tr>
-                <td class="historico">${item.fecha}</td>
-                <td>${item.tarea}</td>
-                <td>${item.resp}</td>
-                <td><span class="badge ${item.estado === 'COMPLETADO' ? 'completado' : 'pendiente'}">${item.estado}</span></td>
-            </tr>`;
-            tabla.innerHTML += fila;
-        });
+        function filtrar() {
+            const fechaVal = document.getElementById('filtroFecha').value;
+            const respVal = document.getElementById('filtroResp').value;
+            const estadoVal = document.getElementById('filtroEstado').value;
+            const tabla = document.getElementById('tabla-actividades');
+            
+            tabla.innerHTML = "";
+
+            actividades.slice().reverse().forEach(item => {
+                const mesItem = item.fecha.substring(0, 7);
+                
+                const coincideFecha = !fechaVal || mesItem === fechaVal;
+                const coincideResp = respVal === "TODOS" || item.resp === respVal;
+                const coincideEstado = estadoVal === "TODOS" || item.estado === estadoVal;
+
+                if (coincideFecha && coincideResp && coincideEstado) {
+                    const fila = `<tr>
+                        <td style="color:#888">${item.fecha}</td>
+                        <td>${item.tarea}</td>
+                        <td>${item.resp}</td>
+                        <td><span class="badge ${item.estado === 'COMPLETADO' ? 'completado' : 'pendiente'}">${item.estado}</span></td>
+                    </tr>`;
+                    tabla.innerHTML += fila;
+                }
+            });
+        }
+        filtrar();
     </script>
 </body>
 </html>
