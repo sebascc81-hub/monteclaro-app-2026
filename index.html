@@ -3,154 +3,607 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monteclaro SAS - Gestión Integral</title>
-    <link rel="icon" type="image/png" href="MONTECLARO5.png">
+    <title>Gestión Inmobiliaria - Monteclaro</title>
     <style>
-        :root { --principal: #2638bf; --blanco: #ffffff; --fondo-gris: #f0f2f5; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--fondo-gris); margin: 0; padding: 0; }
-        .container { max-width: 1250px; margin: auto; padding: 10px; }
-        .header-azul { background-color: var(--principal); text-align: center; padding: 25px 10px; color: white; border-radius: 0 0 15px 15px; margin-bottom: 20px; }
-        .nav-container { display: flex; gap: 10px; margin-bottom: 15px; }
-        .nav-btn { flex: 1; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background: white; color: #444; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .nav-btn.active { background: var(--principal); color: white; }
-        .section { background: var(--blanco); padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: none; }
-        .section.active { display: block; }
-        .form-card { background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
-        label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 5px; color: #555; text-transform: uppercase; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; box-sizing: border-box; }
-        .btn-submit { background: var(--principal); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
-        .badge { padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 10px; color: black; min-width: 85px; text-align: center; display: inline-block; text-transform: uppercase; }
-        .st-PENDIENTE { background-color: #fadb03 !important; } 
-        .st-EN-PROCESO { background-color: #b0f605 !important; } 
-        .st-COMPLETADA, .st-ACTIVO { background-color: #00ff20 !important; }
-        .table-wrapper { overflow-x: auto; max-height: 500px; border: 1px solid #eee; border-radius: 8px; margin-top: 15px; }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 1000px; }
-        th { background: #333; color: white; padding: 12px; text-align: left; position: sticky; top: 0; z-index: 10; }
-        td { padding: 12px; border-bottom: 1px solid #eee; background: white; }
+        :root {
+            --primary: #2638bf; /* Azul Corporativo */
+            --accent: #000000;  /* Negro (Botones/Acción) */
+            --bg: #f4f6f8;
+            --white: #ffffff;
+            /* Estados Semáforo */
+            --st-pendiente: #ffd700; /* Amarillo */
+            --st-proceso: #2196f3;   /* Azul */
+            --st-completada: #4caf50;/* Verde */
+            --st-cancelada: #f44336; /* Rojo */
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: var(--bg); color: #333; }
+        
+        /* HEADER */
+        header { background-color: var(--primary); color: var(--white); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        header h1 { margin: 0; font-size: 1.5rem; }
+        header span { font-size: 0.9rem; opacity: 0.9; }
+
+        /* NAV TABS */
+        .tabs { display: flex; background: var(--white); padding: 0 2rem; border-bottom: 1px solid #ddd; }
+        .tab-btn { background: none; border: none; padding: 15px 25px; cursor: pointer; font-size: 1rem; font-weight: 600; color: #666; border-bottom: 3px solid transparent; transition: 0.3s; }
+        .tab-btn:hover { color: var(--primary); }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+        /* CONTENEDOR PRINCIPAL */
+        .container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .module { display: none; }
+        .module.active { display: block; animation: fadeIn 0.3s; }
+
+        /* BARRA DE HERRAMIENTAS Y FILTROS */
+        .toolbar { background: var(--white); padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .btn-new { background-color: var(--accent); color: var(--white); border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .btn-new:hover { opacity: 0.8; }
+        
+        input, select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; outline: none; }
+        input:focus, select:focus { border-color: var(--primary); }
+
+        /* TABLAS */
+        .table-responsive { overflow-x: auto; background: var(--white); border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; font-size: 0.95rem; }
+        th { background-color: var(--primary); color: var(--white); font-weight: 600; text-transform: uppercase; font-size: 0.85rem; }
+        tr:hover { background-color: #f9f9f9; cursor: pointer; }
+
+        /* BADGES ESTADOS */
+        .badge { padding: 4px 10px; border-radius: 12px; color: white; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .bg-pendiente { background-color: var(--st-pendiente); color: #333; }
+        .bg-proceso { background-color: var(--st-proceso); }
+        .bg-completada { background-color: var(--st-completada); }
+        .bg-cancelada { background-color: var(--st-cancelada); }
+
+        /* MODALES */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(2px); }
+        .modal-content { background-color: var(--white); margin: 5% auto; padding: 0; border-radius: 8px; width: 90%; max-width: 600px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); animation: slideIn 0.3s; }
+        .modal-header { background: var(--primary); color: var(--white); padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { margin: 0; font-size: 1.2rem; }
+        .close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+        
+        .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; color: #555; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; box-sizing: border-box; padding: 10px; }
+        .form-group textarea { height: 80px; resize: vertical; }
+        
+        /* Campos bloqueados visualmente */
+        input:disabled, select:disabled, textarea:disabled { background-color: #e9ecef; cursor: not-allowed; color: #666; border-color: #ddd; }
+
+        .modal-footer { padding: 15px 20px; border-top: 1px solid #eee; text-align: right; }
+        .btn-save { background-color: var(--accent); color: white; padding: 10px 25px; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+        .btn-save:disabled { background-color: #999; cursor: wait; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
-<div class="header-azul">
-    <h2>MONTECLARO INMOBILIARIA SAS</h2>
-    <p>Gestión y Seguimiento | FINANCIAL GROUP</p>
-</div>
-
-<div class="container">
-    <div class="nav-container">
-        <button class="nav-btn active" onclick="switchTab('tab-actividades', this)">📋 ACTIVIDADES</button>
-        <button class="nav-btn" onclick="switchTab('tab-clientes', this)">👥 CLIENTES</button>
-    </div>
-
-    <div id="tab-actividades" class="section active">
-        <div class="form-card">
-            <form id="taskForm">
-                <div class="grid">
-                    <div><label>Cliente</label><select id="t_cliente" required><option value="">Cargando...</option></select></div>
-                    <div><label>Actividad</label><input type="text" id="t_actividad" required></div>
-                    <div><label>Responsable</label><select id="t_resp"><option value="Juan Romero">Juan Romero</option><option value="Sebas Cuervo">Sebas Cuervo</option></select></div>
-                    <div><label>Estado</label><select id="t_estado"><option value="PENDIENTE">PENDIENTE</option><option value="EN PROCESO">EN PROCESO</option><option value="COMPLETADA">COMPLETADA</option></select></div>
-                    <div style="grid-column: span 2;"><label>Notas</label><textarea id="t_notas" rows="1"></textarea></div>
-                </div>
-                <button type="submit" class="btn-submit">Sincronizar Actividad</button>
-            </form>
+    <header>
+        <div>
+            <h1>GESTION INMOBILIARIA</h1>
+            <span>MONTECLARO INMOBILIARIA SAS</span>
         </div>
-        <div class="table-wrapper"><table><thead><tr><th>Acción</th><th>Fecha</th><th>Cliente</th><th>Actividad</th><th>Responsable</th><th>Estado</th><th>Notas</th><th>Actualización</th></tr></thead><tbody id="bodyTasks"></tbody></table></div>
+        <div id="loadingIndicator" style="display:none;">🔄 Procesando...</div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('actividades')">ACTIVIDADES</button>
+        <button class="tab-btn" onclick="switchTab('clientes')">CLIENTES</button>
     </div>
 
-    <div id="tab-clientes" class="section">
-        <div class="form-card">
-            <h3 style="margin-top:0; color:#444; font-size: 14px;">REGISTRAR CLIENTE NUEVO</h3>
-            <form id="clientForm">
-                <div class="grid">
-                    <div><label>Nombre</label><input type="text" id="c_nombre" required></div>
-                    <div><label>NIT / Cédula</label><input type="text" id="c_cedula" required></div>
-                    <div><label>Servicio</label><select id="c_servicio"><option value="VENTA">VENTA</option><option value="ADMINISTRACION">ADMINISTRACION</option><option value="CREDITO/FINANCIAL GROUP">CREDITO / FINANCIAL GROUP</option></select></div>
-                    <div><label>Presupuesto</label><input type="number" id="c_presupuesto"></div>
-                    <div style="grid-column: span 2;"><label>Notas Iniciales</label><textarea id="c_notas" rows="1"></textarea></div>
-                </div>
-                <button type="submit" class="btn-submit" style="background:#444">Registrar en Base</button>
-            </form>
+    <div id="module-actividades" class="container module active">
+        <div class="toolbar">
+            <button class="btn-new" onclick="abrirModalActividad(true)">+ Nueva Actividad</button>
+            <span style="font-weight:bold; color:var(--primary)">| Filtros:</span>
+            <input type="date" id="filtroActFecha" onchange="renderActividades()" title="Filtrar por Fecha">
+            <select id="filtroActResp" onchange="renderActividades()">
+                <option value="">Todo Responsable</option>
+                <option value="JUAN ROMERO">JUAN ROMERO</option>
+                <option value="SEBAS CUERVO">SEBAS CUERVO</option>
+            </select>
+            <select id="filtroActEstado" onchange="renderActividades()">
+                <option value="">Todo Estado</option>
+                <option value="PENDIENTE">PENDIENTE</option>
+                <option value="EN PROCESO">EN PROCESO</option>
+                <option value="COMPLETADA">COMPLETADA</option>
+                <option value="CANCELADA">CANCELADA</option>
+            </select>
         </div>
-        <div class="table-wrapper"><table><thead><tr><th>Acción</th><th>NIT</th><th>Nombre</th><th>Servicio</th><th>Estado</th><th>Notas</th><th>Actualización</th></tr></thead><tbody id="bodyClients"></tbody></table></div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Actividad</th>
+                        <th>Responsable</th>
+                        <th>Estado</th>
+                        <th>Notas</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaActividadesBody">
+                    <tr><td colspan="6" style="text-align:center;">Cargando datos...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
-<script>
-    // URL VALIDADA
-    const API = "https://script.google.com/macros/s/AKfycbyF_nD0ndhOy4moClkKMVUievv_1VlIBYyxoq9X3AGudfQT4IBatokMlYMSy_e7HZOA/exec";
+    <div id="module-clientes" class="container module">
+        <div class="toolbar">
+            <button class="btn-new" onclick="abrirModalCliente(true)">+ Nuevo Cliente</button>
+            <span style="font-weight:bold; color:var(--primary)">| Filtros:</span>
+            <select id="filtroCliTipo" onchange="renderClientes()">
+                <option value="">Todo Tipo Servicio</option>
+                <option value="VENTA">VENTA</option>
+                <option value="ADMINISTRACION">ADMINISTRACION</option>
+                <option value="CREDITO/SUBSIDIO">CREDITO/SUBSIDIO</option>
+            </select>
+            <select id="filtroCliEstado" onchange="renderClientes()">
+                <option value="">Todo Estado</option>
+                <option value="PENDIENTE">PENDIENTE</option>
+                <option value="EN PROCESO">EN PROCESO</option>
+                <option value="COMPLETADA">COMPLETADA</option>
+                <option value="CANCELADA">CANCELADA</option>
+            </select>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Cédula/NIT</th>
+                        <th>Teléfono</th>
+                        <th>Tipo Servicio</th>
+                        <th>Estado</th>
+                        <th>Notas</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaClientesBody">
+                    <tr><td colspan="6" style="text-align:center;">Cargando datos...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    async function switchTab(id, btn) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        btn.classList.add('active');
-        await loadAll();
-    }
+    <div id="modalActividad" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="tituloModalAct">Gestión Actividad</h3>
+                <button class="close-btn" onclick="cerrarModales()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="actId">
+                <input type="hidden" id="actModo"> <div class="form-group">
+                    <label>Cliente:</label>
+                    <input type="text" id="actCliente" placeholder="Nombre del cliente">
+                </div>
+                <div class="form-group">
+                    <label>Actividad (Descripción):</label>
+                    <textarea id="actDescripcion" placeholder="Describe la actividad..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Responsable:</label>
+                    <select id="actResponsable">
+                        <option value="">Seleccione...</option>
+                        <option value="JUAN ROMERO">JUAN ROMERO</option>
+                        <option value="SEBAS CUERVO">SEBAS CUERVO</option>
+                    </select>
+                </div>
+                <div class="form-group" id="groupActEstado">
+                    <label>Estado:</label>
+                    <select id="actEstado">
+                        <option value="PENDIENTE">PENDIENTE</option>
+                        <option value="EN PROCESO">EN PROCESO</option>
+                        <option value="COMPLETADA">COMPLETADA</option>
+                        <option value="CANCELADA">CANCELADA</option>
+                    </select>
+                </div>
+                <div class="form-group" id="groupActNotas">
+                    <label>Notas de Seguimiento:</label>
+                    <textarea id="actNotas" placeholder="Agrega notas de avance..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-save" onclick="guardarActividad()">Guardar</button>
+            </div>
+        </div>
+    </div>
 
-    async function loadAll() {
-        try {
-            const [resC, resT] = await Promise.all([
-                fetch(`${API}?sheet=CLIENTES`).then(r => r.json()),
-                fetch(`${API}?sheet=Hoja 1`).then(r => r.json())
-            ]);
+    <div id="modalCliente" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="tituloModalCli">Gestión Cliente</h3>
+                <button class="close-btn" onclick="cerrarModales()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="cliId">
+                <input type="hidden" id="cliModo">
+                
+                <div class="form-group"><label>Nombre:</label><input type="text" id="cliNombre"></div>
+                <div class="form-group"><label>Cédula/NIT:</label><input type="text" id="cliCedula"></div>
+                <div class="form-group"><label>Teléfono:</label><input type="text" id="cliTelefono"></div>
+                <div class="form-group"><label>Correo:</label><input type="email" id="cliCorreo"></div>
+                <div class="form-group"><label>Dirección:</label><input type="text" id="cliDireccion"></div>
+                <div class="form-group"><label>Presupuesto:</label><input type="text" id="cliPresupuesto"></div>
+                
+                <div class="form-group">
+                    <label>Tipo Servicio:</label>
+                    <select id="cliTipo">
+                        <option value="VENTA">VENTA</option>
+                        <option value="ADMINISTRACION">ADMINISTRACION</option>
+                        <option value="CREDITO/SUBSIDIO">CREDITO/SUBSIDIO</option>
+                    </select>
+                </div>
 
-            const bC = document.getElementById('bodyClients');
-            const selT = document.getElementById('t_cliente');
-            bC.innerHTML = "";
-            selT.innerHTML = '<option value="">-- Seleccione Cliente --</option>';
+                <div class="form-group" id="groupCliEstado">
+                    <label>Estado Cliente:</label>
+                    <select id="cliEstado">
+                        <option value="PENDIENTE">PENDIENTE</option>
+                        <option value="EN PROCESO">EN PROCESO</option>
+                        <option value="COMPLETADA">COMPLETADA</option>
+                        <option value="CANCELADA">CANCELADA</option>
+                    </select>
+                </div>
+                <div class="form-group" id="groupCliNotas">
+                    <label>Notas / Observaciones:</label>
+                    <textarea id="cliNotas" placeholder="Notas de seguimiento..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-save" onclick="guardarCliente()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURACIÓN API
+        const API_URL = "https://script.google.com/macros/s/AKfycbxUrfku7L_X6gHBVMlqk0_pHRkqYnDZVJkd2Kg72-0zgcQHCviY3sHo4Wh0tCYdx5TVEA/exec";
+
+        let dataActividades = [];
+        let dataClientes = [];
+
+        // AL CARGAR
+        window.onload = () => {
+            cargarActividades();
+        };
+
+        function switchTab(tabName) {
+            // Ocultar todos
+            document.querySelectorAll('.module').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             
-            resC.forEach(c => {
-                selT.innerHTML += `<option value="${c.NOMBRE}">${c.NOMBRE}</option>`;
-                const st = c.ESTADO_CLIENTE || "PENDIENTE";
-                bC.innerHTML += `<tr><td><button class="btn-edit" style="background:#444; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:10px;">ESTADO</button></td><td>${c.CEDULA_NIT}</td><td><b>${c.NOMBRE}</b></td><td>${c.TIPO_SERVICIO}</td><td><span class="badge st-${st.replace(/ /g, '-')}">${st}</span></td><td>${c.NOTAS || ''}</td><td>${c.ACTUALIZACION || ''}</td></tr>`;
+            // Mostrar seleccionado
+            document.getElementById(`module-${tabName}`).classList.add('active');
+            event.target.classList.add('active');
+
+            // Cargar datos si es necesario
+            if (tabName === 'actividades' && dataActividades.length === 0) cargarActividades();
+            if (tabName === 'clientes' && dataClientes.length === 0) cargarClientes();
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingIndicator').style.display = show ? 'block' : 'none';
+        }
+
+        // --- LÓGICA ACTIVIDADES ---
+
+        async function cargarActividades() {
+            showLoading(true);
+            try {
+                const res = await fetch(`${API_URL}?action=read_actividades`);
+                const json = await res.json();
+                if (json.status === 'success') {
+                    dataActividades = json.data;
+                    renderActividades();
+                }
+            } catch (e) { console.error(e); alert("Error cargando actividades"); }
+            showLoading(false);
+        }
+
+        function renderActividades() {
+            const tbody = document.getElementById('tablaActividadesBody');
+            tbody.innerHTML = '';
+
+            // Filtros
+            const fFecha = document.getElementById('filtroActFecha').value;
+            const fResp = document.getElementById('filtroActResp').value;
+            const fEst = document.getElementById('filtroActEstado').value;
+
+            const filtrados = dataActividades.filter(item => {
+                // Formato fecha viene de Sheet, intentamos matching simple de string o fecha
+                // La fecha en Sheet suele venir como string, ej "2026-01-05T..." o "5/1/2026"
+                let fechaMatch = true;
+                if (fFecha) {
+                    // Convertimos la fecha del item a string ISO para comparar o incluimos
+                    fechaMatch = item.FECHA.includes(fFecha) || new Date(item.FECHA).toISOString().slice(0,10) === fFecha;
+                }
+                const respMatch = !fResp || item.RESPONSABLE === fResp;
+                const estMatch = !fEst || item.ESTADO === fEst;
+                return fechaMatch && respMatch && estMatch;
             });
 
-            const bT = document.getElementById('bodyTasks');
-            bT.innerHTML = "";
-            resT.slice().reverse().forEach(t => {
-                const st = t.ESTADO || "PENDIENTE";
-                bT.innerHTML += `<tr><td><button class="btn-edit" style="background:var(--principal); color:white; border:none; padding:4px 8px; border-radius:4px; font-size:10px;">NOTAS</button></td><td>${t.FECHA}</td><td><b>${t.CLIENTE}</b></td><td>${t.ACTIVIDAD}</td><td>${t.RESPONSABLE}</td><td><span class="badge st-${st.replace(/ /g, '-')}">${st}</span></td><td>${t.NOTAS || ''}</td><td>${t.ACTUALIZACION || ''}</td></tr>`;
+            if(filtrados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6">No se encontraron actividades.</td></tr>';
+                return;
+            }
+
+            filtrados.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.onclick = () => abrirModalActividad(false, item);
+                
+                // Formato Fecha Bonita
+                let fechaCorta = item.FECHA; 
+                try { fechaCorta = new Date(item.FECHA).toLocaleDateString(); } catch(e){}
+
+                tr.innerHTML = `
+                    <td>${fechaCorta}</td>
+                    <td>${item.CLIENTE}</td>
+                    <td>${item.ACTIVIDAD}</td>
+                    <td>${item.RESPONSABLE}</td>
+                    <td><span class="badge ${getClassEstado(item.ESTADO)}">${item.ESTADO}</span></td>
+                    <td><small>${item.NOTAS || ''}</small></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function abrirModalActividad(esNuevo, item = null) {
+            const modal = document.getElementById('modalActividad');
+            const titulo = document.getElementById('tituloModalAct');
+            const inpModo = document.getElementById('actModo');
+            
+            modal.style.display = 'block';
+
+            if (esNuevo) {
+                titulo.innerText = "Nueva Actividad";
+                inpModo.value = "create";
+                // Limpiar
+                document.getElementById('actId').value = "";
+                document.getElementById('actCliente').value = "";
+                document.getElementById('actDescripcion').value = "";
+                document.getElementById('actResponsable').value = "";
+                document.getElementById('actNotas').value = "";
+                document.getElementById('actEstado').value = "PENDIENTE";
+
+                // Habilitar campos de creación
+                document.getElementById('actCliente').disabled = false;
+                document.getElementById('actDescripcion').disabled = false;
+                document.getElementById('actResponsable').disabled = false;
+
+                // Ocultar o bloquear campos que son automáticos al crear
+                document.getElementById('groupActEstado').style.display = 'none'; // Estado automático
+                document.getElementById('groupActNotas').style.display = 'none';  // Notas vacías al inicio
+
+            } else {
+                titulo.innerText = "Editar Actividad";
+                inpModo.value = "edit";
+                
+                // Llenar datos
+                document.getElementById('actId').value = item.ID;
+                document.getElementById('actCliente').value = item.CLIENTE;
+                document.getElementById('actDescripcion').value = item.ACTIVIDAD;
+                document.getElementById('actResponsable').value = item.RESPONSABLE;
+                document.getElementById('actEstado').value = item.ESTADO;
+                document.getElementById('actNotas').value = item.NOTAS;
+
+                // BLOQUEOS (Reglas de Negocio)
+                document.getElementById('actCliente').disabled = true;
+                document.getElementById('actDescripcion').disabled = true;
+                document.getElementById('actResponsable').disabled = true;
+
+                // Habilitar edición
+                document.getElementById('groupActEstado').style.display = 'block';
+                document.getElementById('groupActNotas').style.display = 'block';
+            }
+        }
+
+        async function guardarActividad() {
+            const modo = document.getElementById('actModo').value;
+            const btn = document.querySelector('#modalActividad .btn-save');
+            
+            // Validaciones Creación
+            if (modo === 'create') {
+                const resp = document.getElementById('actResponsable').value;
+                if (!resp) return alert("El Responsable es obligatorio.");
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Guardando...";
+
+            const formData = new FormData();
+            if (modo === 'create') {
+                formData.append('action', 'create_actividad');
+                formData.append('cliente', document.getElementById('actCliente').value);
+                formData.append('actividad', document.getElementById('actDescripcion').value);
+                formData.append('responsable', document.getElementById('actResponsable').value);
+            } else {
+                formData.append('action', 'update_actividad');
+                formData.append('id', document.getElementById('actId').value);
+                formData.append('estado', document.getElementById('actEstado').value);
+                formData.append('notas', document.getElementById('actNotas').value);
+            }
+
+            try {
+                await fetch(API_URL, { method: 'POST', body: formData });
+                alert("Guardado correctamente");
+                cerrarModales();
+                cargarActividades(); // Recargar tabla
+            } catch (e) {
+                console.error(e);
+                alert("Error al guardar");
+            }
+            btn.disabled = false;
+            btn.innerText = "Guardar";
+        }
+
+
+        // --- LÓGICA CLIENTES ---
+
+        async function cargarClientes() {
+            showLoading(true);
+            try {
+                const res = await fetch(`${API_URL}?action=read_clientes`);
+                const json = await res.json();
+                if (json.status === 'success') {
+                    dataClientes = json.data;
+                    renderClientes();
+                }
+            } catch (e) { console.error(e); alert("Error cargando clientes"); }
+            showLoading(false);
+        }
+
+        function renderClientes() {
+            const tbody = document.getElementById('tablaClientesBody');
+            tbody.innerHTML = '';
+
+            const fTipo = document.getElementById('filtroCliTipo').value;
+            const fEst = document.getElementById('filtroCliEstado').value;
+
+            const filtrados = dataClientes.filter(item => {
+                const tipoMatch = !fTipo || item.TIPO_SERVICIO === fTipo;
+                const estMatch = !fEst || item.ESTADO_CLIENTE === fEst;
+                return tipoMatch && estMatch;
             });
 
-        } catch (e) { console.error("Error cargando datos:", e); }
-    }
+            if(filtrados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6">No se encontraron clientes.</td></tr>';
+                return;
+            }
 
-    document.getElementById('clientForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const data = { 
-            NOMBRE: document.getElementById('c_nombre').value, 
-            CEDULA_NIT: document.getElementById('c_cedula').value, 
-            TIPO_SERVICIO: document.getElementById('c_servicio').value,
-            PRESUPUESTO: document.getElementById('c_presupuesto').value,
-            ESTADO_CLIENTE: 'PENDIENTE',
-            NOTAS: document.getElementById('c_notas').value,
-            ACTUALIZACION: new Date().toLocaleString('es-CO')
-        };
-        await fetch(`${API}?sheet=CLIENTES`, { method: 'POST', mode: 'no-cors', body: JSON.stringify({data:[data]}) });
-        alert("✅ Cliente enviado.");
-        e.target.reset(); await loadAll();
-    });
+            filtrados.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.onclick = () => abrirModalCliente(false, item);
+                
+                tr.innerHTML = `
+                    <td>${item.NOMBRE}</td>
+                    <td>${item.CEDULA_NIT}</td>
+                    <td>${item.TELEFONO}</td>
+                    <td>${item.TIPO_SERVICIO}</td>
+                    <td><span class="badge ${getClassEstado(item.ESTADO_CLIENTE)}">${item.ESTADO_CLIENTE}</span></td>
+                    <td><small>${item.NOTAS || ''}</small></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
 
-    document.getElementById('taskForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const data = { 
-            FECHA: new Date().toLocaleDateString('es-CO'),
-            CLIENTE: document.getElementById('t_cliente').value,
-            ACTIVIDAD: document.getElementById('t_actividad').value,
-            RESPONSABLE: document.getElementById('t_resp').value,
-            ESTADO: document.getElementById('t_estado').value,
-            NOTAS: document.getElementById('t_notas').value,
-            ID: Date.now().toString(),
-            ACTUALIZACION: new Date().toLocaleString('es-CO')
-        };
-        await fetch(`${API}?sheet=Hoja 1`, { method: 'POST', mode: 'no-cors', body: JSON.stringify({data:[data]}) });
-        alert("✅ Actividad guardada.");
-        e.target.reset(); await loadAll();
-    });
+        function abrirModalCliente(esNuevo, item = null) {
+            const modal = document.getElementById('modalCliente');
+            const titulo = document.getElementById('tituloModalCli');
+            const inpModo = document.getElementById('cliModo');
+            
+            modal.style.display = 'block';
+            
+            // Campos a controlar
+            const camposDatos = ['cliNombre', 'cliCedula', 'cliTelefono', 'cliCorreo', 'cliDireccion', 'cliPresupuesto', 'cliTipo'];
 
-    window.onload = loadAll;
-</script>
+            if (esNuevo) {
+                titulo.innerText = "Nuevo Cliente";
+                inpModo.value = "create";
+                document.getElementById('cliId').value = "";
+                
+                // Limpiar y Habilitar campos
+                camposDatos.forEach(id => {
+                    const el = document.getElementById(id);
+                    el.value = "";
+                    el.disabled = false;
+                });
+                
+                // Ocultar Estado y Notas (Son automáticos/vacíos al inicio)
+                document.getElementById('groupCliEstado').style.display = 'none';
+                document.getElementById('groupCliNotas').style.display = 'none';
+
+            } else {
+                titulo.innerText = "Gestionar Cliente";
+                inpModo.value = "edit";
+
+                // Llenar datos
+                document.getElementById('cliId').value = item.ID_CLIENTE;
+                document.getElementById('cliNombre').value = item.NOMBRE;
+                document.getElementById('cliCedula').value = item.CEDULA_NIT;
+                document.getElementById('cliTelefono').value = item.TELEFONO;
+                document.getElementById('cliCorreo').value = item.CORREO;
+                document.getElementById('cliDireccion').value = item.DIRECCION;
+                document.getElementById('cliPresupuesto').value = item.PRESUPUESTO;
+                document.getElementById('cliTipo').value = item.TIPO_SERVICIO;
+                
+                document.getElementById('cliEstado').value = item.ESTADO_CLIENTE;
+                document.getElementById('cliNotas').value = item.NOTAS;
+
+                // BLOQUEAR DATOS (Regla de negocio estricta)
+                camposDatos.forEach(id => {
+                    document.getElementById(id).disabled = true;
+                });
+
+                // Habilitar Estado y Notas
+                document.getElementById('groupCliEstado').style.display = 'block';
+                document.getElementById('groupCliNotas').style.display = 'block';
+            }
+        }
+
+        async function guardarCliente() {
+            const modo = document.getElementById('cliModo').value;
+            const btn = document.querySelector('#modalCliente .btn-save');
+            btn.disabled = true;
+            btn.innerText = "Guardando...";
+
+            const formData = new FormData();
+
+            if (modo === 'create') {
+                formData.append('action', 'create_cliente');
+                formData.append('nombre', document.getElementById('cliNombre').value);
+                formData.append('cedula', document.getElementById('cliCedula').value);
+                formData.append('telefono', document.getElementById('cliTelefono').value);
+                formData.append('correo', document.getElementById('cliCorreo').value);
+                formData.append('direccion', document.getElementById('cliDireccion').value);
+                formData.append('presupuesto', document.getElementById('cliPresupuesto').value);
+                formData.append('tipo', document.getElementById('cliTipo').value);
+            } else {
+                formData.append('action', 'update_cliente');
+                formData.append('id', document.getElementById('cliId').value);
+                formData.append('estado', document.getElementById('cliEstado').value);
+                formData.append('notas', document.getElementById('cliNotas').value);
+            }
+
+            try {
+                await fetch(API_URL, { method: 'POST', body: formData });
+                alert("Guardado correctamente");
+                cerrarModales();
+                cargarClientes();
+            } catch (e) {
+                console.error(e);
+                alert("Error al guardar");
+            }
+            btn.disabled = false;
+            btn.innerText = "Guardar";
+        }
+
+
+        // --- UTILIDADES ---
+        function cerrarModales() {
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+        }
+
+        function getClassEstado(estado) {
+            if (!estado) return '';
+            estado = estado.toUpperCase();
+            if (estado === 'PENDIENTE') return 'bg-pendiente';
+            if (estado === 'EN PROCESO') return 'bg-proceso';
+            if (estado === 'COMPLETADA') return 'bg-completada';
+            if (estado === 'CANCELADA') return 'bg-cancelada';
+            return '';
+        }
+
+        // Clic fuera del modal para cerrar
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                cerrarModales();
+            }
+        }
+    </script>
 </body>
 </html>
