@@ -398,8 +398,8 @@
     </div>
 
     <script>
-        // --- URL API ACTUALIZADA ---
-        const API = "https://script.google.com/macros/s/AKfycbybZwb4DMqBV8_5qsd10zpX59qRP53HxLqlsEh_NG4_xWcYc1nOS2ItRRVUKCXsCVxi5A/exec";
+        // --- URL API ACTUALIZADA (V3) ---
+        const API = "https://script.google.com/macros/s/AKfycbyhFfbZnfsNcw_lWSOP04TLHASe8EcZ27YTW3ywQpkT7HS3NnJy9hxuZuh4iUBZYSH5/exec";
 
         let dAct = [], dCli = [], dProp = [];
 
@@ -454,7 +454,9 @@
 
             let fil = dAct.filter(i => {
                 let fechaOk = true;
-                if(fF) fechaOk = (i.FECHA && i.FECHA.includes(fF)) || (new Date(i.FECHA).toISOString().startsWith(fF));
+                // NOTA: EL BACKEND RETORNA 'FECHA', ACCEDEMOS DIRECTO
+                let fechaItem = i.FECHA || "";
+                if(fF) fechaOk = fechaItem.includes(fF) || (new Date(fechaItem).toISOString().startsWith(fF));
                 let respOk = !fR || i.RESPONSABLE == fR;
                 let estOk = !fE || i.ESTADO == fE;
                 return fechaOk && respOk && estOk;
@@ -490,7 +492,6 @@
             fil.forEach(i => {
                 let tr = document.createElement('tr');
                 tr.onclick = () => abrirModalPropiedad(false, i);
-                // Formato precio
                 let precio = i.PRECIO ? new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(i.PRECIO) : '$0';
                 
                 tr.innerHTML = `<td><small>${i.ID_PROPIEDAD}</small></td>
@@ -529,8 +530,6 @@
         // 1. Modal Actividad
         function abrirModalActividad(esNuevo, item) {
             document.getElementById('modalActividad').style.display = 'block';
-            
-            // Llenar SELECT de Clientes
             let sel = document.getElementById('actCliente');
             sel.innerHTML = '<option value="">Seleccione Cliente...</option>';
             dCli.sort((a,b) => (a.NOMBRE || "").localeCompare(b.NOMBRE || "")).forEach(c => {
@@ -547,14 +546,14 @@
                 document.getElementById('actResp').value = ""; document.getElementById('actResp').disabled = false;
                 document.getElementById('actNotas').value = "";
                 
-                // CORRECCION: Mostrar Estado al Crear
+                // MOSTRAR ESTADO
                 document.getElementById('actEst').value = "PENDIENTE";
                 document.getElementById('divActEst').style.display = 'block';
-                document.getElementById('divActNotas').style.display = 'none';
+                document.getElementById('divActNotas').style.display = 'none'; // Notas seguimiento ocultas en creación (opcional)
             } else {
                 document.getElementById('tModalAct').innerText = "Editar Actividad";
                 document.getElementById('actModo').value = "edit";
-                document.getElementById('actId').value = item.ID;
+                document.getElementById('actId').value = item.ID; // USAMOS EL ID QUE VIENE DEL SHEET
                 sel.value = item.CLIENTE; sel.disabled = true;
                 document.getElementById('actDesc').value = item.ACTIVIDAD; document.getElementById('actDesc').disabled = true;
                 document.getElementById('actResp').value = item.RESPONSABLE; document.getElementById('actResp').disabled = true;
@@ -568,8 +567,6 @@
         // 2. Modal Propiedad
         function abrirModalPropiedad(esNuevo, item) {
             document.getElementById('modalPropiedad').style.display = 'block';
-            
-            // Llenar SELECT de Propietarios (Clientes)
             let selProp = document.getElementById('proPropietario');
             selProp.innerHTML = '<option value="">Seleccione Cliente...</option>';
             dCli.sort((a,b) => (a.NOMBRE || "").localeCompare(b.NOMBRE || "")).forEach(c => {
@@ -577,7 +574,6 @@
                 opt.value = c.NOMBRE; opt.text = c.NOMBRE; selProp.appendChild(opt);
             });
 
-            // IDs de campos
             let ids = ['proOper','proTipo','proDir','proCiu','proArea','proHab','proBan','proEst'];
             
             if(esNuevo) {
@@ -585,14 +581,13 @@
                 document.getElementById('proModo').value = "create";
                 document.getElementById('proId').value = "";
                 
-                // Resetear campos
                 selProp.value = ""; selProp.disabled = false;
                 ids.forEach(id => { document.getElementById(id).value = ""; document.getElementById(id).disabled = false; });
                 document.getElementById('proPre').value = "";
                 document.getElementById('proCiu').value = "Pereira";
                 document.getElementById('proNotas').value = "";
                 
-                // AHORA MOSTRAMOS EL ESTADO AL CREAR
+                // MOSTRAR ESTADO
                 document.getElementById('proEstado').value = "DISPONIBLE"; 
                 document.getElementById('divProEstado').style.display = 'block';
 
@@ -601,7 +596,6 @@
                 document.getElementById('proModo').value = "edit";
                 document.getElementById('proId').value = item.ID_PROPIEDAD;
 
-                // Cargar datos
                 selProp.value = item.PROPIETARIO; selProp.disabled = true; 
                 document.getElementById('proOper').value = item.TIPO_OPERACION; document.getElementById('proOper').disabled = true;
                 document.getElementById('proTipo').value = item.TIPO_INMUEBLE; document.getElementById('proTipo').disabled = true;
@@ -612,11 +606,9 @@
                 document.getElementById('proBan').value = item.BANOS; document.getElementById('proBan').disabled = true;
                 document.getElementById('proEst').value = item.ESTRATO; document.getElementById('proEst').disabled = true;
 
-                // Campos editables
                 document.getElementById('proPre').value = item.PRECIO; 
                 document.getElementById('proEstado').value = item.ESTADO;
                 document.getElementById('proNotas').value = item.NOTAS;
-
                 document.getElementById('divProEstado').style.display = 'block';
             }
         }
@@ -632,7 +624,7 @@
                 document.getElementById('cliId').value = "";
                 ids.forEach(id => { let el = document.getElementById(id); el.value=""; el.disabled=false; });
                 
-                // CORRECCION: Mostrar Estado al Crear
+                // MOSTRAR ESTADO
                 document.getElementById('cliEst').value = "PENDIENTE";
                 document.getElementById('divCliEst').style.display = 'block';
                 document.getElementById('divCliNotas').style.display = 'none';
@@ -668,8 +660,7 @@
                 fd.append('cliente', document.getElementById('actCliente').value);
                 fd.append('actividad', document.getElementById('actDesc').value);
                 fd.append('responsable', document.getElementById('actResp').value);
-                // AÑADIDO: ENVIAR ESTADO AL CREAR
-                fd.append('estado', document.getElementById('actEst').value);
+                fd.append('estado', document.getElementById('actEst').value); // ENVIAR ESTADO
             } else {
                 fd.append('action','update_actividad');
                 fd.append('id', document.getElementById('actId').value);
@@ -698,7 +689,7 @@
                 fd.append('habitaciones', document.getElementById('proHab').value);
                 fd.append('banos', document.getElementById('proBan').value);
                 fd.append('estrato', document.getElementById('proEst').value);
-                fd.append('estado', document.getElementById('proEstado').value);
+                fd.append('estado', document.getElementById('proEstado').value); // ENVIAR ESTADO
                 fd.append('notas', document.getElementById('proNotas').value);
             } else {
                 fd.append('action','update_propiedad');
@@ -723,8 +714,7 @@
                 fd.append('direccion', document.getElementById('cliDir').value);
                 fd.append('presupuesto', document.getElementById('cliPre').value);
                 fd.append('tipo', document.getElementById('cliTipo').value);
-                // AÑADIDO: ENVIAR ESTADO AL CREAR
-                fd.append('estado', document.getElementById('cliEst').value);
+                fd.append('estado', document.getElementById('cliEst').value); // ENVIAR ESTADO
             } else {
                 fd.append('action','update_cliente');
                 fd.append('id', document.getElementById('cliId').value);
