@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monteclaro SAS - Consecutivo</title>
+    <title>Monteclaro SAS - Gestión Integral</title>
     <style>
         :root { --principal: #2638bf; --sebas: #11734b; --juan: #0a53a8; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
@@ -22,8 +22,6 @@
         th { background: #333; color: white; padding: 12px; text-align: left; }
         td { padding: 12px; border-bottom: 1px solid #eee; }
         .badge { padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 10px; }
-        .resp-sebas { color: var(--sebas); font-weight: bold; border-left: 3px solid var(--sebas); padding-left: 5px; }
-        .resp-juan { color: var(--juan); font-weight: bold; border-left: 3px solid var(--juan); padding-left: 5px; }
     </style>
 </head>
 <body>
@@ -31,7 +29,7 @@
 <div class="container">
     <div style="text-align:center; padding: 15px;">
         <h2 style="color:var(--principal); margin:0;">MONTECLARO INMOBILIARIA SAS</h2>
-        <small>Control de Clientes y Actividades FINANCIAL GROUP</small>
+        <small>Gestión Multiservicios | FINANCIAL GROUP</small>
     </div>
 
     <div class="nav-container">
@@ -49,7 +47,7 @@
                     <div><label>Estado</label><select id="t_estado"><option value="PENDIENTE">PENDIENTE</option><option value="EN PROCESO">EN PROCESO</option><option value="COMPLETADA">COMPLETADA</option></select></div>
                     <div style="grid-column: 1 / -1;"><label>Notas</label><textarea id="t_notas" rows="2"></textarea></div>
                 </div>
-                <button type="submit" class="btn-submit">Guardar Actividad</button>
+                <button type="submit" class="btn-submit">Sincronizar Gestión</button>
             </form>
         </div>
         <div class="table-wrapper"><table><thead><tr><th>Fecha</th><th>Cliente</th><th>Actividad</th><th>Responsable</th><th>Estado</th></tr></thead><tbody id="bodyTasks"></tbody></table></div>
@@ -64,14 +62,21 @@
                     <div><label>Teléfono</label><input type="text" id="c_tel"></div>
                     <div><label>Correo</label><input type="email" id="c_correo"></div>
                     <div><label>Dirección</label><input type="text" id="c_dir"></div>
-                    <div><label>Servicio</label><select id="c_servicio"><option value="CREDITO/FINANCIAL GROUP">CREDITO / FINANCIAL GROUP</option><option value="ADMINISTRACION">ADMINISTRACION</option></select></div>
-                    <div><label>Estado</label><select id="c_estado"><option value="PENDIENTE">PENDIENTE</option><option value="ACTIVO">ACTIVO</option></select></div>
-                    <div><label>Valor</label><input type="text" id="c_presupuesto"></div>
+                    <div>
+                        <label>Servicio</label>
+                        <select id="c_servicio">
+                            <option value="VENTA">VENTA</option>
+                            <option value="ADMINISTRACION">ADMINISTRACION</option>
+                            <option value="CREDITO / FINANCIAL GROUP">CREDITO / FINANCIAL GROUP</option>
+                        </select>
+                    </div>
+                    <div><label>Estado Cliente</label><select id="c_estado"><option value="PENDIENTE">PENDIENTE</option><option value="ACTIVO">ACTIVO</option></select></div>
+                    <div><label>Presupuesto/Valor</label><input type="text" id="c_presupuesto"></div>
                 </div>
                 <button type="submit" class="btn-submit" style="background:#444">Registrar Cliente</button>
             </form>
         </div>
-        <div class="table-wrapper"><table><thead><tr><th>ID No.</th><th>Nombre</th><th>Cédula/NIT</th><th>Correo</th><th>Estado</th></tr></thead><tbody id="bodyClients"></tbody></table></div>
+        <div class="table-wrapper"><table><thead><tr><th>ID No.</th><th>Nombre</th><th>Cédula/NIT</th><th>Servicio</th><th>Estado</th></tr></thead><tbody id="bodyClients"></tbody></table></div>
     </div>
 </div>
 
@@ -98,7 +103,7 @@
             bC.innerHTML = "";
             dataC.forEach(c => {
                 sel.innerHTML += `<option value="${c.NOMBRE}">${c.NOMBRE}</option>`;
-                bC.innerHTML += `<tr><td><b>${c.ID_CLIENTE}</b></td><td><b>${c.NOMBRE}</b></td><td>${c.CEDULA_NIT}</td><td>${c.CORREO}</td><td><span class="badge" style="background:#eee">${c.ESTADO_CLIENTE}</span></td></tr>`;
+                bC.innerHTML += `<tr><td><b>${c.ID_CLIENTE}</b></td><td><b>${c.NOMBRE}</b></td><td>${c.CEDULA_NIT}</td><td>${c.TIPO_SERVICIO}</td><td><span class="badge" style="background:#eee">${c.ESTADO_CLIENTE}</span></td></tr>`;
             });
 
             const resT = await fetch(`${API}?sheet=Sheet1`);
@@ -106,10 +111,9 @@
             const bT = document.getElementById('bodyTasks');
             bT.innerHTML = "";
             dataT.slice().reverse().forEach(t => {
-                const rStyle = t.RESPONSABLE === 'Sebas Cuervo' ? 'resp-sebas' : 'resp-juan';
-                bT.innerHTML += `<tr><td>${t.FECHA}</td><td><b>${t.CLIENTE}</b></td><td>${t.ACTIVIDAD}</td><td class="${rStyle}">${t.RESPONSABLE}</td><td>${t.ESTADO}</td></tr>`;
+                bT.innerHTML += `<tr><td>${t.FECHA}</td><td><b>${t.CLIENTE}</b></td><td>${t.ACTIVIDAD}</td><td>${t.RESPONSABLE}</td><td>${t.ESTADO}</td></tr>`;
             });
-        } catch(e) { console.error("Error cargando datos"); }
+        } catch(e) { console.error("Error"); }
     }
 
     document.getElementById('clientForm').addEventListener('submit', async (e) => {
@@ -133,18 +137,9 @@
 
     document.getElementById('taskForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = e.target.querySelector('button'); btn.disabled = true;
-        const data = { 
-            CLIENTE: document.getElementById('t_cliente').value, 
-            ACTIVIDAD: document.getElementById('t_actividad').value, 
-            RESPONSABLE: document.getElementById('t_resp').value, 
-            ESTADO: document.getElementById('t_estado').value, 
-            NOTAS: document.getElementById('t_notas').value, 
-            FECHA: new Date().toLocaleDateString(), 
-            ID: Date.now().toString() 
-        };
+        const data = { CLIENTE: document.getElementById('t_cliente').value, ACTIVIDAD: document.getElementById('t_actividad').value, RESPONSABLE: document.getElementById('t_resp').value, ESTADO: document.getElementById('t_estado').value, NOTAS: document.getElementById('t_notas').value, FECHA: new Date().toLocaleDateString(), ID: Date.now().toString() };
         await fetch(`${API}?sheet=Sheet1`, { method: 'POST', body: JSON.stringify({data:[data]}) });
-        e.target.reset(); btn.disabled = false; await loadAll();
+        e.target.reset(); await loadAll();
     });
 
     window.onload = loadAll;
