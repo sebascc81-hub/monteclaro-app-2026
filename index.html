@@ -291,6 +291,7 @@
                         <option value="SEBAS CUERVO">SEBAS CUERVO</option>
                     </select>
                 </div>
+                
                 <div class="form-group" id="divActEst">
                     <label>Estado:</label>
                     <select id="actEst">
@@ -398,7 +399,7 @@
 
     <script>
         // --- URL API ACTUALIZADA ---
-        const API = "https://script.google.com/macros/s/AKfycbxnkbVBwyguJMyjDVItDR19aZkNXXuNAmzgMQVRajr8Rl10RfUrbrsXhBNhzHGV1OLPoA/exec";
+        const API = "https://script.google.com/macros/s/AKfycbybZwb4DMqBV8_5qsd10zpX59qRP53HxLqlsEh_NG4_xWcYc1nOS2ItRRVUKCXsCVxi5A/exec";
 
         let dAct = [], dCli = [], dProp = [];
 
@@ -545,7 +546,10 @@
                 document.getElementById('actDesc').value = ""; document.getElementById('actDesc').disabled = false;
                 document.getElementById('actResp').value = ""; document.getElementById('actResp').disabled = false;
                 document.getElementById('actNotas').value = "";
-                document.getElementById('divActEst').style.display = 'none';
+                
+                // CORRECCION: Mostrar Estado al Crear
+                document.getElementById('actEst').value = "PENDIENTE";
+                document.getElementById('divActEst').style.display = 'block';
                 document.getElementById('divActNotas').style.display = 'none';
             } else {
                 document.getElementById('tModalAct').innerText = "Editar Actividad";
@@ -588,7 +592,7 @@
                 document.getElementById('proCiu').value = "Pereira";
                 document.getElementById('proNotas').value = "";
                 
-                // AHORA MOSTRAMOS EL ESTADO AL CREAR (Por defecto DISPONIBLE, pero cambiable)
+                // AHORA MOSTRAMOS EL ESTADO AL CREAR
                 document.getElementById('proEstado').value = "DISPONIBLE"; 
                 document.getElementById('divProEstado').style.display = 'block';
 
@@ -627,7 +631,10 @@
                 document.getElementById('cliModo').value = "create";
                 document.getElementById('cliId').value = "";
                 ids.forEach(id => { let el = document.getElementById(id); el.value=""; el.disabled=false; });
-                document.getElementById('divCliEst').style.display = 'none';
+                
+                // CORRECCION: Mostrar Estado al Crear
+                document.getElementById('cliEst').value = "PENDIENTE";
+                document.getElementById('divCliEst').style.display = 'block';
                 document.getElementById('divCliNotas').style.display = 'none';
             } else {
                 document.getElementById('tModalCli').innerText = "Editar Cliente";
@@ -661,6 +668,8 @@
                 fd.append('cliente', document.getElementById('actCliente').value);
                 fd.append('actividad', document.getElementById('actDesc').value);
                 fd.append('responsable', document.getElementById('actResp').value);
+                // AÑADIDO: ENVIAR ESTADO AL CREAR
+                fd.append('estado', document.getElementById('actEst').value);
             } else {
                 fd.append('action','update_actividad');
                 fd.append('id', document.getElementById('actId').value);
@@ -689,7 +698,6 @@
                 fd.append('habitaciones', document.getElementById('proHab').value);
                 fd.append('banos', document.getElementById('proBan').value);
                 fd.append('estrato', document.getElementById('proEst').value);
-                // AHORA ENVIAMOS EL ESTADO SELECCIONADO
                 fd.append('estado', document.getElementById('proEstado').value);
                 fd.append('notas', document.getElementById('proNotas').value);
             } else {
@@ -715,6 +723,8 @@
                 fd.append('direccion', document.getElementById('cliDir').value);
                 fd.append('presupuesto', document.getElementById('cliPre').value);
                 fd.append('tipo', document.getElementById('cliTipo').value);
+                // AÑADIDO: ENVIAR ESTADO AL CREAR
+                fd.append('estado', document.getElementById('cliEst').value);
             } else {
                 fd.append('action','update_cliente');
                 fd.append('id', document.getElementById('cliId').value);
