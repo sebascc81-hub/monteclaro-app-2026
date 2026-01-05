@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monteclaro SAS - Consecutivo</title>
     <style>
-        :root { --principal: #2638bf; }
+        :root { --principal: #2638bf; --sebas: #11734b; --juan: #0a53a8; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
         .container { max-width: 1100px; margin: auto; }
         .nav-container { display: flex; gap: 8px; margin-bottom: 15px; }
-        .nav-btn { flex: 1; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background: #e9ecef; }
+        .nav-btn { flex: 1; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background: #e9ecef; transition: 0.3s; }
         .nav-btn.active { background: var(--principal); color: white; }
         .section { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: none; }
         .section.active { display: block; }
@@ -22,6 +22,8 @@
         th { background: #333; color: white; padding: 12px; text-align: left; }
         td { padding: 12px; border-bottom: 1px solid #eee; }
         .badge { padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 10px; }
+        .resp-sebas { color: var(--sebas); font-weight: bold; border-left: 3px solid var(--sebas); padding-left: 5px; }
+        .resp-juan { color: var(--juan); font-weight: bold; border-left: 3px solid var(--juan); padding-left: 5px; }
     </style>
 </head>
 <body>
@@ -29,7 +31,7 @@
 <div class="container">
     <div style="text-align:center; padding: 15px;">
         <h2 style="color:var(--principal); margin:0;">MONTECLARO INMOBILIARIA SAS</h2>
-        <small>Control Consecutivo de Clientes</small>
+        <small>Control de Clientes y Actividades FINANCIAL GROUP</small>
     </div>
 
     <div class="nav-container">
@@ -50,7 +52,7 @@
                 <button type="submit" class="btn-submit">Guardar Actividad</button>
             </form>
         </div>
-        <div class="table-wrapper"><table><thead><tr><th>Fecha</th><th>Cliente</th><th>Actividad</th><th>Estado</th></tr></thead><tbody id="bodyTasks"></tbody></table></div>
+        <div class="table-wrapper"><table><thead><tr><th>Fecha</th><th>Cliente</th><th>Actividad</th><th>Responsable</th><th>Estado</th></tr></thead><tbody id="bodyTasks"></tbody></table></div>
     </div>
 
     <div id="tab-clientes" class="section">
@@ -89,10 +91,10 @@
         try {
             const resC = await fetch(`${API}?sheet=CLIENTES`);
             const dataC = await resC.json();
-            totalClientes = dataC.length; // Guardamos cuántos hay para el siguiente ID
+            totalClientes = dataC.length;
             const sel = document.getElementById('t_cliente');
             const bC = document.getElementById('bodyClients');
-            sel.innerHTML = '<option value="">-- Seleccione --</option>';
+            sel.innerHTML = '<option value="">-- Seleccione Cliente --</option>';
             bC.innerHTML = "";
             dataC.forEach(c => {
                 sel.innerHTML += `<option value="${c.NOMBRE}">${c.NOMBRE}</option>`;
@@ -104,18 +106,16 @@
             const bT = document.getElementById('bodyTasks');
             bT.innerHTML = "";
             dataT.slice().reverse().forEach(t => {
-                bT.innerHTML += `<tr><td>${t.FECHA}</td><td><b>${t.CLIENTE}</b></td><td>${t.ACTIVIDAD}</td><td>${t.ESTADO}</td></tr>`;
+                const rStyle = t.RESPONSABLE === 'Sebas Cuervo' ? 'resp-sebas' : 'resp-juan';
+                bT.innerHTML += `<tr><td>${t.FECHA}</td><td><b>${t.CLIENTE}</b></td><td>${t.ACTIVIDAD}</td><td class="${rStyle}">${t.RESPONSABLE}</td><td>${t.ESTADO}</td></tr>`;
             });
-        } catch(e) { console.error("Error"); }
+        } catch(e) { console.error("Error cargando datos"); }
     }
 
     document.getElementById('clientForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = e.target.querySelector('button'); btn.disabled = true;
-        
-        // Lógica del Consecutivo: Toma el total actual + 1 y le pone el 0 adelante si es menor a 10
         const proximoID = (totalClientes + 1).toString().padStart(2, '0');
-        
         const data = { 
             NOMBRE: document.getElementById('c_nombre').value, 
             CEDULA_NIT: document.getElementById('c_cedula').value, 
@@ -133,9 +133,18 @@
 
     document.getElementById('taskForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const data = { CLIENTE: document.getElementById('t_cliente').value, ACTIVIDAD: document.getElementById('t_actividad').value, RESPONSABLE: document.getElementById('t_resp').value, ESTADO: document.getElementById('t_estado').value, NOTAS: document.getElementById('t_notas').value, FECHA: new Date().toLocaleDateString(), ID: Date.now().toString() };
+        const btn = e.target.querySelector('button'); btn.disabled = true;
+        const data = { 
+            CLIENTE: document.getElementById('t_cliente').value, 
+            ACTIVIDAD: document.getElementById('t_actividad').value, 
+            RESPONSABLE: document.getElementById('t_resp').value, 
+            ESTADO: document.getElementById('t_estado').value, 
+            NOTAS: document.getElementById('t_notas').value, 
+            FECHA: new Date().toLocaleDateString(), 
+            ID: Date.now().toString() 
+        };
         await fetch(`${API}?sheet=Sheet1`, { method: 'POST', body: JSON.stringify({data:[data]}) });
-        e.target.reset(); await loadAll();
+        e.target.reset(); btn.disabled = false; await loadAll();
     });
 
     window.onload = loadAll;
