@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Monteclaro | Filtro Diario</title>
+    <title>Panel Monteclaro | Gestión Socios</title>
     <style>
         :root { --principal: #2638bf; --secundario: #000000; --blanco: #ffffff; --gris: #b2b8bf; }
         body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
@@ -23,20 +23,22 @@
         .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.7rem; }
         .pendiente { background: #ffeaa7; color: #d35400; }
         .completado { background: #d1f7d1; color: #1a5c37; }
+        
+        .btn-limpiar { background: var(--principal); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: auto; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="logo-box"><img src="MONTECLARO1.png" alt="Logo" style="width: 90%;"></div>
-            <div><h1>MONTECLARO SAS</h1><p>Control de Actividades e Histórico</p></div>
+            <div><h1>MONTECLARO SAS</h1><p>Histórico de Gestión - 2026</p></div>
         </div>
 
         <div class="section">
             <div class="filtros">
                 <div class="filtros-group">
-                    <label>Filtrar por Día</label>
-                    <input type="date" id="filtroFecha" onchange="filtrar()">
+                    <label>Por Día Exacto</label>
+                    <input type="date" id="filtroFecha" oninput="filtrar()">
                 </div>
                 <div class="filtros-group">
                     <label>Responsable</label>
@@ -54,9 +56,7 @@
                         <option value="COMPLETADO">Completados</option>
                     </select>
                 </div>
-                <div class="filtros-group" style="flex: 0; min-width: 50px; align-self: flex-end;">
-                    <button onclick="limpiar()" style="padding: 10px; cursor: pointer; border-radius: 6px; border: 1px solid var(--gris); background: white;">✖</button>
-                </div>
+                <button class="btn-limpiar" onclick="limpiar()">Limpiar Filtros</button>
             </div>
 
             <table>
@@ -69,9 +69,54 @@
     </div>
 
     <script>
-        // --- BASE DE DATOS INTERNA ---
+        // --- BASE DE DATOS (Asegúrate de que la fecha coincida con el formato AAAA-MM-DD) ---
         const actividades = [
             { fecha: "2026-01-04", tarea: "Diseño de identidad visual", resp: "Socio A", estado: "COMPLETADO" },
             { fecha: "2026-01-05", tarea: "Carga de logo MONTECLARO1.png", resp: "Socio A", estado: "COMPLETADO" },
             { fecha: "2026-01-05", tarea: "Trámite inicial Financial Group", resp: "Socio B", estado: "PENDIENTE" },
-            { fecha: "2026-01-10", tarea: "Seguimiento crédito Familia Pérez", resp: "Socio B", estado:
+            { fecha: "2026-01-10", tarea: "Seguimiento crédito Familia Pérez", resp: "Socio B", estado: "PENDIENTE" }
+        ];
+
+        function filtrar() {
+            const fechaVal = document.getElementById('filtroFecha').value;
+            const respVal = document.getElementById('filtroResp').value;
+            const estadoVal = document.getElementById('filtroEstado').value;
+            const tabla = document.getElementById('tabla-actividades');
+            
+            tabla.innerHTML = "";
+
+            // Filtramos y mostramos
+            actividades.slice().reverse().forEach(item => {
+                const coincideFecha = !fechaVal || item.fecha === fechaVal;
+                const coincideResp = respVal === "TODOS" || item.resp === respVal;
+                const coincideEstado = estadoVal === "TODOS" || item.estado === estadoVal;
+
+                if (coincideFecha && coincideResp && coincideEstado) {
+                    const fila = `<tr>
+                        <td style="color:#888">${item.fecha}</td>
+                        <td>${item.tarea}</td>
+                        <td>${item.resp}</td>
+                        <td><span class="badge ${item.estado === 'COMPLETADO' ? 'completado' : 'pendiente'}">${item.estado}</span></td>
+                    </tr>`;
+                    tabla.innerHTML += fila;
+                }
+            });
+            
+            // Si después de filtrar no hay nada, mostrar mensaje
+            if(tabla.innerHTML === "") {
+                tabla.innerHTML = "<tr><td colspan='4' style='text-align:center; padding: 20px;'>No hay actividades para estos filtros.</td></tr>";
+            }
+        }
+
+        function limpiar() {
+            document.getElementById('filtroFecha').value = "";
+            document.getElementById('filtroResp').value = "TODOS";
+            document.getElementById('filtroEstado').value = "TODOS";
+            filtrar();
+        }
+
+        // Ejecutar al cargar la página para que se vean las actividades de entrada
+        window.onload = filtrar;
+    </script>
+</body>
+</html>
