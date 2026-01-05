@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monteclaro SAS - Gestión a Color</title>
+    <title>Monteclaro SAS - Unificado</title>
     <style>
         :root { --principal: #2638bf; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
@@ -18,8 +18,8 @@
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
         .btn-submit { background: var(--principal); color: white; border: none; padding: 14px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; }
         
-        /* ESTILOS DE SEMÁFORO */
-        .badge { padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 10px; display: inline-block; text-align: center; color: black; min-width: 80px; }
+        /* SEMÁFORO UNIFICADO */
+        .badge { padding: 6px 10px; border-radius: 5px; font-weight: bold; font-size: 10px; color: black; min-width: 90px; text-align: center; display: inline-block; }
         .st-PENDIENTE { background: #fadb03; } 
         .st-EN-PROCESO { background: #b0f605; } 
         .st-COMPLETADA, .st-ACTIVO { background: #00ff20; } 
@@ -36,7 +36,7 @@
 <div class="container">
     <div style="text-align:center; padding: 15px;">
         <h2 style="color:var(--principal); margin:0;">MONTECLARO INMOBILIARIA SAS</h2>
-        <small>Sistema de Control Visual Ilimitado</small>
+        <small>Sistema Unificado | Juan Romero & Sebas Cuervo</small>
     </div>
 
     <div class="nav-container">
@@ -45,14 +45,14 @@
     </div>
 
     <div id="tab-actividades" class="section active">
-        <div class="form-card">
+        <div class="form-card" style="background:#f8f9fa; padding:20px; border-radius:10px; border:1px solid #ddd;">
             <form id="taskForm">
                 <div class="grid">
                     <div><label>Cliente</label><select id="t_cliente" required><option value="">Cargando...</option></select></div>
                     <div><label>Actividad</label><input type="text" id="t_actividad" required></div>
                     <div><label>Responsable</label><select id="t_resp" required><option value="Juan Romero">Juan Romero</option><option value="Sebas Cuervo">Sebas Cuervo</option></select></div>
                     <div>
-                        <label>Estado Gestión</label>
+                        <label>Estado</label>
                         <select id="t_estado">
                             <option value="PENDIENTE">🟡 PENDIENTE</option>
                             <option value="EN PROCESO">🟢 EN PROCESO</option>
@@ -62,14 +62,14 @@
                     </div>
                     <div style="grid-column: 1 / -1;"><label>Notas</label><textarea id="t_notas" rows="2"></textarea></div>
                 </div>
-                <button type="submit" class="btn-submit">Sincronizar Gestión</button>
+                <button type="submit" class="btn-submit">Guardar Actividad</button>
             </form>
         </div>
         <div class="table-wrapper"><table><thead><tr><th>Fecha</th><th>Cliente</th><th>Actividad</th><th>Responsable</th><th>Estado</th></tr></thead><tbody id="bodyTasks"></tbody></table></div>
     </div>
 
     <div id="tab-clientes" class="section">
-        <div class="form-card">
+        <div class="form-card" style="background:#f8f9fa; padding:20px; border-radius:10px; border:1px solid #ddd;">
             <form id="clientForm">
                 <div class="grid">
                     <div><label>Nombre Completo</label><input type="text" id="c_nombre" required></div>
@@ -78,13 +78,21 @@
                     <div><label>Correo</label><input type="email" id="c_correo"></div>
                     <div><label>Dirección</label><input type="text" id="c_dir"></div>
                     <div><label>Servicio</label><select id="c_servicio"><option value="VENTA">VENTA</option><option value="ADMINISTRACION">ADMINISTRACION</option><option value="CREDITO/FINANCIAL GROUP">CREDITO / FINANCIAL GROUP</option></select></div>
-                    <div><label>Estado</label><select id="c_estado"><option value="PENDIENTE">PENDIENTE</option><option value="ACTIVO">ACTIVO</option><option value="CANCELADA">CANCELADA</option></select></div>
+                    <div>
+                        <label>Estado</label>
+                        <select id="c_estado">
+                            <option value="PENDIENTE">🟡 PENDIENTE</option>
+                            <option value="EN PROCESO">🟢 EN PROCESO</option>
+                            <option value="COMPLETADA">✅ COMPLETADA</option>
+                            <option value="CANCELADA">❌ CANCELADA</option>
+                        </select>
+                    </div>
                     <div><label>Presupuesto</label><input type="text" id="c_presupuesto"></div>
                 </div>
                 <button type="submit" class="btn-submit" style="background:#444">Registrar Cliente</button>
             </form>
         </div>
-        <div class="table-wrapper"><table><thead><tr><th>ID No.</th><th>Nombre</th><th>Cédula/NIT</th><th>Servicio</th><th>Estado</th></tr></thead><tbody id="bodyClients"></tbody></table></div>
+        <div class="table-wrapper"><table><thead><tr><th>ID No.</th><th>Nombre</th><th>Servicio</th><th>Estado</th></tr></thead><tbody id="bodyClients"></tbody></table></div>
     </div>
 </div>
 
@@ -100,6 +108,11 @@
         await loadAll();
     }
 
+    function getBadge(status) {
+        const cleanStatus = (status || "PENDIENTE").replace(/ /g, "-");
+        return `<span class="badge st-${cleanStatus}">${status}</span>`;
+    }
+
     async function loadAll() {
         try {
             const resC = await fetch(`${API}?sheet=CLIENTES`);
@@ -111,8 +124,7 @@
             bC.innerHTML = "";
             dataC.forEach(c => {
                 sel.innerHTML += `<option value="${c.NOMBRE}">${c.NOMBRE}</option>`;
-                const stClass = "st-" + (c.ESTADO_CLIENTE || "PENDIENTE").replace(/ /g, "-");
-                bC.innerHTML += `<tr><td><b>${c.ID_CLIENTE}</b></td><td><b>${c.NOMBRE}</b></td><td>${c.CEDULA_NIT}</td><td>${c.TIPO_SERVICIO}</td><td><span class="badge ${stClass}">${c.ESTADO_CLIENTE}</span></td></tr>`;
+                bC.innerHTML += `<tr><td><b>${c.ID_CLIENTE}</b></td><td><b>${c.NOMBRE}</b></td><td>${c.TIPO_SERVICIO}</td><td>${getBadge(c.ESTADO_CLIENTE)}</td></tr>`;
             });
 
             const resT = await fetch(`${API}?sheet=Sheet1`);
@@ -120,10 +132,9 @@
             const bT = document.getElementById('bodyTasks');
             bT.innerHTML = "";
             dataT.slice().reverse().forEach(t => {
-                const stClass = "st-" + (t.ESTADO || "PENDIENTE").replace(/ /g, "-");
-                bT.innerHTML += `<tr><td>${t.FECHA}</td><td><b>${t.CLIENTE}</b></td><td>${t.ACTIVIDAD}</td><td>${t.RESPONSABLE}</td><td><span class="badge ${stClass}">${t.ESTADO}</span></td></tr>`;
+                bT.innerHTML += `<tr><td>${t.FECHA}</td><td><b>${t.CLIENTE}</b></td><td>${t.ACTIVIDAD}</td><td>${t.RESPONSABLE}</td><td>${getBadge(t.ESTADO)}</td></tr>`;
             });
-        } catch(e) { console.error("Error cargando colores"); }
+        } catch(e) { console.error("Error cargando datos"); }
     }
 
     document.getElementById('clientForm').addEventListener('submit', async (e) => {
