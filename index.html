@@ -15,8 +15,11 @@
             --st-proceso: #2196f3; 
             --st-completada: #4caf50; 
             --st-cancelada: #f44336;
+            
+            /* Nuevos Estados Propiedades */
             --st-disponible: #4caf50; /* Verde */
             --st-vendido: #f44336;   /* Rojo */
+            --st-separado: #ff9800;  /* Naranja */
         }
         
         body { 
@@ -106,8 +109,12 @@
         /* COLORES ESTADO */
         .bg-pendiente { background: var(--st-pendiente); color: black; }
         .bg-proceso { background: var(--st-proceso); }
-        .bg-completada, .bg-disponible { background: var(--st-completada); }
-        .bg-cancelada, .bg-vendido { background: var(--st-cancelada); }
+        .bg-completada { background: var(--st-completada); }
+        .bg-cancelada { background: var(--st-cancelada); }
+        /* Colores Propiedades */
+        .bg-disponible { background: var(--st-disponible); }
+        .bg-vendido, .bg-arrendado { background: var(--st-vendido); }
+        .bg-separado { background: var(--st-separado); color: black; }
 
         /* MODALES */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; backdrop-filter: blur(2px); }
@@ -115,7 +122,6 @@
         .modal-header { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px 8px 0 0; }
         .modal-body { padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .modal-body .full-width { grid-column: span 2; }
-        
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; color: #555; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; box-sizing: border-box; }
         .form-group textarea { height: 80px; resize: vertical; }
@@ -152,14 +158,12 @@
     <header>
         <div class="header-branding">
             <img src="MONTECLARO5.png" alt="Logo Monteclaro" class="logo">
-            
             <div class="header-text">
                 <h1>GESTION INMOBILIARIA</h1>
                 <div>MONTECLARO INMOBILIARIA S.A.S</div>
                 <div>901.968.559-8</div>
             </div>
         </div>
-
         <div id="loading" style="display:none; font-weight:bold;">🔄 Sincronizando...</div>
     </header>
 
@@ -240,6 +244,7 @@
                 <option value="PENDIENTE">PENDIENTE</option>
                 <option value="EN PROCESO">EN PROCESO</option>
                 <option value="COMPLETADA">COMPLETADA</option>
+                <option value="CANCELADA">CANCELADA</option>
             </select>
         </div>
         <div class="table-responsive">
@@ -314,6 +319,7 @@
                         <option value="LOTE">LOTE</option>
                         <option value="FINCA">FINCA</option>
                         <option value="LOCAL">LOCAL</option>
+                        <option value="OFICINA">OFICINA</option>
                     </select>
                 </div>
                 <div class="form-group full-width"><label>Dirección:</label><input type="text" id="proDir"></div>
@@ -380,7 +386,7 @@
 
     <script>
         // --- TU NUEVA URL DE APPS SCRIPT ---
-        const API = "https://script.google.com/macros/s/AKfycbwPC4XZK3lqovzIilrTkaWCnpvVM4IQUFYHMN2iFM8qOfKkxLfwW2TsORVacDRmbbTu/exec";
+        const API = "https://script.google.com/macros/s/AKfycby4FcwO8bggq1onUBrOhA4CYkoW1HWyS6I7fo7qDPIDyG4JSugbt4fM7eCdeON5tTk/exec";
 
         let dAct = [], dCli = [], dProp = [];
 
@@ -578,7 +584,7 @@
                 document.getElementById('proId').value = item.ID_PROPIEDAD;
 
                 // Cargar datos
-                selProp.value = item.PROPIETARIO; selProp.disabled = true; // No cambiar propietario
+                selProp.value = item.PROPIETARIO; selProp.disabled = true; 
                 document.getElementById('proOper').value = item.TIPO_OPERACION; document.getElementById('proOper').disabled = true;
                 document.getElementById('proTipo').value = item.TIPO_INMUEBLE; document.getElementById('proTipo').disabled = true;
                 document.getElementById('proDir').value = item.DIRECCION; document.getElementById('proDir').disabled = true;
@@ -675,7 +681,7 @@
                 fd.append('id', document.getElementById('proId').value);
                 fd.append('estado', document.getElementById('proEstado').value);
                 fd.append('notas', document.getElementById('proNotas').value);
-                fd.append('precio', document.getElementById('proPre').value); // Permitimos editar precio
+                fd.append('precio', document.getElementById('proPre').value); 
             }
             await enviar(fd, btn, cargarPropiedades);
         }
@@ -726,6 +732,7 @@
             if(e=='CANCELADA') return 'bg-cancelada';
             if(e=='DISPONIBLE') return 'bg-disponible';
             if(e=='VENDIDO' || e=='ARRENDADO') return 'bg-vendido';
+            if(e=='SEPARADO') return 'bg-separado';
             return '';
         }
 
