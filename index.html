@@ -3,21 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monteclaro Inmobiliaria</title>
+    <title>Gestión Monteclaro</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; color: #333; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
-        h1 { color: #1a5c37; }
-        .btn { display: inline-block; background: #25d366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; }
+        .header { border-bottom: 2px solid #25d366; padding-bottom: 10px; margin-bottom: 20px; }
+        h1 { color: #25d366; margin: 0; font-size: 1.5rem; }
+        
+        .section { background: #1e1e1e; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #333; }
+        h2 { font-size: 1.1rem; color: #25d366; margin-top: 0; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #333; }
+        th { color: #888; }
+        
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .status-proceso { background: #f39c12; color: #000; }
+        .status-fin { background: #25d366; color: #000; }
+        
+        .fin-group-box { border-left: 4px solid #3498db; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>Monteclaro Inmobiliaria SAS</h1>
-        <p>Sistema de Gestión 2026 - En Línea</p>
-        <hr>
-        <p>Socio, el sistema está listo para recibir datos.</p>
-        <a href="https://wa.me/tu-numero" class="btn">Abrir WhatsApp de Negocios</a>
+    <div class="container">
+        <div class="header">
+            <h1>MONTECLARO SAS - Panel Interno</h1>
+            <p>Control de Actividades 2026</p>
+        </div>
+
+        <div class="section">
+            <h2>🚀 Actividades de Socios</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Actividad</th>
+                        <th>Resp.</th>
+                        <th>Estatus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Actualización de Catálogo</td>
+                        <td>Socio A</td>
+                        <td><span class="badge status-fin">FINALIZADO</span></td>
+                    </tr>
+                    <tr>
+                        <td>Seguimiento Clientes Enero</td>
+                        <td>Socio B</td>
+                        <td><span class="badge status-proceso">EN PROCESO</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section fin-group-box">
+            <h2>💰 Trámites FINANCIAL GROUP</h2>
+            <p>Seguimiento de créditos y subsidios (Participación: 60%)</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Trámite</th>
+                        <th>Honorarios Est.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Familia Pérez</td>
+                        <td>Crédito Hipotecario</td>
+                        <td>Por calcular</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 </html>
