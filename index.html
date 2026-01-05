@@ -20,6 +20,8 @@
             --st-disponible: #4caf50; /* Verde */
             --st-vendido: #f44336;   /* Rojo */
             --st-separado: #ff9800;  /* Naranja */
+            --st-arrendado: #9c27b0; /* Morado */
+            --st-inactivo: #9e9e9e;  /* Gris */
         }
         
         body { 
@@ -113,8 +115,10 @@
         .bg-cancelada { background: var(--st-cancelada); }
         /* Colores Propiedades */
         .bg-disponible { background: var(--st-disponible); }
-        .bg-vendido, .bg-arrendado { background: var(--st-vendido); }
+        .bg-vendido { background: var(--st-vendido); }
         .bg-separado { background: var(--st-separado); color: black; }
+        .bg-arrendado { background: var(--st-arrendado); }
+        .bg-inactivo { background: var(--st-inactivo); }
 
         /* MODALES */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; backdrop-filter: blur(2px); }
@@ -207,19 +211,25 @@
                 <option value="">Operación: Todas</option>
                 <option value="VENTA">VENTA</option>
                 <option value="ARRIENDO">ARRIENDO</option>
-                <option value="PERMUTA">PERMUTA</option> </select>
+                <option value="PERMUTA">PERMUTA</option>
+            </select>
             <select id="fProTipo" onchange="renderPropiedades()">
                 <option value="">Tipo: Todos</option>
                 <option value="CASA">CASA</option>
                 <option value="APARTAMENTO">APARTAMENTO</option>
                 <option value="LOTE">LOTE</option>
-                <option value="FINCA">FINCA</option> <option value="LOCAL">LOCAL</option> <option value="OFICINA">OFICINA</option> <option value="BODEGA">BODEGA</option> </select>
+                <option value="FINCA">FINCA</option>
+                <option value="LOCAL">LOCAL</option>
+                <option value="OFICINA">OFICINA</option>
+                <option value="BODEGA">BODEGA</option>
+            </select>
             <select id="fProEstado" onchange="renderPropiedades()">
                 <option value="">Estado: Todos</option>
                 <option value="DISPONIBLE">DISPONIBLE</option>
+                <option value="SEPARADO">SEPARADO</option>
                 <option value="VENDIDO">VENDIDO</option>
                 <option value="ARRENDADO">ARRENDADO</option>
-                <option value="SEPARADO">SEPARADO</option>
+                <option value="INACTIVO">INACTIVO</option>
             </select>
         </div>
         <div class="table-responsive">
@@ -387,8 +397,8 @@
     </div>
 
     <script>
-        // --- TU URL DE APPS SCRIPT ---
-        const API = "https://script.google.com/macros/s/AKfycbyHS5e13XzQbJ9L2ex4rChfQ6aiMjT5NevyeRUgyGGyXWgFvM2aWhsHMEkLLN5kSffS/exec";
+        // --- URL API ACTUALIZADA ---
+        const API = "https://script.google.com/macros/s/AKfycbxnkbVBwyguJMyjDVItDR19aZkNXXuNAmzgMQVRajr8Rl10RfUrbrsXhBNhzHGV1OLPoA/exec";
 
         let dAct = [], dCli = [], dProp = [];
 
@@ -551,7 +561,7 @@
             }
         }
 
-        // 2. Modal Propiedad (NUEVO)
+        // 2. Modal Propiedad
         function abrirModalPropiedad(esNuevo, item) {
             document.getElementById('modalPropiedad').style.display = 'block';
             
@@ -578,8 +588,10 @@
                 document.getElementById('proCiu').value = "Pereira";
                 document.getElementById('proNotas').value = "";
                 
-                // Ocultar campo estado en creación
-                document.getElementById('divProEstado').style.display = 'none';
+                // AHORA MOSTRAMOS EL ESTADO AL CREAR (Por defecto DISPONIBLE, pero cambiable)
+                document.getElementById('proEstado').value = "DISPONIBLE"; 
+                document.getElementById('divProEstado').style.display = 'block';
+
             } else {
                 document.getElementById('tModalPro').innerText = "Editar Propiedad: " + item.ID_PROPIEDAD;
                 document.getElementById('proModo').value = "edit";
@@ -597,7 +609,7 @@
                 document.getElementById('proEst').value = item.ESTRATO; document.getElementById('proEst').disabled = true;
 
                 // Campos editables
-                document.getElementById('proPre').value = item.PRECIO; // Permitimos editar precio
+                document.getElementById('proPre').value = item.PRECIO; 
                 document.getElementById('proEstado').value = item.ESTADO;
                 document.getElementById('proNotas').value = item.NOTAS;
 
@@ -677,6 +689,8 @@
                 fd.append('habitaciones', document.getElementById('proHab').value);
                 fd.append('banos', document.getElementById('proBan').value);
                 fd.append('estrato', document.getElementById('proEst').value);
+                // AHORA ENVIAMOS EL ESTADO SELECCIONADO
+                fd.append('estado', document.getElementById('proEstado').value);
                 fd.append('notas', document.getElementById('proNotas').value);
             } else {
                 fd.append('action','update_propiedad');
@@ -733,8 +747,10 @@
             if(e=='COMPLETADA') return 'bg-completada';
             if(e=='CANCELADA') return 'bg-cancelada';
             if(e=='DISPONIBLE') return 'bg-disponible';
-            if(e=='VENDIDO' || e=='ARRENDADO') return 'bg-vendido';
+            if(e=='VENDIDO') return 'bg-vendido';
+            if(e=='ARRENDADO') return 'bg-arrendado';
             if(e=='SEPARADO') return 'bg-separado';
+            if(e=='INACTIVO') return 'bg-inactivo';
             return '';
         }
 
