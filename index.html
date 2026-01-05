@@ -3,37 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monteclaro SAS - Tablero de Control</title>
+    <title>Monteclaro SAS - Gestión Integral</title>
     <link rel="icon" type="image/png" href="MONTECLARO5.png">
     <style>
         :root { --principal: #2638bf; --blanco: #ffffff; --fondo-gris: #f0f2f5; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--fondo-gris); margin: 0; padding: 0; }
         .container { max-width: 1200px; margin: auto; padding: 10px; }
-        .header-azul { background-color: var(--principal); text-align: center; padding: 35px 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); margin-bottom: 20px; }
-        .logo { max-width: 280px; height: auto; }
+        .header-azul { background-color: var(--principal); text-align: center; padding: 30px 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); margin-bottom: 20px; }
+        .logo { max-width: 250px; height: auto; }
         .header-azul p { color: rgba(255,255,255,0.9); margin-top: 10px; font-weight: bold; }
         .nav-container { display: flex; gap: 8px; margin-bottom: 15px; }
         .nav-btn { flex: 1; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background: white; color: #444; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .nav-btn.active { background: var(--principal); color: white; }
         .section { background: var(--blanco); padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: none; }
         .section.active { display: block; }
-        .filter-row { display: flex; gap: 10px; margin-bottom: 15px; background: #e9ecef; padding: 12px; border-radius: 10px; flex-wrap: wrap; align-items: center; }
-        .filter-row label { font-size: 10px; font-weight: bold; color: #666; display: block; margin-bottom: 3px; }
-        .filter-row select { padding: 10px; border-radius: 6px; border: 1px solid #ccc; min-width: 160px; }
-        .badge { padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 10px; color: black; min-width: 90px; text-align: center; display: inline-block; }
-        .st-PENDIENTE { background: #fadb03; } .st-EN-PROCESO { background: #b0f605; } .st-COMPLETADA, .st-ACTIVO, .st-ACTIVA { background: #00ff20; }
+        
+        /* FORMULARIOS */
+        .form-card { background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 25px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+        label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 5px; color: #555; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; box-sizing: border-box; }
+        .btn-submit { background: var(--principal); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
+
+        /* FILTROS */
+        .filter-row { display: flex; gap: 10px; margin: 20px 0 10px 0; background: #e9ecef; padding: 12px; border-radius: 10px; flex-wrap: wrap; align-items: flex-end; }
+        .filter-group { display: flex; flex-direction: column; }
+        .filter-group label { font-size: 9px; color: #777; margin-bottom: 2px; }
+        .filter-row select { padding: 8px; border-radius: 5px; border: 1px solid #ccc; min-width: 140px; font-size: 12px; }
+        
+        .badge { padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 10px; color: black; min-width: 85px; text-align: center; display: inline-block; }
+        .st-PENDIENTE { background: #fadb03; } .st-EN-PROCESO { background: #b0f605; } .st-COMPLETADA, .st-ACTIVO { background: #00ff20; }
+        
+        .table-wrapper { overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; }
         table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1000px; }
-        th { background: #333; color: white; padding: 12px; text-align: left; position: sticky; top: 0; }
-        td { padding: 12px; border-bottom: 1px solid #eee; }
+        th { background: #333; color: white; padding: 10px; text-align: left; position: sticky; top: 0; }
+        td { padding: 10px; border-bottom: 1px solid #eee; }
         .valor-pesos { font-family: monospace; font-weight: bold; color: #11734b; }
-        .btn-reset { padding: 10px 15px; border: none; border-radius: 6px; background: #6c757d; color: white; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="header-azul">
-    <img src="MONTECLARO5.png" alt="Logo Monteclaro SAS" class="logo">
-    <p>Maestro de Gestión Ilimitada | FINANCIAL GROUP</p>
+    <img src="MONTECLARO5.png" alt="Logo Monteclaro" class="logo">
+    <p>Plataforma de Gestión Monteclaro Inmobiliaria SAS</p>
 </div>
 
 <div class="container">
@@ -43,40 +55,52 @@
     </div>
 
     <div id="tab-actividades" class="section active">
+        <div class="form-card">
+            <h3 style="margin-top:0; color:var(--principal)">Nueva Actividad</h3>
+            <form id="taskForm">
+                <div class="grid">
+                    <div><label>Cliente</label><select id="t_cliente" required><option value="">Cargando...</option></select></div>
+                    <div><label>Actividad</label><input type="text" id="t_actividad" required></div>
+                    <div><label>Responsable</label><select id="t_resp" required><option value="Juan Romero">Juan Romero</option><option value="Sebas Cuervo">Sebas Cuervo</option></select></div>
+                    <div><label>Estado</label><select id="t_estado"><option value="PENDIENTE">PENDIENTE</option><option value="EN PROCESO">EN PROCESO</option><option value="COMPLETADA">COMPLETADA</option></select></div>
+                    <div style="grid-column: 1 / -1;"><label>Notas</label><textarea id="t_notas" rows="1"></textarea></div>
+                </div>
+                <button type="submit" class="btn-submit">Sincronizar Actividad</button>
+            </form>
+        </div>
+
         <div class="filter-row">
-            <div><label>FECHA</label><select id="f_fecha_act" onchange="applyActFilters()"><option value="">📅 Todas</option></select></div>
-            <div><label>RESPONSABLE</label><select id="f_resp_act" onchange="applyActFilters()">
-                <option value="">👤 Todos</option>
-                <option value="Juan Romero">Juan Romero</option>
-                <option value="Sebas Cuervo">Sebas Cuervo</option>
-            </select></div>
-            <div><label>ESTADO</label><select id="f_estado_act" onchange="applyActFilters()">
-                <option value="">🔘 Todos</option>
-                <option value="PENDIENTE">PENDIENTE</option>
-                <option value="EN PROCESO">EN PROCESO</option>
-                <option value="COMPLETADA">COMPLETADA</option>
-            </select></div>
-            <button class="btn-reset" onclick="resetActFilters()" style="margin-top:15px">Limpiar</button>
+            <div class="filter-group"><label>FECHA</label><select id="f_fecha_act" onchange="applyActFilters()"><option value="">Todas</option></select></div>
+            <div class="filter-group"><label>RESPONSABLE</label><select id="f_resp_act" onchange="applyActFilters()"><option value="">Todos</option><option value="Juan Romero">Juan Romero</option><option value="Sebas Cuervo">Sebas Cuervo</option></select></div>
+            <div class="filter-group"><label>ESTADO</label><select id="f_estado_act" onchange="applyActFilters()"><option value="">Todos</option><option value="PENDIENTE">PENDIENTE</option><option value="EN PROCESO">EN PROCESO</option><option value="COMPLETADA">COMPLETADA</option></select></div>
+            <button onclick="resetActFilters()" style="padding:8px 12px; cursor:pointer; background:#6c757d; color:white; border:none; border-radius:5px;">Limpiar</button>
         </div>
         <div class="table-wrapper"><table><thead><tr><th>Fecha</th><th>Cliente</th><th>Actividad</th><th>Responsable</th><th>Estado</th></tr></thead><tbody id="bodyTasks"></tbody></table></div>
     </div>
 
     <div id="tab-clientes" class="section">
+        <div class="form-card">
+            <h3 style="margin-top:0; color:#444">Registrar Cliente</h3>
+            <form id="clientForm">
+                <div class="grid">
+                    <div><label>Nombre Completo</label><input type="text" id="c_nombre" required></div>
+                    <div><label>Cédula / NIT</label><input type="text" id="c_cedula" required></div>
+                    <div><label>Teléfono</label><input type="text" id="c_tel"></div>
+                    <div><label>Correo</label><input type="email" id="c_correo"></div>
+                    <div><label>Dirección</label><input type="text" id="c_dir"></div>
+                    <div><label>Servicio</label><select id="c_servicio"><option value="VENTA">VENTA</option><option value="ADMINISTRACION">ADMINISTRACION</option><option value="CREDITO/FINANCIAL GROUP">CREDITO / FINANCIAL GROUP</option></select></div>
+                    <div><label>Estado</label><select id="c_estado"><option value="PENDIENTE">PENDIENTE</option><option value="ACTIVO">ACTIVO</option></select></div>
+                    <div><label>Presupuesto</label><input type="number" id="c_presupuesto"></div>
+                </div>
+                <button type="submit" class="btn-submit" style="background:#444">Registrar Cliente</button>
+            </form>
+        </div>
+
         <div class="filter-row">
-            <div><label>CÉDULA / NIT</label><select id="f_nit_cli" onchange="applyCliFilters()"><option value="">🆔 Todos</option></select></div>
-            <div><label>SERVICIO</label><select id="f_serv_cli" onchange="applyCliFilters()">
-                <option value="">💼 Todos los Servicios</option>
-                <option value="VENTA">VENTA</option>
-                <option value="ADMINISTRACION">ADMINISTRACIÓN</option>
-                <option value="CREDITO/FINANCIAL GROUP">CREDITO / FINANCIAL GROUP</option>
-            </select></div>
-            <div><label>ESTADO</label><select id="f_est_cli" onchange="applyCliFilters()">
-                <option value="">🔘 Todos los Estados</option>
-                <option value="PENDIENTE">PENDIENTE</option>
-                <option value="EN PROCESO">EN PROCESO</option>
-                <option value="ACTIVO">ACTIVO</option>
-            </select></div>
-            <button class="btn-reset" onclick="resetCliFilters()" style="margin-top:15px">Limpiar</button>
+            <div class="filter-group"><label>CÉDULA / NIT</label><select id="f_nit_cli" onchange="applyCliFilters()"><option value="">Todos</option></select></div>
+            <div class="filter-group"><label>SERVICIO</label><select id="f_serv_cli" onchange="applyCliFilters()"><option value="">Todos</option><option value="VENTA">VENTA</option><option value="ADMINISTRACION">ADMINISTRACION</option><option value="CREDITO/FINANCIAL GROUP">CREDITO / FINANCIAL GROUP</option></select></div>
+            <div class="filter-group"><label>ESTADO</label><select id="f_est_cli" onchange="applyCliFilters()"><option value="">Todos</option><option value="PENDIENTE">PENDIENTE</option><option value="ACTIVO">ACTIVO</option></select></div>
+            <button onclick="resetCliFilters()" style="padding:8px 12px; cursor:pointer; background:#6c757d; color:white; border:none; border-radius:5px;">Limpiar</button>
         </div>
         <div class="table-wrapper"><table><thead><tr><th>Cédula / NIT</th><th>Nombre</th><th>Servicio</th><th>Estado</th><th>Presupuesto</th></tr></thead><tbody id="bodyClients"></tbody></table></div>
     </div>
@@ -84,7 +108,10 @@
 
 <script>
     const API = "https://script.google.com/macros/s/AKfycbw96ZCP__jJ4lE5Y195QJR1pVsQxqLMY6eeS160hNcRLL1W8fCsG6mT-DObV7QXII-9/exec";
-    
+    let totalClientes = 0;
+
+    const formatCOP = (v) => v ? new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(v) : "$0";
+
     async function switchTab(id, btn) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -93,7 +120,7 @@
         await loadAll();
     }
 
-    // Filtros de Actividades
+    // LÓGICA DE FILTROS
     function applyActFilters() {
         const fF = document.getElementById('f_fecha_act').value;
         const fR = document.getElementById('f_resp_act').value;
@@ -101,14 +128,10 @@
         const rows = document.getElementById('bodyTasks').getElementsByTagName('tr');
         for (let r of rows) {
             const c = r.getElementsByTagName('td');
-            const mF = !fF || c[0].innerText === fF;
-            const mR = !fR || c[3].innerText === fR;
-            const mE = !fE || c[4].innerText.includes(fE);
-            r.style.display = (mF && mR && mE) ? '' : 'none';
+            r.style.display = (!fF || c[0].innerText === fF) && (!fR || c[3].innerText === fR) && (!fE || c[4].innerText.includes(fE)) ? '' : 'none';
         }
     }
 
-    // Filtros de Clientes
     function applyCliFilters() {
         const fN = document.getElementById('f_nit_cli').value;
         const fS = document.getElementById('f_serv_cli').value;
@@ -116,10 +139,7 @@
         const rows = document.getElementById('bodyClients').getElementsByTagName('tr');
         for (let r of rows) {
             const c = r.getElementsByTagName('td');
-            const mN = !fN || c[0].innerText === fN;
-            const mS = !fS || c[2].innerText === fS;
-            const mE = !fE || c[3].innerText.includes(fE);
-            r.style.display = (mN && mS && mE) ? '' : 'none';
+            r.style.display = (!fN || c[0].innerText === fN) && (!fS || c[2].innerText === fS) && (!fE || c[3].innerText.includes(fE)) ? '' : 'none';
         }
     }
 
@@ -127,33 +147,53 @@
     function resetCliFilters() { document.getElementById('f_nit_cli').value=""; document.getElementById('f_serv_cli').value=""; document.getElementById('f_est_cli').value=""; applyCliFilters(); }
 
     async function loadAll() {
-        // Cargar Clientes y Llenar Filtro NIT
+        // Cargar Clientes
         const resC = await fetch(`${API}?sheet=CLIENTES`);
         const dataC = await resC.json();
+        totalClientes = dataC.length;
+        const selT = document.getElementById('t_cliente');
         const bC = document.getElementById('bodyClients');
         const fN = document.getElementById('f_nit_cli');
-        fN.innerHTML = '<option value="">🆔 Todos</option>';
+        selT.innerHTML = '<option value="">-- Seleccione --</option>';
+        fN.innerHTML = '<option value="">Todos</option>';
         bC.innerHTML = "";
         dataC.forEach(c => {
+            selT.innerHTML += `<option value="${c.NOMBRE}">${c.NOMBRE}</option>`;
             fN.innerHTML += `<option value="${c.CEDULA_NIT}">${c.CEDULA_NIT}</option>`;
-            bC.innerHTML += `<tr><td><b>${c.CEDULA_NIT}</b></td><td><b>${c.NOMBRE}</b></td><td>${c.TIPO_SERVICIO}</td><td><span class="badge st-${c.ESTADO_CLIENTE}">${c.ESTADO_CLIENTE}</span></td><td class="valor-pesos">${new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(c.PRESUPUESTO)}</td></tr>`;
+            bC.innerHTML += `<tr><td><b>${c.CEDULA_NIT}</b></td><td><b>${c.NOMBRE}</b></td><td>${c.TIPO_SERVICIO}</td><td><span class="badge st-${c.ESTADO_CLIENTE}">${c.ESTADO_CLIENTE}</span></td><td class="valor-pesos">${formatCOP(c.PRESUPUESTO)}</td></tr>`;
         });
 
-        // Cargar Actividades y Llenar Filtro Fecha
+        // Cargar Actividades
         const resT = await fetch(`${API}?sheet=Sheet1`);
         const dataT = await resT.json();
         const bT = document.getElementById('bodyTasks');
         const fF = document.getElementById('f_fecha_act');
         const fechas = [...new Set(dataT.map(t => t.FECHA))];
-        fF.innerHTML = '<option value="">📅 Todas</option>';
+        fF.innerHTML = '<option value="">Todas</option>';
         fechas.forEach(f => fF.innerHTML += `<option value="${f}">${f}</option>`);
-        
         bT.innerHTML = "";
         dataT.slice().reverse().forEach(t => {
-            const st = (t.ESTADO || "PENDIENTE").replace(/ /g, "-");
-            bT.innerHTML += `<tr><td>${t.FECHA}</td><td><b>${t.CLIENTE}</b></td><td>${t.ACTIVIDAD}</td><td>${t.RESPONSABLE}</td><td><span class="badge st-${st}">${t.ESTADO}</span></td></tr>`;
+            bT.innerHTML += `<tr><td>${t.FECHA}</td><td><b>${t.CLIENTE}</b></td><td>${t.ACTIVIDAD}</td><td>${t.RESPONSABLE}</td><td><span class="badge st-${(t.ESTADO||'').replace(/ /g,'-')}">${t.ESTADO}</span></td></tr>`;
         });
     }
+
+    // ENVÍO DE FORMULARIOS
+    document.getElementById('clientForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button'); btn.disabled = true;
+        const proximoID = (totalClientes + 1).toString().padStart(2, '0');
+        const data = { NOMBRE: document.getElementById('c_nombre').value, CEDULA_NIT: document.getElementById('c_cedula').value, TELEFONO: document.getElementById('c_tel').value, CORREO: document.getElementById('c_correo').value, DIRECCION: document.getElementById('c_dir').value, TIPO_SERVICIO: document.getElementById('c_servicio').value, ESTADO_CLIENTE: document.getElementById('c_estado').value, PRESUPUESTO: document.getElementById('c_presupuesto').value, ID_CLIENTE: proximoID };
+        await fetch(`${API}?sheet=CLIENTES`, { method: 'POST', body: JSON.stringify({data:[data]}) });
+        e.target.reset(); btn.disabled = false; await loadAll();
+    });
+
+    document.getElementById('taskForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button'); btn.disabled = true;
+        const data = { CLIENTE: document.getElementById('t_cliente').value, ACTIVIDAD: document.getElementById('t_actividad').value, RESPONSABLE: document.getElementById('t_resp').value, ESTADO: document.getElementById('t_estado').value, NOTAS: document.getElementById('t_notas').value, FECHA: new Date().toLocaleDateString(), ID: Date.now().toString() };
+        await fetch(`${API}?sheet=Sheet1`, { method: 'POST', body: JSON.stringify({data:[data]}) });
+        e.target.reset(); btn.disabled = false; await loadAll();
+    });
 
     window.onload = loadAll;
 </script>
