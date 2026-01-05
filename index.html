@@ -3,120 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Monteclaro | Gestión Socios</title>
+    <title>Monteclaro SAS - Gestión</title>
     <style>
-        :root { --principal: #2638bf; --secundario: #000000; --blanco: #ffffff; --gris: #b2b8bf; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 950px; margin: auto; }
-        .header { background: var(--principal); color: var(--blanco); padding: 20px; border-radius: 15px 15px 0 0; display: flex; align-items: center; gap: 20px; }
-        .logo-box { width: 70px; height: 70px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .section { background: var(--blanco); padding: 20px; border-radius: 0 0 15px 15px; border: 1px solid var(--gris); }
-        
-        .filtros { display: flex; gap: 10px; margin-bottom: 20px; background: #e9ecef; padding: 15px; border-radius: 8px; flex-wrap: wrap; }
-        .filtros-group { display: flex; flex-direction: column; flex: 1; min-width: 150px; }
-        label { font-size: 0.75rem; font-weight: bold; color: var(--principal); margin-bottom: 5px; text-transform: uppercase; }
-        .filtros select, .filtros input { padding: 10px; border: 1px solid var(--gris); border-radius: 6px; background: white; }
-
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; background: var(--secundario); color: white; padding: 12px; font-size: 0.8rem; text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.7rem; }
-        .pendiente { background: #ffeaa7; color: #d35400; }
-        .completado { background: #d1f7d1; color: #1a5c37; }
-        
-        .btn-limpiar { background: var(--principal); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: auto; }
+        :root { --principal: #2638bf; --juan: #0a53a8; --sebas: #11734b; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 15px; }
+        .container { max-width: 1100px; margin: auto; }
+        .header { background: var(--principal); color: white; padding: 20px; border-radius: 12px 12px 0 0; display: flex; align-items: center; gap: 15px; }
+        .logo-box { width: 50px; height: 50px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--principal); }
+        .section { background: white; padding: 25px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .form-card { background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #dee2e6; margin-bottom: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #495057; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
+        .btn-save { background: var(--principal); color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-new { background: #6c757d; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; margin-left: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #343a40; color: white; padding: 12px; text-align: left; font-size: 12px; }
+        td { padding: 12px; border-bottom: 1px solid #dee2e6; font-size: 14px; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+        .st-PENDIENTE { background: #fadb03; } .st-EN-PROCESO { background: #b0f605; }
+        .st-COMPLETADA { background: #00ff20; } .st-CANCELADA { background: #b10202; color: white; }
+        .resp-juan { border-left: 5px solid var(--juan); padding-left: 10px; color: var(--juan); font-weight: bold; }
+        .resp-sebas { border-left: 5px solid var(--sebas); padding-left: 10px; color: var(--sebas); font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo-box"><img src="MONTECLARO1.png" alt="Logo" style="width: 90%;"></div>
-            <div><h1>MONTECLARO SAS</h1><p>Histórico de Gestión - 2026</p></div>
-        </div>
-
-        <div class="section">
-            <div class="filtros">
-                <div class="filtros-group">
-                    <label>Por Día Exacto</label>
-                    <input type="date" id="filtroFecha" oninput="filtrar()">
-                </div>
-                <div class="filtros-group">
-                    <label>Responsable</label>
-                    <select id="filtroResp" onchange="filtrar()">
-                        <option value="TODOS">Todos los socios</option>
-                        <option value="Socio A">Socio A</option>
-                        <option value="Socio B">Socio B</option>
-                    </select>
-                </div>
-                <div class="filtros-group">
-                    <label>Estado</label>
-                    <select id="filtroEstado" onchange="filtrar()">
-                        <option value="TODOS">Todos los estados</option>
-                        <option value="PENDIENTE">Pendientes</option>
-                        <option value="COMPLETADO">Completados</option>
-                    </select>
-                </div>
-                <button class="btn-limpiar" onclick="limpiar()">Limpiar Filtros</button>
-            </div>
-
-            <table>
-                <thead>
-                    <tr><th>Fecha</th><th>Actividad</th><th>Responsable</th><th>Estado</th></tr>
-                </thead>
-                <tbody id="tabla-actividades"></tbody>
-            </table>
-        </div>
+<div class="container">
+    <div class="header">
+        <div class="logo-box">M</div>
+        <div><h1>MONTECLARO SAS</h1><p style="margin:0; font-size:12px">Gestión de Créditos - FINANCIAL GROUP</p></div>
     </div>
-
-    <script>
-        // --- BASE DE DATOS (Asegúrate de que la fecha coincida con el formato AAAA-MM-DD) ---
-        const actividades = [
-            { fecha: "2026-01-04", tarea: "Diseño de identidad visual", resp: "Socio A", estado: "COMPLETADO" },
-            { fecha: "2026-01-05", tarea: "Carga de logo MONTECLARO1.png", resp: "Socio A", estado: "COMPLETADO" },
-            { fecha: "2026-01-05", tarea: "Trámite inicial Financial Group", resp: "Socio B", estado: "PENDIENTE" },
-            { fecha: "2026-01-10", tarea: "Seguimiento crédito Familia Pérez", resp: "Socio B", estado: "PENDIENTE" }
-        ];
-
-        function filtrar() {
-            const fechaVal = document.getElementById('filtroFecha').value;
-            const respVal = document.getElementById('filtroResp').value;
-            const estadoVal = document.getElementById('filtroEstado').value;
-            const tabla = document.getElementById('tabla-actividades');
-            
-            tabla.innerHTML = "";
-
-            // Filtramos y mostramos
-            actividades.slice().reverse().forEach(item => {
-                const coincideFecha = !fechaVal || item.fecha === fechaVal;
-                const coincideResp = respVal === "TODOS" || item.resp === respVal;
-                const coincideEstado = estadoVal === "TODOS" || item.estado === estadoVal;
-
-                if (coincideFecha && coincideResp && coincideEstado) {
-                    const fila = `<tr>
-                        <td style="color:#888">${item.fecha}</td>
-                        <td>${item.tarea}</td>
-                        <td>${item.resp}</td>
-                        <td><span class="badge ${item.estado === 'COMPLETADO' ? 'completado' : 'pendiente'}">${item.estado}</span></td>
-                    </tr>`;
-                    tabla.innerHTML += fila;
-                }
-            });
-            
-            // Si después de filtrar no hay nada, mostrar mensaje
-            if(tabla.innerHTML === "") {
-                tabla.innerHTML = "<tr><td colspan='4' style='text-align:center; padding: 20px;'>No hay actividades para estos filtros.</td></tr>";
-            }
+    <div class="section">
+        <div class="form-card">
+            <h3 id="form-title">Nueva Actividad</h3>
+            <form id="taskForm">
+                <input type="hidden" id="row_id">
+                <div class="grid">
+                    <div><label>CLIENTE</label><input type="text" id="cliente" required></div>
+                    <div><label>ACTIVIDAD</label><input type="text" id="actividad" required></div>
+                    <div><label>RESPONSABLE</label>
+                        <select id="responsable" required>
+                            <option value="">-- Seleccionar --</option>
+                            <option value="Juan Romero">Juan Romero</option>
+                            <option value="Sebas Cuervo">Sebas Cuervo</option>
+                        </select>
+                    </div>
+                    <div><label>ESTADO</label>
+                        <select id="estado">
+                            <option value="PENDIENTE">PENDIENTE</option>
+                            <option value="EN PROCESO">EN PROCESO</option>
+                            <option value="COMPLETADA">COMPLETADA</option>
+                            <option value="CANCELADA">CANCELADA</option>
+                        </select>
+                    </div>
+                    <div style="grid-column: 1 / -1;"><label>NOTAS</label><textarea id="notas" rows="2"></textarea></div>
+                </div>
+                <div style="margin-top:15px">
+                    <button type="submit" id="btnSubmit" class="btn-save">Guardar Actividad</button>
+                    <button type="button" onclick="resetForm()" class="btn-new">Limpiar</button>
+                </div>
+            </form>
+        </div>
+        <div style="overflow-x:auto"><table id="dataTable">
+            <thead><tr><th>Fecha</th><th>Cliente</th><th>Actividad</th><th>Responsable</th><th>Estado</th><th>Notas</th><th>Acción</th></tr></thead>
+            <tbody id="tableBody"></tbody>
+        </table></div>
+    </div>
+</div>
+<script>
+    const API = "https://sheetdb.io/api/v1/t3m7h0xll0hgh";
+    let cache = [];
+    async function load() {
+        const r = await fetch(API); cache = await r.json();
+        const b = document.getElementById('tableBody'); b.innerHTML = "";
+        cache.slice().reverse().forEach(row => {
+            b.innerHTML += `<tr>
+                <td>${row.FECHA}<br><small>${row.ACTUALIZACION || ''}</small></td>
+                <td><b>${row.CLIENTE}</b></td>
+                <td>${row.ACTIVIDAD}</td>
+                <td class="${row.RESPONSABLE === 'Juan Romero' ? 'resp-juan' : 'resp-sebas'}">${row.RESPONSABLE}</td>
+                <td><span class="badge st-${row.ESTADO.replace(/ /g,'-')}">${row.ESTADO}</span></td>
+                <td>${row.NOTAS || ''}</td>
+                <td><button onclick="edit('${row.ID}')">Editar</button></td>
+            </tr>`;
+        });
+    }
+    document.getElementById('taskForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('row_id').value;
+        const data = {
+            CLIENTE: document.getElementById('cliente').value,
+            ACTIVIDAD: document.getElementById('actividad').value,
+            RESPONSABLE: document.getElementById('responsable').value,
+            ESTADO: document.getElementById('estado').value,
+            NOTAS: document.getElementById('notas').value,
+            ACTUALIZACION: new Date().toLocaleString()
+        };
+        if(id) { await fetch(`${API}/ID/${id}`, { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({data}) }); }
+        else { 
+            data.ID = Date.now().toString(); data.FECHA = new Date().toLocaleDateString();
+            await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({data:[data]}) });
         }
-
-        function limpiar() {
-            document.getElementById('filtroFecha').value = "";
-            document.getElementById('filtroResp').value = "TODOS";
-            document.getElementById('filtroEstado').value = "TODOS";
-            filtrar();
-        }
-
-        // Ejecutar al cargar la página para que se vean las actividades de entrada
-        window.onload = filtrar;
-    </script>
+        resetForm(); load();
+    });
+    function edit(id) {
+        const item = cache.find(i => i.ID === id);
+        document.getElementById('row_id').value = item.ID;
+        document.getElementById('cliente').value = item.CLIENTE;
+        document.getElementById('actividad').value = item.ACTIVIDAD;
+        document.getElementById('responsable').value = item.RESPONSABLE;
+        document.getElementById('estado').value = item.ESTADO;
+        document.getElementById('notas').value = item.NOTAS;
+        document.getElementById('btnSubmit').innerText = "Actualizar Cambios";
+        window.scrollTo(0,0);
+    }
+    function resetForm() { document.getElementById('taskForm').reset(); document.getElementById('row_id').value = ""; document.getElementById('btnSubmit').innerText = "Guardar Actividad"; }
+    window.onload = load;
+</script>
 </body>
 </html>
