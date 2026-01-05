@@ -11,74 +11,68 @@
             --bg: #f4f6f8;
             --white: #ffffff;
             /* Estados Semáforo */
-            --st-pendiente: #ffd700; /* Amarillo */
-            --st-proceso: #2196f3;   /* Azul */
-            --st-completada: #4caf50;/* Verde */
-            --st-cancelada: #f44336; /* Rojo */
+            --st-pendiente: #ffd700; 
+            --st-proceso: #2196f3; 
+            --st-completada: #4caf50; 
+            --st-cancelada: #f44336;
         }
-
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: var(--bg); color: #333; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--bg); color: #333; }
         
         /* HEADER */
-        header { background-color: var(--primary); color: var(--white); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        header h1 { margin: 0; font-size: 1.5rem; }
-        header span { font-size: 0.9rem; opacity: 0.9; }
-
-        /* NAV TABS */
-        .tabs { display: flex; background: var(--white); padding: 0 2rem; border-bottom: 1px solid #ddd; }
-        .tab-btn { background: none; border: none; padding: 15px 25px; cursor: pointer; font-size: 1rem; font-weight: 600; color: #666; border-bottom: 3px solid transparent; transition: 0.3s; }
-        .tab-btn:hover { color: var(--primary); }
-        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
-
-        /* CONTENEDOR PRINCIPAL */
-        .container { padding: 20px; max-width: 1200px; margin: 0 auto; }
-        .module { display: none; }
-        .module.active { display: block; animation: fadeIn 0.3s; }
-
-        /* BARRA DE HERRAMIENTAS Y FILTROS */
-        .toolbar { background: var(--white); padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-        .btn-new { background-color: var(--accent); color: var(--white); border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .btn-new:hover { opacity: 0.8; }
+        header { background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        header h1 { margin: 0; font-size: 1.4rem; }
         
-        input, select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; outline: none; }
+        /* NAVEGACIÓN */
+        .tabs { display: flex; background: white; padding: 0 2rem; border-bottom: 1px solid #ddd; }
+        .tab-btn { background: none; border: none; padding: 15px 25px; cursor: pointer; font-weight: bold; color: #666; border-bottom: 3px solid transparent; transition: 0.3s; }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab-btn:hover { color: var(--primary); }
+
+        /* CONTENEDOR */
+        .container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .module { display: none; animation: fadeIn 0.3s; }
+        .module.active { display: block; }
+        
+        /* HERRAMIENTAS Y FILTROS */
+        .toolbar { background: white; padding: 15px; margin-bottom: 20px; border-radius: 8px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .btn-new { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-new:hover { opacity: 0.8; }
+        .filter-label { font-weight: bold; color: var(--primary); margin-left: 10px; }
+        input, select, textarea { padding: 8px; border: 1px solid #ccc; border-radius: 4px; outline: none; }
         input:focus, select:focus { border-color: var(--primary); }
-
+        
         /* TABLAS */
-        .table-responsive { overflow-x: auto; background: var(--white); border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .table-responsive { overflow-x: auto; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         table { width: 100%; border-collapse: collapse; min-width: 800px; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; font-size: 0.95rem; }
-        th { background-color: var(--primary); color: var(--white); font-weight: 600; text-transform: uppercase; font-size: 0.85rem; }
-        tr:hover { background-color: #f9f9f9; cursor: pointer; }
-
-        /* BADGES ESTADOS */
-        .badge { padding: 4px 10px; border-radius: 12px; color: white; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
-        .bg-pendiente { background-color: var(--st-pendiente); color: #333; }
-        .bg-proceso { background-color: var(--st-proceso); }
-        .bg-completada { background-color: var(--st-completada); }
-        .bg-cancelada { background-color: var(--st-cancelada); }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: var(--primary); color: white; text-transform: uppercase; font-size: 0.8rem; font-weight: 600; }
+        tr:hover { background: #f9f9f9; cursor: pointer; }
+        .badge { padding: 4px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; color: white; display: inline-block; min-width: 80px; text-align: center; }
+        
+        /* COLORES ESTADO */
+        .bg-pendiente { background: var(--st-pendiente); color: black; }
+        .bg-proceso { background: var(--st-proceso); }
+        .bg-completada { background: var(--st-completada); }
+        .bg-cancelada { background: var(--st-cancelada); }
 
         /* MODALES */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(2px); }
-        .modal-content { background-color: var(--white); margin: 5% auto; padding: 0; border-radius: 8px; width: 90%; max-width: 600px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); animation: slideIn 0.3s; }
-        .modal-header { background: var(--primary); color: var(--white); padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; }
-        .modal-header h3 { margin: 0; font-size: 1.2rem; }
-        .close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
-        
-        .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; backdrop-filter: blur(2px); }
+        .modal-content { background: white; margin: 5% auto; width: 90%; max-width: 500px; padding: 0; border-radius: 8px; max-height: 85vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .modal-header { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px 8px 0 0; }
+        .modal-body { padding: 20px; }
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; color: #555; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; box-sizing: border-box; padding: 10px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; color: #555; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; box-sizing: border-box; }
         .form-group textarea { height: 80px; resize: vertical; }
         
-        /* Campos bloqueados visualmente */
-        input:disabled, select:disabled, textarea:disabled { background-color: #e9ecef; cursor: not-allowed; color: #666; border-color: #ddd; }
-
-        .modal-footer { padding: 15px 20px; border-top: 1px solid #eee; text-align: right; }
-        .btn-save { background-color: var(--accent); color: white; padding: 10px 25px; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; }
-        .btn-save:disabled { background-color: #999; cursor: wait; }
+        /* Bloqueados */
+        input:disabled, select:disabled, textarea:disabled { background: #e9ecef; cursor: not-allowed; color: #777; border-color: #ddd; }
+        
+        .modal-footer { padding: 15px 20px; text-align: right; border-top: 1px solid #eee; }
+        .btn-save { background: var(--accent); color: white; padding: 10px 25px; border: none; cursor: pointer; border-radius: 4px; font-size: 1rem; }
+        .btn-save:disabled { background: #ccc; cursor: wait; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -86,28 +80,28 @@
     <header>
         <div>
             <h1>GESTION INMOBILIARIA</h1>
-            <span>MONTECLARO INMOBILIARIA SAS</span>
+            <small>MONTECLARO INMOBILIARIA SAS</small>
         </div>
-        <div id="loadingIndicator" style="display:none;">🔄 Procesando...</div>
+        <div id="loading" style="display:none; font-weight:bold;">🔄 Sincronizando...</div>
     </header>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('actividades')">ACTIVIDADES</button>
-        <button class="tab-btn" onclick="switchTab('clientes')">CLIENTES</button>
+        <button class="tab-btn active" onclick="verModulo('actividades')">ACTIVIDADES</button>
+        <button class="tab-btn" onclick="verModulo('clientes')">CLIENTES</button>
     </div>
 
-    <div id="module-actividades" class="container module active">
+    <div id="mod-actividades" class="container module active">
         <div class="toolbar">
             <button class="btn-new" onclick="abrirModalActividad(true)">+ Nueva Actividad</button>
-            <span style="font-weight:bold; color:var(--primary)">| Filtros:</span>
-            <input type="date" id="filtroActFecha" onchange="renderActividades()" title="Filtrar por Fecha">
-            <select id="filtroActResp" onchange="renderActividades()">
-                <option value="">Todo Responsable</option>
+            <span class="filter-label">| Filtros:</span>
+            <input type="date" id="fActFecha" onchange="renderActividades()" title="Filtrar Fecha">
+            <select id="fActResp" onchange="renderActividades()">
+                <option value="">Resp: Todos</option>
                 <option value="JUAN ROMERO">JUAN ROMERO</option>
                 <option value="SEBAS CUERVO">SEBAS CUERVO</option>
             </select>
-            <select id="filtroActEstado" onchange="renderActividades()">
-                <option value="">Todo Estado</option>
+            <select id="fActEstado" onchange="renderActividades()">
+                <option value="">Est: Todos</option>
                 <option value="PENDIENTE">PENDIENTE</option>
                 <option value="EN PROCESO">EN PROCESO</option>
                 <option value="COMPLETADA">COMPLETADA</option>
@@ -116,35 +110,24 @@
         </div>
         <div class="table-responsive">
             <table>
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Cliente</th>
-                        <th>Actividad</th>
-                        <th>Responsable</th>
-                        <th>Estado</th>
-                        <th>Notas</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaActividadesBody">
-                    <tr><td colspan="6" style="text-align:center;">Cargando datos...</td></tr>
-                </tbody>
+                <thead><tr><th>Fecha</th><th>Cliente</th><th>Actividad</th><th>Responsable</th><th>Estado</th><th>Notas</th></tr></thead>
+                <tbody id="tblActividades"><tr><td colspan="6" style="text-align:center">Cargando...</td></tr></tbody>
             </table>
         </div>
     </div>
 
-    <div id="module-clientes" class="container module">
+    <div id="mod-clientes" class="container module">
         <div class="toolbar">
             <button class="btn-new" onclick="abrirModalCliente(true)">+ Nuevo Cliente</button>
-            <span style="font-weight:bold; color:var(--primary)">| Filtros:</span>
-            <select id="filtroCliTipo" onchange="renderClientes()">
-                <option value="">Todo Tipo Servicio</option>
+            <span class="filter-label">| Filtros:</span>
+            <select id="fCliTipo" onchange="renderClientes()">
+                <option value="">Tipo: Todos</option>
                 <option value="VENTA">VENTA</option>
                 <option value="ADMINISTRACION">ADMINISTRACION</option>
                 <option value="CREDITO/SUBSIDIO">CREDITO/SUBSIDIO</option>
             </select>
-            <select id="filtroCliEstado" onchange="renderClientes()">
-                <option value="">Todo Estado</option>
+            <select id="fCliEstado" onchange="renderClientes()">
+                <option value="">Est: Todos</option>
                 <option value="PENDIENTE">PENDIENTE</option>
                 <option value="EN PROCESO">EN PROCESO</option>
                 <option value="COMPLETADA">COMPLETADA</option>
@@ -153,88 +136,60 @@
         </div>
         <div class="table-responsive">
             <table>
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Cédula/NIT</th>
-                        <th>Teléfono</th>
-                        <th>Tipo Servicio</th>
-                        <th>Estado</th>
-                        <th>Notas</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaClientesBody">
-                    <tr><td colspan="6" style="text-align:center;">Cargando datos...</td></tr>
-                </tbody>
+                <thead><tr><th>Nombre</th><th>Cédula</th><th>Teléfono</th><th>Tipo</th><th>Estado</th><th>Notas</th></tr></thead>
+                <tbody id="tblClientes"><tr><td colspan="6" style="text-align:center">Cargando...</td></tr></tbody>
             </table>
         </div>
     </div>
 
     <div id="modalActividad" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="tituloModalAct">Gestión Actividad</h3>
-                <button class="close-btn" onclick="cerrarModales()">&times;</button>
-            </div>
+            <div class="modal-header"><h3 id="tModalAct">Gestión Actividad</h3><span style="cursor:pointer; font-size:1.5rem;" onclick="cerrarModales()">&times;</span></div>
             <div class="modal-body">
-                <input type="hidden" id="actId">
-                <input type="hidden" id="actModo"> <div class="form-group">
-                    <label>Cliente (Base de Datos):</label>
-                    <select id="actCliente">
-                        <option value="">Cargando clientes...</option>
-                    </select>
-                </div>
+                <input type="hidden" id="actId"><input type="hidden" id="actModo">
+                
                 <div class="form-group">
-                    <label>Actividad (Descripción):</label>
-                    <textarea id="actDescripcion" placeholder="Describe la actividad..."></textarea>
+                    <label>Cliente (Base de Datos):</label>
+                    <select id="actCliente"><option value="">Cargando lista...</option></select>
                 </div>
+                <div class="form-group"><label>Actividad:</label><textarea id="actDesc" placeholder="Describa la tarea..."></textarea></div>
                 <div class="form-group">
                     <label>Responsable:</label>
-                    <select id="actResponsable">
+                    <select id="actResp">
                         <option value="">Seleccione...</option>
                         <option value="JUAN ROMERO">JUAN ROMERO</option>
                         <option value="SEBAS CUERVO">SEBAS CUERVO</option>
                     </select>
                 </div>
-                <div class="form-group" id="groupActEstado">
+                
+                <div class="form-group" id="divActEst">
                     <label>Estado:</label>
-                    <select id="actEstado">
-                        <option value="PENDIENTE">PENDIENTE</option>
-                        <option value="EN PROCESO">EN PROCESO</option>
-                        <option value="COMPLETADA">COMPLETADA</option>
-                        <option value="CANCELADA">CANCELADA</option>
+                    <select id="actEst">
+                        <option value="PENDIENTE">PENDIENTE</option><option value="EN PROCESO">EN PROCESO</option>
+                        <option value="COMPLETADA">COMPLETADA</option><option value="CANCELADA">CANCELADA</option>
                     </select>
                 </div>
-                <div class="form-group" id="groupActNotas">
-                    <label>Notas de Seguimiento:</label>
-                    <textarea id="actNotas" placeholder="Agrega notas de avance..."></textarea>
-                </div>
+                <div class="form-group" id="divActNotas"><label>Notas de Seguimiento:</label><textarea id="actNotas"></textarea></div>
             </div>
             <div class="modal-footer">
-                <button class="btn-save" onclick="guardarActividad()">Guardar</button>
+                <button class="btn-save" onclick="guardarActividad()">Guardar Cambios</button>
             </div>
         </div>
     </div>
 
     <div id="modalCliente" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="tituloModalCli">Gestión Cliente</h3>
-                <button class="close-btn" onclick="cerrarModales()">&times;</button>
-            </div>
+            <div class="modal-header"><h3 id="tModalCli">Gestión Cliente</h3><span style="cursor:pointer; font-size:1.5rem;" onclick="cerrarModales()">&times;</span></div>
             <div class="modal-body">
-                <input type="hidden" id="cliId">
-                <input type="hidden" id="cliModo">
-                
-                <div class="form-group"><label>Nombre:</label><input type="text" id="cliNombre"></div>
-                <div class="form-group"><label>Cédula/NIT:</label><input type="text" id="cliCedula"></div>
-                <div class="form-group"><label>Teléfono:</label><input type="text" id="cliTelefono"></div>
-                <div class="form-group"><label>Correo:</label><input type="email" id="cliCorreo"></div>
-                <div class="form-group"><label>Dirección:</label><input type="text" id="cliDireccion"></div>
-                <div class="form-group"><label>Presupuesto:</label><input type="text" id="cliPresupuesto"></div>
-                
-                <div class="form-group">
-                    <label>Tipo Servicio:</label>
+                <input type="hidden" id="cliId"><input type="hidden" id="cliModo">
+
+                <div class="form-group"><label>Nombre:</label><input type="text" id="cliNom"></div>
+                <div class="form-group"><label>Cédula/NIT:</label><input type="text" id="cliCed"></div>
+                <div class="form-group"><label>Teléfono:</label><input type="text" id="cliTel"></div>
+                <div class="form-group"><label>Correo:</label><input type="text" id="cliCor"></div>
+                <div class="form-group"><label>Dirección:</label><input type="text" id="cliDir"></div>
+                <div class="form-group"><label>Presupuesto:</label><input type="text" id="cliPre"></div>
+                <div class="form-group"><label>Tipo Servicio:</label>
                     <select id="cliTipo">
                         <option value="VENTA">VENTA</option>
                         <option value="ADMINISTRACION">ADMINISTRACION</option>
@@ -242,372 +197,287 @@
                     </select>
                 </div>
 
-                <div class="form-group" id="groupCliEstado">
-                    <label>Estado Cliente:</label>
-                    <select id="cliEstado">
-                        <option value="PENDIENTE">PENDIENTE</option>
-                        <option value="EN PROCESO">EN PROCESO</option>
-                        <option value="COMPLETADA">COMPLETADA</option>
-                        <option value="CANCELADA">CANCELADA</option>
+                <div class="form-group" id="divCliEst">
+                    <label>Estado:</label>
+                    <select id="cliEst">
+                        <option value="PENDIENTE">PENDIENTE</option><option value="EN PROCESO">EN PROCESO</option>
+                        <option value="COMPLETADA">COMPLETADA</option><option value="CANCELADA">CANCELADA</option>
                     </select>
                 </div>
-                <div class="form-group" id="groupCliNotas">
-                    <label>Notas / Observaciones:</label>
-                    <textarea id="cliNotas" placeholder="Notas de seguimiento..."></textarea>
-                </div>
+                <div class="form-group" id="divCliNotas"><label>Notas / Observaciones:</label><textarea id="cliNotas"></textarea></div>
             </div>
             <div class="modal-footer">
-                <button class="btn-save" onclick="guardarCliente()">Guardar</button>
+                <button class="btn-save" onclick="guardarCliente()">Guardar Cambios</button>
             </div>
         </div>
     </div>
 
     <script>
-        // CONFIGURACIÓN API
-        const API_URL = "https://script.google.com/macros/s/AKfycbxUrfku7L_X6gHBVMlqk0_pHRkqYnDZVJkd2Kg72-0zgcQHCviY3sHo4Wh0tCYdx5TVEA/exec";
+        // --- TU URL DE APPS SCRIPT ---
+        const API = "https://script.google.com/macros/s/AKfycbxomLdB31kWJ6rsv5Uat6G6E3k1nvM_s2mr855DB1Oh4gSVoW1huSk2BOEqZa__WwMe/exec";
 
-        let dataActividades = [];
-        let dataClientes = [];
+        let dAct = [], dCli = [];
 
-        // AL CARGAR: Cargar AMBOS datos para tener los clientes listos
+        // AL CARGAR LA PÁGINA
         window.onload = () => {
             cargarActividades();
-            cargarClientes(true); // true = carga silenciosa (sin bloquear pantalla si ya cargó actividades)
+            cargarClientes(true); // Carga silenciosa para llenar el dropdown
         };
 
-        function switchTab(tabName) {
-            // Ocultar todos
-            document.querySelectorAll('.module').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
-            // Mostrar seleccionado
-            document.getElementById(`module-${tabName}`).classList.add('active');
+        function verModulo(m) {
+            document.querySelectorAll('.module').forEach(e => e.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(e => e.classList.remove('active'));
+            document.getElementById('mod-'+m).classList.add('active');
             event.target.classList.add('active');
-
-            // Recargar solo si está vacío, aunque window.onload ya debió iniciarlo
-            if (tabName === 'actividades' && dataActividades.length === 0) cargarActividades();
-            if (tabName === 'clientes' && dataClientes.length === 0) cargarClientes();
         }
 
-        function showLoading(show) {
-            document.getElementById('loadingIndicator').style.display = show ? 'block' : 'none';
-        }
-
-        // --- LÓGICA ACTIVIDADES ---
-
+        // --- CARGA DE DATOS ---
         async function cargarActividades() {
-            showLoading(true);
             try {
-                const res = await fetch(`${API_URL}?action=read_actividades`);
-                const json = await res.json();
-                if (json.status === 'success') {
-                    dataActividades = json.data;
-                    renderActividades();
-                }
-            } catch (e) { console.error(e); }
-            showLoading(false);
+                let r = await fetch(API + "?action=read_actividades");
+                let j = await r.json();
+                if(j.status === 'success') { dAct = j.data; renderActividades(); }
+            } catch(e) { console.error(e); }
         }
 
+        async function cargarClientes(silencioso = false) {
+            if(!silencioso) document.getElementById('loading').style.display = 'block';
+            try {
+                let r = await fetch(API + "?action=read_clientes");
+                let j = await r.json();
+                if(j.status === 'success') { dCli = j.data; renderClientes(); }
+            } catch(e) { console.error(e); }
+            if(!silencioso) document.getElementById('loading').style.display = 'none';
+        }
+
+        // --- RENDERIZADO (TABLAS) ---
         function renderActividades() {
-            const tbody = document.getElementById('tablaActividadesBody');
-            tbody.innerHTML = '';
+            let tb = document.getElementById('tblActividades');
+            tb.innerHTML = "";
+            let fF = document.getElementById('fActFecha').value;
+            let fR = document.getElementById('fActResp').value;
+            let fE = document.getElementById('fActEstado').value;
 
-            // Filtros
-            const fFecha = document.getElementById('filtroActFecha').value;
-            const fResp = document.getElementById('filtroActResp').value;
-            const fEst = document.getElementById('filtroActEstado').value;
-
-            const filtrados = dataActividades.filter(item => {
-                let fechaMatch = true;
-                if (fFecha) {
-                    fechaMatch = item.FECHA.includes(fFecha) || new Date(item.FECHA).toISOString().slice(0,10) === fFecha;
+            // Filtros usando MAYÚSCULAS (porque el script ahora devuelve todo en mayúsculas)
+            let fil = dAct.filter(i => {
+                let fechaOk = true;
+                if(fF) {
+                    // Intento de match fecha (string o ISO)
+                    fechaOk = (i.FECHA && i.FECHA.includes(fF)) || (new Date(i.FECHA).toISOString().startsWith(fF));
                 }
-                const respMatch = !fResp || item.RESPONSABLE === fResp;
-                const estMatch = !fEst || item.ESTADO === fEst;
-                return fechaMatch && respMatch && estMatch;
+                let respOk = !fR || i.RESPONSABLE == fR;
+                let estOk = !fE || i.ESTADO == fE;
+                return fechaOk && respOk && estOk;
             });
 
-            if(filtrados.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6">No se encontraron actividades.</td></tr>';
-                return;
-            }
+            if(fil.length === 0) tb.innerHTML = "<tr><td colspan='6' style='text-align:center'>No hay datos</td></tr>";
 
-            filtrados.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.onclick = () => abrirModalActividad(false, item);
-                
-                let fechaCorta = item.FECHA; 
-                try { fechaCorta = new Date(item.FECHA).toLocaleDateString(); } catch(e){}
-
-                tr.innerHTML = `
-                    <td>${fechaCorta}</td>
-                    <td>${item.CLIENTE}</td>
-                    <td>${item.ACTIVIDAD}</td>
-                    <td>${item.RESPONSABLE}</td>
-                    <td><span class="badge ${getClassEstado(item.ESTADO)}">${item.ESTADO}</span></td>
-                    <td><small>${item.NOTAS || ''}</small></td>
-                `;
-                tbody.appendChild(tr);
+            fil.forEach(i => {
+                let tr = document.createElement('tr');
+                tr.onclick = () => abrirModalActividad(false, i);
+                let fechaStr = i.FECHA ? new Date(i.FECHA).toLocaleDateString() : '';
+                tr.innerHTML = `<td>${fechaStr}</td><td>${i.CLIENTE}</td><td>${i.ACTIVIDAD}</td><td>${i.RESPONSABLE}</td>
+                                <td><span class="badge ${color(i.ESTADO)}">${i.ESTADO}</span></td><td><small>${i.NOTAS||''}</small></td>`;
+                tb.appendChild(tr);
             });
-        }
-
-        // FUNCIÓN CLAVE MODIFICADA: LLENAR SELECT DE CLIENTES
-        function abrirModalActividad(esNuevo, item = null) {
-            const modal = document.getElementById('modalActividad');
-            const titulo = document.getElementById('tituloModalAct');
-            const inpModo = document.getElementById('actModo');
-            
-            // 1. LLENAR SELECT CLIENTES
-            const selectCliente = document.getElementById('actCliente');
-            selectCliente.innerHTML = '<option value="">Seleccione un Cliente...</option>';
-            
-            // Ordenar alfabéticamente
-            const clientesOrdenados = [...dataClientes].sort((a,b) => a.NOMBRE.localeCompare(b.NOMBRE));
-
-            if (clientesOrdenados.length === 0) {
-                selectCliente.innerHTML = '<option value="">No hay clientes creados</option>';
-            } else {
-                clientesOrdenados.forEach(cli => {
-                    const opt = document.createElement('option');
-                    opt.value = cli.NOMBRE;
-                    opt.text = cli.NOMBRE; // Muestra el nombre
-                    selectCliente.appendChild(opt);
-                });
-            }
-
-            modal.style.display = 'block';
-
-            if (esNuevo) {
-                titulo.innerText = "Nueva Actividad";
-                inpModo.value = "create";
-                document.getElementById('actId').value = "";
-                
-                // Resetear campos
-                selectCliente.value = ""; // Dropdown vacío
-                document.getElementById('actDescripcion').value = "";
-                document.getElementById('actResponsable').value = "";
-                document.getElementById('actNotas').value = "";
-                document.getElementById('actEstado').value = "PENDIENTE";
-
-                document.getElementById('actCliente').disabled = false;
-                document.getElementById('actDescripcion').disabled = false;
-                document.getElementById('actResponsable').disabled = false;
-
-                document.getElementById('groupActEstado').style.display = 'none';
-                document.getElementById('groupActNotas').style.display = 'none';
-
-            } else {
-                titulo.innerText = "Editar Actividad";
-                inpModo.value = "edit";
-                
-                document.getElementById('actId').value = item.ID;
-                
-                // Intentar seleccionar el cliente actual (si existe en la lista)
-                selectCliente.value = item.CLIENTE;
-                
-                document.getElementById('actDescripcion').value = item.ACTIVIDAD;
-                document.getElementById('actResponsable').value = item.RESPONSABLE;
-                document.getElementById('actEstado').value = item.ESTADO;
-                document.getElementById('actNotas').value = item.NOTAS;
-
-                // BLOQUEOS
-                document.getElementById('actCliente').disabled = true; // Cliente fijo al editar
-                document.getElementById('actDescripcion').disabled = true;
-                document.getElementById('actResponsable').disabled = true;
-
-                document.getElementById('groupActEstado').style.display = 'block';
-                document.getElementById('groupActNotas').style.display = 'block';
-            }
-        }
-
-        async function guardarActividad() {
-            const modo = document.getElementById('actModo').value;
-            const btn = document.querySelector('#modalActividad .btn-save');
-            
-            if (modo === 'create') {
-                const cli = document.getElementById('actCliente').value;
-                const resp = document.getElementById('actResponsable').value;
-                if (!cli) return alert("Debes seleccionar un Cliente.");
-                if (!resp) return alert("El Responsable es obligatorio.");
-            }
-
-            btn.disabled = true;
-            btn.innerText = "Guardando...";
-
-            const formData = new FormData();
-            if (modo === 'create') {
-                formData.append('action', 'create_actividad');
-                formData.append('cliente', document.getElementById('actCliente').value); // Valor del Select
-                formData.append('actividad', document.getElementById('actDescripcion').value);
-                formData.append('responsable', document.getElementById('actResponsable').value);
-            } else {
-                formData.append('action', 'update_actividad');
-                formData.append('id', document.getElementById('actId').value);
-                formData.append('estado', document.getElementById('actEstado').value);
-                formData.append('notas', document.getElementById('actNotas').value);
-            }
-
-            try {
-                await fetch(API_URL, { method: 'POST', body: formData });
-                alert("Guardado correctamente");
-                cerrarModales();
-                cargarActividades();
-            } catch (e) { console.error(e); alert("Error al guardar"); }
-            btn.disabled = false;
-            btn.innerText = "Guardar";
-        }
-
-
-        // --- LÓGICA CLIENTES ---
-
-        async function cargarClientes(silent = false) {
-            if(!silent) showLoading(true);
-            try {
-                const res = await fetch(`${API_URL}?action=read_clientes`);
-                const json = await res.json();
-                if (json.status === 'success') {
-                    dataClientes = json.data;
-                    renderClientes();
-                }
-            } catch (e) { console.error(e); if(!silent) alert("Error cargando clientes"); }
-            if(!silent) showLoading(false);
         }
 
         function renderClientes() {
-            const tbody = document.getElementById('tablaClientesBody');
-            tbody.innerHTML = '';
+            let tb = document.getElementById('tblClientes');
+            tb.innerHTML = "";
+            let fT = document.getElementById('fCliTipo').value;
+            let fE = document.getElementById('fCliEstado').value;
 
-            const fTipo = document.getElementById('filtroCliTipo').value;
-            const fEst = document.getElementById('filtroCliEstado').value;
+            // Usando claves MAYÚSCULAS (TIPO_SERVICIO, ESTADO_CLIENTE)
+            let fil = dCli.filter(i => (!fT || i.TIPO_SERVICIO == fT) && (!fE || i.ESTADO_CLIENTE == fE));
+            
+            if(fil.length === 0) tb.innerHTML = "<tr><td colspan='6' style='text-align:center'>No hay datos</td></tr>";
 
-            const filtrados = dataClientes.filter(item => {
-                const tipoMatch = !fTipo || item.TIPO_SERVICIO === fTipo;
-                const estMatch = !fEst || item.ESTADO_CLIENTE === fEst;
-                return tipoMatch && estMatch;
-            });
-
-            if(filtrados.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6">No se encontraron clientes.</td></tr>';
-                return;
-            }
-
-            filtrados.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.onclick = () => abrirModalCliente(false, item);
-                
-                tr.innerHTML = `
-                    <td>${item.NOMBRE}</td>
-                    <td>${item.CEDULA_NIT}</td>
-                    <td>${item.TELEFONO}</td>
-                    <td>${item.TIPO_SERVICIO}</td>
-                    <td><span class="badge ${getClassEstado(item.ESTADO_CLIENTE)}">${item.ESTADO_CLIENTE}</span></td>
-                    <td><small>${item.NOTAS || ''}</small></td>
-                `;
-                tbody.appendChild(tr);
+            fil.forEach(i => {
+                let tr = document.createElement('tr');
+                tr.onclick = () => abrirModalCliente(false, i);
+                tr.innerHTML = `<td>${i.NOMBRE}</td><td>${i.CEDULA_NIT}</td><td>${i.TELEFONO}</td><td>${i.TIPO_SERVICIO}</td>
+                                <td><span class="badge ${color(i.ESTADO_CLIENTE)}">${i.ESTADO_CLIENTE}</span></td><td><small>${i.NOTAS||''}</small></td>`;
+                tb.appendChild(tr);
             });
         }
 
-        function abrirModalCliente(esNuevo, item = null) {
-            const modal = document.getElementById('modalCliente');
-            const titulo = document.getElementById('tituloModalCli');
-            const inpModo = document.getElementById('cliModo');
+        // --- GESTIÓN DE MODALES ---
+        
+        // 1. Modal Actividad (Con Dropdown de Clientes)
+        function abrirModalActividad(esNuevo, item) {
+            document.getElementById('modalActividad').style.display = 'block';
             
-            modal.style.display = 'block';
-            
-            const camposDatos = ['cliNombre', 'cliCedula', 'cliTelefono', 'cliCorreo', 'cliDireccion', 'cliPresupuesto', 'cliTipo'];
+            // Llenar SELECT de Clientes
+            let sel = document.getElementById('actCliente');
+            sel.innerHTML = '<option value="">Seleccione Cliente...</option>';
+            dCli.sort((a,b) => (a.NOMBRE || "").localeCompare(b.NOMBRE || "")).forEach(c => {
+                let opt = document.createElement('option');
+                opt.value = c.NOMBRE; 
+                opt.text = c.NOMBRE; 
+                sel.appendChild(opt);
+            });
 
-            if (esNuevo) {
-                titulo.innerText = "Nuevo Cliente";
-                inpModo.value = "create";
+            if(esNuevo) {
+                document.getElementById('tModalAct').innerText = "Nueva Actividad";
+                document.getElementById('actModo').value = "create";
+                document.getElementById('actId').value = "";
+                
+                // Limpiar
+                sel.value = "";
+                document.getElementById('actDesc').value = "";
+                document.getElementById('actResp').value = "";
+                document.getElementById('actNotas').value = "";
+                
+                // Habilitar campos
+                sel.disabled = false;
+                document.getElementById('actDesc').disabled = false;
+                document.getElementById('actResp').disabled = false;
+
+                // Ocultar campos automáticos
+                document.getElementById('divActEst').style.display = 'none';
+                document.getElementById('divActNotas').style.display = 'none';
+            } else {
+                document.getElementById('tModalAct').innerText = "Editar Actividad";
+                document.getElementById('actModo').value = "edit";
+                document.getElementById('actId').value = item.ID;
+                
+                // Cargar datos (Usando claves MAYÚSCULAS)
+                sel.value = item.CLIENTE;
+                document.getElementById('actDesc').value = item.ACTIVIDAD;
+                document.getElementById('actResp').value = item.RESPONSABLE;
+                document.getElementById('actEst').value = item.ESTADO;
+                document.getElementById('actNotas').value = item.NOTAS;
+
+                // Bloquear campos fijos
+                sel.disabled = true;
+                document.getElementById('actDesc').disabled = true;
+                document.getElementById('actResp').disabled = true;
+
+                // Mostrar campos editables
+                document.getElementById('divActEst').style.display = 'block';
+                document.getElementById('divActNotas').style.display = 'block';
+            }
+        }
+
+        // 2. Modal Cliente
+        function abrirModalCliente(esNuevo, item) {
+            document.getElementById('modalCliente').style.display = 'block';
+            let ids = ['cliNom','cliCed','cliTel','cliCor','cliDir','cliPre','cliTipo'];
+            
+            if(esNuevo) {
+                document.getElementById('tModalCli').innerText = "Nuevo Cliente";
+                document.getElementById('cliModo').value = "create";
                 document.getElementById('cliId').value = "";
                 
-                camposDatos.forEach(id => {
-                    const el = document.getElementById(id);
-                    el.value = "";
-                    el.disabled = false;
+                ids.forEach(id => { 
+                    let el = document.getElementById(id); 
+                    el.value=""; 
+                    el.disabled=false; 
                 });
-                
-                document.getElementById('groupCliEstado').style.display = 'none';
-                document.getElementById('groupCliNotas').style.display = 'none';
 
+                document.getElementById('divCliEst').style.display = 'none';
+                document.getElementById('divCliNotas').style.display = 'none';
             } else {
-                titulo.innerText = "Gestionar Cliente";
-                inpModo.value = "edit";
-
-                document.getElementById('cliId').value = item.ID_CLIENTE;
-                document.getElementById('cliNombre').value = item.NOMBRE;
-                document.getElementById('cliCedula').value = item.CEDULA_NIT;
-                document.getElementById('cliTelefono').value = item.TELEFONO;
-                document.getElementById('cliCorreo').value = item.CORREO;
-                document.getElementById('cliDireccion').value = item.DIRECCION;
-                document.getElementById('cliPresupuesto').value = item.PRESUPUESTO;
-                document.getElementById('cliTipo').value = item.TIPO_SERVICIO;
+                document.getElementById('tModalCli').innerText = "Editar Cliente";
+                document.getElementById('cliModo').value = "edit";
                 
-                document.getElementById('cliEstado').value = item.ESTADO_CLIENTE;
+                // Cargar datos (Claves MAYÚSCULAS)
+                document.getElementById('cliId').value = item.ID_CLIENTE;
+                document.getElementById('cliNom').value = item.NOMBRE;
+                document.getElementById('cliCed').value = item.CEDULA_NIT;
+                document.getElementById('cliTel').value = item.TELEFONO;
+                document.getElementById('cliCor').value = item.CORREO;
+                document.getElementById('cliDir').value = item.DIRECCION;
+                document.getElementById('cliPre').value = item.PRESUPUESTO;
+                document.getElementById('cliTipo').value = item.TIPO_SERVICIO;
+                document.getElementById('cliEst').value = item.ESTADO_CLIENTE;
                 document.getElementById('cliNotas').value = item.NOTAS;
 
-                camposDatos.forEach(id => {
-                    document.getElementById(id).disabled = true;
-                });
-
-                document.getElementById('groupCliEstado').style.display = 'block';
-                document.getElementById('groupCliNotas').style.display = 'block';
+                // Bloquear todo menos estado y notas
+                ids.forEach(id => document.getElementById(id).disabled = true);
+                
+                document.getElementById('divCliEst').style.display = 'block';
+                document.getElementById('divCliNotas').style.display = 'block';
             }
+        }
+
+        // --- ENVIAR DATOS ---
+        async function guardarActividad() {
+            let modo = document.getElementById('actModo').value;
+            let btn = document.querySelector('#modalActividad .btn-save');
+            
+            // Validación básica
+            if(modo == 'create' && !document.getElementById('actCliente').value) return alert("Seleccione un cliente");
+            if(modo == 'create' && !document.getElementById('actResp').value) return alert("Seleccione un responsable");
+
+            let fd = new FormData();
+            if(modo=='create') {
+                fd.append('action','create_actividad');
+                fd.append('cliente', document.getElementById('actCliente').value);
+                fd.append('actividad', document.getElementById('actDesc').value);
+                fd.append('responsable', document.getElementById('actResp').value);
+            } else {
+                fd.append('action','update_actividad');
+                fd.append('id', document.getElementById('actId').value);
+                fd.append('estado', document.getElementById('actEst').value);
+                fd.append('notas', document.getElementById('actNotas').value);
+            }
+            await enviar(fd, btn, cargarActividades);
         }
 
         async function guardarCliente() {
-            const modo = document.getElementById('cliModo').value;
-            const btn = document.querySelector('#modalCliente .btn-save');
+            let modo = document.getElementById('cliModo').value;
+            let btn = document.querySelector('#modalCliente .btn-save');
+            let fd = new FormData();
+            
+            if(modo=='create') {
+                fd.append('action','create_cliente');
+                fd.append('nombre', document.getElementById('cliNom').value);
+                fd.append('cedula', document.getElementById('cliCed').value);
+                fd.append('telefono', document.getElementById('cliTel').value);
+                fd.append('correo', document.getElementById('cliCor').value);
+                fd.append('direccion', document.getElementById('cliDir').value);
+                fd.append('presupuesto', document.getElementById('cliPre').value);
+                fd.append('tipo', document.getElementById('cliTipo').value);
+            } else {
+                fd.append('action','update_cliente');
+                fd.append('id', document.getElementById('cliId').value);
+                fd.append('estado', document.getElementById('cliEst').value);
+                fd.append('notas', document.getElementById('cliNotas').value);
+            }
+            // Al guardar cliente, recargamos clientes Y actividades (por si cambia el nombre)
+            await enviar(fd, btn, () => { cargarClientes(); cargarActividades(); });
+        }
+
+        async function enviar(fd, btn, callback) {
             btn.disabled = true;
             btn.innerText = "Guardando...";
-
-            const formData = new FormData();
-
-            if (modo === 'create') {
-                formData.append('action', 'create_cliente');
-                formData.append('nombre', document.getElementById('cliNombre').value);
-                formData.append('cedula', document.getElementById('cliCedula').value);
-                formData.append('telefono', document.getElementById('cliTelefono').value);
-                formData.append('correo', document.getElementById('cliCorreo').value);
-                formData.append('direccion', document.getElementById('cliDireccion').value);
-                formData.append('presupuesto', document.getElementById('cliPresupuesto').value);
-                formData.append('tipo', document.getElementById('cliTipo').value);
-            } else {
-                formData.append('action', 'update_cliente');
-                formData.append('id', document.getElementById('cliId').value);
-                formData.append('estado', document.getElementById('cliEstado').value);
-                formData.append('notas', document.getElementById('cliNotas').value);
-            }
-
-            try {
-                await fetch(API_URL, { method: 'POST', body: formData });
-                alert("Guardado correctamente");
+            try { 
+                await fetch(API, {method:'POST', body:fd}); 
+                alert("Guardado exitosamente"); 
                 cerrarModales();
-                // Recargar clientes y también la lista en Actividades por si hubo uno nuevo
-                cargarClientes(); 
-            } catch (e) { console.error(e); alert("Error al guardar"); }
+                if(callback) callback(); 
+            }
+            catch(e){ console.error(e); alert("Hubo un error al guardar"); }
             btn.disabled = false;
-            btn.innerText = "Guardar";
+            btn.innerText = "Guardar Cambios";
         }
 
-        function cerrarModales() {
-            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
-        }
-
-        function getClassEstado(estado) {
-            if (!estado) return '';
-            estado = estado.toUpperCase();
-            if (estado === 'PENDIENTE') return 'bg-pendiente';
-            if (estado === 'EN PROCESO') return 'bg-proceso';
-            if (estado === 'COMPLETADA') return 'bg-completada';
-            if (estado === 'CANCELADA') return 'bg-cancelada';
+        function cerrarModales() { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); }
+        
+        function color(e) {
+            if(!e) return '';
+            if(e=='PENDIENTE') return 'bg-pendiente';
+            if(e=='EN PROCESO') return 'bg-proceso';
+            if(e=='COMPLETADA') return 'bg-completada';
+            if(e=='CANCELADA') return 'bg-cancelada';
             return '';
         }
 
+        // Cerrar al dar clic fuera
         window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                cerrarModales();
-            }
+            if (event.target.classList.contains('modal')) cerrarModales();
         }
     </script>
 </body>
