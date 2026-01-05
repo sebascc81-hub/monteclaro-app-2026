@@ -15,8 +15,10 @@
             --st-proceso: #2196f3; 
             --st-completada: #4caf50; 
             --st-cancelada: #f44336;
+            --st-disponible: #4caf50; /* Verde */
+            --st-vendido: #f44336;   /* Rojo */
         }
-        /* MODIFICADO: Añadido flex y min-height para empujar el footer abajo */
+        
         body { 
             font-family: 'Segoe UI', sans-serif; 
             margin: 0; 
@@ -75,12 +77,12 @@
         }
 
         /* NAVEGACIÓN */
-        .tabs { display: flex; background: white; padding: 0 2rem; border-bottom: 1px solid #ddd; justify-content: center; }
-        .tab-btn { background: none; border: none; padding: 15px 25px; cursor: pointer; font-weight: bold; color: #666; border-bottom: 3px solid transparent; transition: 0.3s; }
+        .tabs { display: flex; background: white; padding: 0 1rem; border-bottom: 1px solid #ddd; justify-content: center; flex-wrap: wrap; }
+        .tab-btn { background: none; border: none; padding: 15px 20px; cursor: pointer; font-weight: bold; color: #666; border-bottom: 3px solid transparent; transition: 0.3s; }
         .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
         .tab-btn:hover { color: var(--primary); }
 
-        /* CONTENEDOR - MODIFICADO: flex: 1 para ocupar espacio disponible */
+        /* CONTENEDOR */
         .container { padding: 20px; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box; flex: 1; }
         .module { display: none; animation: fadeIn 0.3s; }
         .module.active { display: block; }
@@ -95,7 +97,7 @@
         
         /* TABLAS */
         .table-responsive { overflow-x: auto; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
         th { background: var(--primary); color: white; text-transform: uppercase; font-size: 0.8rem; font-weight: 600; }
         tr:hover { background: #f9f9f9; cursor: pointer; }
@@ -104,15 +106,16 @@
         /* COLORES ESTADO */
         .bg-pendiente { background: var(--st-pendiente); color: black; }
         .bg-proceso { background: var(--st-proceso); }
-        .bg-completada { background: var(--st-completada); }
-        .bg-cancelada { background: var(--st-cancelada); }
+        .bg-completada, .bg-disponible { background: var(--st-completada); }
+        .bg-cancelada, .bg-vendido { background: var(--st-cancelada); }
 
         /* MODALES */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; backdrop-filter: blur(2px); }
-        .modal-content { background: white; margin: 5% auto; width: 90%; max-width: 500px; padding: 0; border-radius: 8px; max-height: 85vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .modal-content { background: white; margin: 2% auto; width: 95%; max-width: 600px; padding: 0; border-radius: 8px; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
         .modal-header { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px 8px 0 0; }
-        .modal-body { padding: 20px; }
-        .form-group { margin-bottom: 15px; }
+        .modal-body { padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .modal-body .full-width { grid-column: span 2; }
+        
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; color: #555; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; box-sizing: border-box; }
         .form-group textarea { height: 80px; resize: vertical; }
@@ -134,8 +137,11 @@
             color: #666;
             margin-top: 20px;
         }
-        footer strong {
-            color: var(--primary);
+        footer strong { color: var(--primary); }
+
+        @media (max-width: 600px) {
+            .modal-body { grid-template-columns: 1fr; }
+            .modal-body .full-width { grid-column: span 1; }
         }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -159,6 +165,7 @@
 
     <div class="tabs">
         <button class="tab-btn active" onclick="verModulo('actividades')">ACTIVIDADES</button>
+        <button class="tab-btn" onclick="verModulo('propiedades')">PROPIEDADES</button>
         <button class="tab-btn" onclick="verModulo('clientes')">CLIENTES</button>
     </div>
 
@@ -188,6 +195,36 @@
         </div>
     </div>
 
+    <div id="mod-propiedades" class="container module">
+        <div class="toolbar">
+            <button class="btn-new" onclick="abrirModalPropiedad(true)">+ Nueva Propiedad</button>
+            <span class="filter-label">| Filtros:</span>
+            <select id="fProOper" onchange="renderPropiedades()">
+                <option value="">Operación: Todas</option>
+                <option value="VENTA">VENTA</option>
+                <option value="ARRIENDO">ARRIENDO</option>
+            </select>
+            <select id="fProTipo" onchange="renderPropiedades()">
+                <option value="">Tipo: Todos</option>
+                <option value="CASA">CASA</option>
+                <option value="APARTAMENTO">APARTAMENTO</option>
+                <option value="LOTE">LOTE</option>
+            </select>
+            <select id="fProEstado" onchange="renderPropiedades()">
+                <option value="">Estado: Todos</option>
+                <option value="DISPONIBLE">DISPONIBLE</option>
+                <option value="VENDIDO">VENDIDO</option>
+                <option value="ARRENDADO">ARRENDADO</option>
+            </select>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead><tr><th>ID</th><th>Operación</th><th>Tipo</th><th>Ubicación</th><th>Precio</th><th>Área</th><th>Estado</th><th>Propietario</th></tr></thead>
+                <tbody id="tblPropiedades"><tr><td colspan="8" style="text-align:center">Cargando...</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
     <div id="mod-clientes" class="container module">
         <div class="toolbar">
             <button class="btn-new" onclick="abrirModalCliente(true)">+ Nuevo Cliente</button>
@@ -203,7 +240,6 @@
                 <option value="PENDIENTE">PENDIENTE</option>
                 <option value="EN PROCESO">EN PROCESO</option>
                 <option value="COMPLETADA">COMPLETADA</option>
-                <option value="CANCELADA">CANCELADA</option>
             </select>
         </div>
         <div class="table-responsive">
@@ -217,7 +253,7 @@
     <footer>
         MONTECLARO INMOBILIARIA S.A.S<br>
         Desarrollado por <strong>SEBASTIÁN CUERVO</br>
-         <strong>V1.0 &copy; 2026</br>
+        <strong>V2.0 &copy; 2026</br>
     </footer>
 
     <div id="modalActividad" class="modal">
@@ -226,11 +262,11 @@
             <div class="modal-body">
                 <input type="hidden" id="actId"><input type="hidden" id="actModo">
                 
-                <div class="form-group">
+                <div class="form-group full-width">
                     <label>Cliente (Base de Datos):</label>
                     <select id="actCliente"><option value="">Cargando lista...</option></select>
                 </div>
-                <div class="form-group"><label>Actividad:</label><textarea id="actDesc" placeholder="Describa la tarea..."></textarea></div>
+                <div class="form-group full-width"><label>Actividad:</label><textarea id="actDesc" placeholder="Describa la tarea..."></textarea></div>
                 <div class="form-group">
                     <label>Responsable:</label>
                     <select id="actResp">
@@ -239,7 +275,6 @@
                         <option value="SEBAS CUERVO">SEBAS CUERVO</option>
                     </select>
                 </div>
-                
                 <div class="form-group" id="divActEst">
                     <label>Estado:</label>
                     <select id="actEst">
@@ -247,10 +282,63 @@
                         <option value="COMPLETADA">COMPLETADA</option><option value="CANCELADA">CANCELADA</option>
                     </select>
                 </div>
-                <div class="form-group" id="divActNotas"><label>Notas de Seguimiento:</label><textarea id="actNotas"></textarea></div>
+                <div class="form-group full-width" id="divActNotas"><label>Notas de Seguimiento:</label><textarea id="actNotas"></textarea></div>
             </div>
             <div class="modal-footer">
                 <button class="btn-save" onclick="guardarActividad()">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalPropiedad" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="tModalPro">Gestión Propiedad</h3><span style="cursor:pointer; font-size:1.5rem;" onclick="cerrarModales()">&times;</span></div>
+            <div class="modal-body">
+                <input type="hidden" id="proId"><input type="hidden" id="proModo">
+                
+                <div class="form-group full-width">
+                    <label>Propietario (Cliente):</label>
+                    <select id="proPropietario"><option value="">Seleccione Cliente...</option></select>
+                </div>
+                <div class="form-group"><label>Tipo Operación:</label>
+                    <select id="proOper">
+                        <option value="VENTA">VENTA</option>
+                        <option value="ARRIENDO">ARRIENDO</option>
+                        <option value="PERMUTA">PERMUTA</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Tipo Inmueble:</label>
+                    <select id="proTipo">
+                        <option value="CASA">CASA</option>
+                        <option value="APARTAMENTO">APARTAMENTO</option>
+                        <option value="LOTE">LOTE</option>
+                        <option value="FINCA">FINCA</option>
+                        <option value="LOCAL">LOCAL</option>
+                    </select>
+                </div>
+                <div class="form-group full-width"><label>Dirección:</label><input type="text" id="proDir"></div>
+                <div class="form-group"><label>Ciudad:</label><input type="text" id="proCiu" value="Pereira"></div>
+                <div class="form-group"><label>Precio:</label><input type="number" id="proPre"></div>
+                
+                <div class="form-group"><label>Área (m2):</label><input type="text" id="proArea"></div>
+                <div class="form-group"><label>Habitaciones:</label><input type="number" id="proHab"></div>
+                <div class="form-group"><label>Baños:</label><input type="number" id="proBan"></div>
+                <div class="form-group"><label>Estrato:</label><input type="number" id="proEst"></div>
+
+                <div class="form-group" id="divProEstado">
+                    <label>Estado:</label>
+                    <select id="proEstado">
+                        <option value="DISPONIBLE">DISPONIBLE</option>
+                        <option value="SEPARADO">SEPARADO</option>
+                        <option value="VENDIDO">VENDIDO</option>
+                        <option value="ARRENDADO">ARRENDADO</option>
+                        <option value="INACTIVO">INACTIVO</option>
+                    </select>
+                </div>
+                <div class="form-group full-width"><label>Notas / Descripción:</label><textarea id="proNotas"></textarea></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-save" onclick="guardarPropiedad()">Guardar Propiedad</button>
             </div>
         </div>
     </div>
@@ -265,7 +353,7 @@
                 <div class="form-group"><label>Cédula/NIT:</label><input type="text" id="cliCed"></div>
                 <div class="form-group"><label>Teléfono:</label><input type="text" id="cliTel"></div>
                 <div class="form-group"><label>Correo:</label><input type="text" id="cliCor"></div>
-                <div class="form-group"><label>Dirección:</label><input type="text" id="cliDir"></div>
+                <div class="form-group full-width"><label>Dirección:</label><input type="text" id="cliDir"></div>
                 <div class="form-group"><label>Presupuesto/Valor:</label><input type="text" id="cliPre"></div>
                 <div class="form-group"><label>Tipo Servicio:</label>
                     <select id="cliTipo">
@@ -282,7 +370,7 @@
                         <option value="COMPLETADA">COMPLETADA</option><option value="CANCELADA">CANCELADA</option>
                     </select>
                 </div>
-                <div class="form-group" id="divCliNotas"><label>Notas / Observaciones:</label><textarea id="cliNotas"></textarea></div>
+                <div class="form-group full-width" id="divCliNotas"><label>Notas / Observaciones:</label><textarea id="cliNotas"></textarea></div>
             </div>
             <div class="modal-footer">
                 <button class="btn-save" onclick="guardarCliente()">Guardar Cambios</button>
@@ -291,15 +379,16 @@
     </div>
 
     <script>
-        // --- TU URL DE APPS SCRIPT (CONSERVADA) ---
-        const API = "https://script.google.com/macros/s/AKfycbxomLdB31kWJ6rsv5Uat6G6E3k1nvM_s2mr855DB1Oh4gSVoW1huSk2BOEqZa__WwMe/exec";
+        // --- TU NUEVA URL DE APPS SCRIPT ---
+        const API = "https://script.google.com/macros/s/AKfycbwPC4XZK3lqovzIilrTkaWCnpvVM4IQUFYHMN2iFM8qOfKkxLfwW2TsORVacDRmbbTu/exec";
 
-        let dAct = [], dCli = [];
+        let dAct = [], dCli = [], dProp = [];
 
         // AL CARGAR LA PÁGINA
         window.onload = () => {
             cargarActividades();
-            cargarClientes(true); // Carga silenciosa para llenar el dropdown
+            cargarPropiedades();
+            cargarClientes(true); // Carga silenciosa para llenar dropdowns
         };
 
         function verModulo(m) {
@@ -328,6 +417,14 @@
             if(!silencioso) document.getElementById('loading').style.display = 'none';
         }
 
+        async function cargarPropiedades() {
+            try {
+                let r = await fetch(API + "?action=read_propiedades");
+                let j = await r.json();
+                if(j.status === 'success') { dProp = j.data; renderPropiedades(); }
+            } catch(e) { console.error(e); }
+        }
+
         // --- RENDERIZADO (TABLAS) ---
         function renderActividades() {
             let tb = document.getElementById('tblActividades');
@@ -336,12 +433,9 @@
             let fR = document.getElementById('fActResp').value;
             let fE = document.getElementById('fActEstado').value;
 
-            // Filtros usando MAYÚSCULAS
             let fil = dAct.filter(i => {
                 let fechaOk = true;
-                if(fF) {
-                    fechaOk = (i.FECHA && i.FECHA.includes(fF)) || (new Date(i.FECHA).toISOString().startsWith(fF));
-                }
+                if(fF) fechaOk = (i.FECHA && i.FECHA.includes(fF)) || (new Date(i.FECHA).toISOString().startsWith(fF));
                 let respOk = !fR || i.RESPONSABLE == fR;
                 let estOk = !fE || i.ESTADO == fE;
                 return fechaOk && respOk && estOk;
@@ -359,13 +453,45 @@
             });
         }
 
+        function renderPropiedades() {
+            let tb = document.getElementById('tblPropiedades');
+            tb.innerHTML = "";
+            let fO = document.getElementById('fProOper').value;
+            let fT = document.getElementById('fProTipo').value;
+            let fE = document.getElementById('fProEstado').value;
+
+            let fil = dProp.filter(i => 
+                (!fO || i.TIPO_OPERACION == fO) && 
+                (!fT || i.TIPO_INMUEBLE == fT) &&
+                (!fE || i.ESTADO == fE)
+            );
+            
+            if(fil.length === 0) tb.innerHTML = "<tr><td colspan='8' style='text-align:center'>No hay datos</td></tr>";
+
+            fil.forEach(i => {
+                let tr = document.createElement('tr');
+                tr.onclick = () => abrirModalPropiedad(false, i);
+                // Formato precio
+                let precio = i.PRECIO ? new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(i.PRECIO) : '$0';
+                
+                tr.innerHTML = `<td><small>${i.ID_PROPIEDAD}</small></td>
+                                <td>${i.TIPO_OPERACION}</td>
+                                <td>${i.TIPO_INMUEBLE}</td>
+                                <td><small>${i.DIRECCION}, ${i.CIUDAD}</small></td>
+                                <td style="font-weight:bold">${precio}</td>
+                                <td>${i.AREA_M2}m²</td>
+                                <td><span class="badge ${color(i.ESTADO)}">${i.ESTADO}</span></td>
+                                <td><small>${i.PROPIETARIO || 'N/A'}</small></td>`;
+                tb.appendChild(tr);
+            });
+        }
+
         function renderClientes() {
             let tb = document.getElementById('tblClientes');
             tb.innerHTML = "";
             let fT = document.getElementById('fCliTipo').value;
             let fE = document.getElementById('fCliEstado').value;
 
-            // Usando claves MAYÚSCULAS
             let fil = dCli.filter(i => (!fT || i.TIPO_SERVICIO == fT) && (!fE || i.ESTADO_CLIENTE == fE));
             
             if(fil.length === 0) tb.innerHTML = "<tr><td colspan='6' style='text-align:center'>No hay datos</td></tr>";
@@ -381,7 +507,7 @@
 
         // --- GESTIÓN DE MODALES ---
         
-        // 1. Modal Actividad (Con Dropdown de Clientes)
+        // 1. Modal Actividad
         function abrirModalActividad(esNuevo, item) {
             document.getElementById('modalActividad').style.display = 'block';
             
@@ -390,54 +516,88 @@
             sel.innerHTML = '<option value="">Seleccione Cliente...</option>';
             dCli.sort((a,b) => (a.NOMBRE || "").localeCompare(b.NOMBRE || "")).forEach(c => {
                 let opt = document.createElement('option');
-                opt.value = c.NOMBRE; 
-                opt.text = c.NOMBRE; 
-                sel.appendChild(opt);
+                opt.value = c.NOMBRE; opt.text = c.NOMBRE; sel.appendChild(opt);
             });
 
             if(esNuevo) {
                 document.getElementById('tModalAct').innerText = "Nueva Actividad";
                 document.getElementById('actModo').value = "create";
                 document.getElementById('actId').value = "";
-                
-                // Limpiar
-                sel.value = "";
-                document.getElementById('actDesc').value = "";
-                document.getElementById('actResp').value = "";
+                sel.value = ""; sel.disabled = false;
+                document.getElementById('actDesc').value = ""; document.getElementById('actDesc').disabled = false;
+                document.getElementById('actResp').value = ""; document.getElementById('actResp').disabled = false;
                 document.getElementById('actNotas').value = "";
-                
-                // Habilitar campos
-                sel.disabled = false;
-                document.getElementById('actDesc').disabled = false;
-                document.getElementById('actResp').disabled = false;
-
-                // Ocultar campos automáticos
                 document.getElementById('divActEst').style.display = 'none';
                 document.getElementById('divActNotas').style.display = 'none';
             } else {
                 document.getElementById('tModalAct').innerText = "Editar Actividad";
                 document.getElementById('actModo').value = "edit";
                 document.getElementById('actId').value = item.ID;
-                
-                // Cargar datos
-                sel.value = item.CLIENTE;
-                document.getElementById('actDesc').value = item.ACTIVIDAD;
-                document.getElementById('actResp').value = item.RESPONSABLE;
+                sel.value = item.CLIENTE; sel.disabled = true;
+                document.getElementById('actDesc').value = item.ACTIVIDAD; document.getElementById('actDesc').disabled = true;
+                document.getElementById('actResp').value = item.RESPONSABLE; document.getElementById('actResp').disabled = true;
                 document.getElementById('actEst').value = item.ESTADO;
                 document.getElementById('actNotas').value = item.NOTAS;
-
-                // Bloquear campos fijos
-                sel.disabled = true;
-                document.getElementById('actDesc').disabled = true;
-                document.getElementById('actResp').disabled = true;
-
-                // Mostrar campos editables
                 document.getElementById('divActEst').style.display = 'block';
                 document.getElementById('divActNotas').style.display = 'block';
             }
         }
 
-        // 2. Modal Cliente
+        // 2. Modal Propiedad (NUEVO)
+        function abrirModalPropiedad(esNuevo, item) {
+            document.getElementById('modalPropiedad').style.display = 'block';
+            
+            // Llenar SELECT de Propietarios (Clientes)
+            let selProp = document.getElementById('proPropietario');
+            selProp.innerHTML = '<option value="">Seleccione Cliente...</option>';
+            dCli.sort((a,b) => (a.NOMBRE || "").localeCompare(b.NOMBRE || "")).forEach(c => {
+                let opt = document.createElement('option');
+                opt.value = c.NOMBRE; opt.text = c.NOMBRE; selProp.appendChild(opt);
+            });
+
+            // IDs de campos
+            let ids = ['proOper','proTipo','proDir','proCiu','proArea','proHab','proBan','proEst'];
+            
+            if(esNuevo) {
+                document.getElementById('tModalPro').innerText = "Nueva Propiedad";
+                document.getElementById('proModo').value = "create";
+                document.getElementById('proId').value = "";
+                
+                // Resetear campos
+                selProp.value = ""; selProp.disabled = false;
+                ids.forEach(id => { document.getElementById(id).value = ""; document.getElementById(id).disabled = false; });
+                document.getElementById('proPre').value = "";
+                document.getElementById('proCiu').value = "Pereira";
+                document.getElementById('proNotas').value = "";
+                
+                // Ocultar campo estado en creación
+                document.getElementById('divProEstado').style.display = 'none';
+            } else {
+                document.getElementById('tModalPro').innerText = "Editar Propiedad: " + item.ID_PROPIEDAD;
+                document.getElementById('proModo').value = "edit";
+                document.getElementById('proId').value = item.ID_PROPIEDAD;
+
+                // Cargar datos
+                selProp.value = item.PROPIETARIO; selProp.disabled = true; // No cambiar propietario
+                document.getElementById('proOper').value = item.TIPO_OPERACION; document.getElementById('proOper').disabled = true;
+                document.getElementById('proTipo').value = item.TIPO_INMUEBLE; document.getElementById('proTipo').disabled = true;
+                document.getElementById('proDir').value = item.DIRECCION; document.getElementById('proDir').disabled = true;
+                document.getElementById('proCiu').value = item.CIUDAD; document.getElementById('proCiu').disabled = true;
+                document.getElementById('proArea').value = item.AREA_M2; document.getElementById('proArea').disabled = true;
+                document.getElementById('proHab').value = item.HABITACIONES; document.getElementById('proHab').disabled = true;
+                document.getElementById('proBan').value = item.BANOS; document.getElementById('proBan').disabled = true;
+                document.getElementById('proEst').value = item.ESTRATO; document.getElementById('proEst').disabled = true;
+
+                // Campos editables
+                document.getElementById('proPre').value = item.PRECIO; // Permitimos editar precio
+                document.getElementById('proEstado').value = item.ESTADO;
+                document.getElementById('proNotas').value = item.NOTAS;
+
+                document.getElementById('divProEstado').style.display = 'block';
+            }
+        }
+
+        // 3. Modal Cliente
         function abrirModalCliente(esNuevo, item) {
             document.getElementById('modalCliente').style.display = 'block';
             let ids = ['cliNom','cliCed','cliTel','cliCor','cliDir','cliPre','cliTipo'];
@@ -446,20 +606,12 @@
                 document.getElementById('tModalCli').innerText = "Nuevo Cliente";
                 document.getElementById('cliModo').value = "create";
                 document.getElementById('cliId').value = "";
-                
-                ids.forEach(id => { 
-                    let el = document.getElementById(id); 
-                    el.value=""; 
-                    el.disabled=false; 
-                });
-
+                ids.forEach(id => { let el = document.getElementById(id); el.value=""; el.disabled=false; });
                 document.getElementById('divCliEst').style.display = 'none';
                 document.getElementById('divCliNotas').style.display = 'none';
             } else {
                 document.getElementById('tModalCli').innerText = "Editar Cliente";
                 document.getElementById('cliModo').value = "edit";
-                
-                // Cargar datos
                 document.getElementById('cliId').value = item.ID_CLIENTE;
                 document.getElementById('cliNom').value = item.NOMBRE;
                 document.getElementById('cliCed').value = item.CEDULA_NIT;
@@ -471,9 +623,7 @@
                 document.getElementById('cliEst').value = item.ESTADO_CLIENTE;
                 document.getElementById('cliNotas').value = item.NOTAS;
 
-                // Bloquear todo menos estado y notas
                 ids.forEach(id => document.getElementById(id).disabled = true);
-                
                 document.getElementById('divCliEst').style.display = 'block';
                 document.getElementById('divCliNotas').style.display = 'block';
             }
@@ -483,11 +633,8 @@
         async function guardarActividad() {
             let modo = document.getElementById('actModo').value;
             let btn = document.querySelector('#modalActividad .btn-save');
-            
-            // Validación básica
             if(modo == 'create' && !document.getElementById('actCliente').value) return alert("Seleccione un cliente");
-            if(modo == 'create' && !document.getElementById('actResp').value) return alert("Seleccione un responsable");
-
+            
             let fd = new FormData();
             if(modo=='create') {
                 fd.append('action','create_actividad');
@@ -503,11 +650,40 @@
             await enviar(fd, btn, cargarActividades);
         }
 
+        async function guardarPropiedad() {
+            let modo = document.getElementById('proModo').value;
+            let btn = document.querySelector('#modalPropiedad .btn-save');
+            
+            if(modo == 'create' && !document.getElementById('proPropietario').value) return alert("Seleccione un propietario");
+
+            let fd = new FormData();
+            if(modo=='create') {
+                fd.append('action','create_propiedad');
+                fd.append('propietario', document.getElementById('proPropietario').value);
+                fd.append('tipo_operacion', document.getElementById('proOper').value);
+                fd.append('tipo_inmueble', document.getElementById('proTipo').value);
+                fd.append('direccion', document.getElementById('proDir').value);
+                fd.append('ciudad', document.getElementById('proCiu').value);
+                fd.append('precio', document.getElementById('proPre').value);
+                fd.append('area', document.getElementById('proArea').value);
+                fd.append('habitaciones', document.getElementById('proHab').value);
+                fd.append('banos', document.getElementById('proBan').value);
+                fd.append('estrato', document.getElementById('proEst').value);
+                fd.append('notas', document.getElementById('proNotas').value);
+            } else {
+                fd.append('action','update_propiedad');
+                fd.append('id', document.getElementById('proId').value);
+                fd.append('estado', document.getElementById('proEstado').value);
+                fd.append('notas', document.getElementById('proNotas').value);
+                fd.append('precio', document.getElementById('proPre').value); // Permitimos editar precio
+            }
+            await enviar(fd, btn, cargarPropiedades);
+        }
+
         async function guardarCliente() {
             let modo = document.getElementById('cliModo').value;
             let btn = document.querySelector('#modalCliente .btn-save');
             let fd = new FormData();
-            
             if(modo=='create') {
                 fd.append('action','create_cliente');
                 fd.append('nombre', document.getElementById('cliNom').value);
@@ -537,7 +713,7 @@
             }
             catch(e){ console.error(e); alert("Hubo un error al guardar"); }
             btn.disabled = false;
-            btn.innerText = "Guardar Cambios";
+            btn.innerText = "Guardar";
         }
 
         function cerrarModales() { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); }
@@ -548,10 +724,11 @@
             if(e=='EN PROCESO') return 'bg-proceso';
             if(e=='COMPLETADA') return 'bg-completada';
             if(e=='CANCELADA') return 'bg-cancelada';
+            if(e=='DISPONIBLE') return 'bg-disponible';
+            if(e=='VENDIDO' || e=='ARRENDADO') return 'bg-vendido';
             return '';
         }
 
-        // Cerrar al dar clic fuera
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) cerrarModales();
         }
