@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monteclaro SAS - Gestión Dual</title>
+    <title>Monteclaro SAS - Gestión Clientes</title>
     <style>
         :root { --principal: #2638bf; --blanco: #ffffff; --fondo-gris: #f0f2f5; }
         
@@ -14,14 +14,14 @@
         .header-azul { 
             background-color: var(--principal); 
             text-align: center; 
-            padding: 40px 10px; 
+            padding: 35px 10px; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             margin-bottom: 20px;
         }
-        .logo { max-width: 300px; height: auto; }
-        .header-azul p { color: rgba(255,255,255,0.9); margin-top: 15px; font-weight: bold; font-size: 1.1em; }
+        .logo { max-width: 280px; height: auto; }
+        .header-azul p { color: rgba(255,255,255,0.9); margin-top: 10px; font-weight: bold; }
 
-        /* NAVEGACIÓN Y SECCIONES (FONDO CLARO) */
+        /* NAVEGACIÓN Y SECCIONES */
         .nav-container { display: flex; gap: 8px; margin-bottom: 15px; }
         .nav-btn { 
             flex: 1; padding: 15px; border: none; border-radius: 8px; cursor: pointer; 
@@ -51,13 +51,14 @@
         th { background: #333; color: white; padding: 12px; text-align: left; }
         td { padding: 12px; border-bottom: 1px solid #eee; }
         .valor-pesos { font-family: monospace; font-weight: bold; color: #11734b; }
+        .id-celda { color: #999; font-size: 10px; }
     </style>
 </head>
 <body>
 
 <div class="header-azul">
     <img src="MONTECLARO5.png" alt="Logo Monteclaro SAS" class="logo">
-    <p>Gestión Administrativa e Inmobiliaria | FINANCIAL GROUP</p>
+    <p>Maestro de Clientes y Gestión - FINANCIAL GROUP</p>
 </div>
 
 <div class="container">
@@ -101,12 +102,12 @@
                         <option value="EN PROCESO">EN PROCESO</option>
                         <option value="ACTIVO">ACTIVO</option>
                     </select></div>
-                    <div><label>Presupuesto</label><input type="number" id="c_presupuesto" placeholder="Valor numérico"></div>
+                    <div><label>Presupuesto</label><input type="number" id="c_presupuesto" placeholder="Solo números"></div>
                 </div>
                 <button type="submit" class="btn-submit" style="background:#444">Registrar Cliente</button>
             </form>
         </div>
-        <div class="table-wrapper"><table><thead><tr><th>ID No.</th><th>Nombre</th><th>Servicio</th><th>Estado</th><th>Presupuesto</th></tr></thead><tbody id="bodyClients"></tbody></table></div>
+        <div class="table-wrapper"><table><thead><tr><th>Cédula / NIT</th><th>Nombre</th><th>Servicio</th><th>Estado</th><th>Presupuesto</th></tr></thead><tbody id="bodyClients"></tbody></table></div>
     </div>
 </div>
 
@@ -143,7 +144,8 @@
             bC.innerHTML = "";
             dataC.forEach(c => {
                 sel.innerHTML += `<option value="${c.NOMBRE}">${c.NOMBRE}</option>`;
-                bC.innerHTML += `<tr><td><b>${c.ID_CLIENTE}</b></td><td><b>${c.NOMBRE}</b></td><td>${c.TIPO_SERVICIO}</td><td>${badgeEstado(c.ESTADO_CLIENTE)}</td><td class="valor-pesos">${formatCOP(c.PRESUPUESTO)}</td></tr>`;
+                // Mostramos Cédula de primero en lugar del ID
+                bC.innerHTML += `<tr><td><b>${c.CEDULA_NIT}</b></td><td><b>${c.NOMBRE}</b></td><td>${c.TIPO_SERVICIO}</td><td>${badgeEstado(c.ESTADO_CLIENTE)}</td><td class="valor-pesos">${formatCOP(c.PRESUPUESTO)}</td></tr>`;
             });
 
             const resT = await fetch(`${API}?sheet=Sheet1`);
