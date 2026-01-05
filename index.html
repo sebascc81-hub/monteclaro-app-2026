@@ -3,74 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Interno Monteclaro</title>
+    <title>Panel Interno | Monteclaro SAS</title>
     <style>
-        :root { --primary: #25d366; --bg: #121212; --card: #1e1e1e; --text: #e0e0e0; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        /* PALETA OFICIAL MONTECLARO */
+        :root {
+            --principal: #2638bf; /* Azul Real */
+            --secundario: #000000; /* Negro */
+            --blanco: #ffffff;
+            --gris-opcional: #b2b8bf;
+            --fondo: #f4f7f6;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: var(--fondo); 
+            color: var(--secundario); 
+            margin: 0; 
+            padding: 20px; 
+        }
+
         .container { max-width: 900px; margin: auto; }
-        .header { border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 25px; }
-        h1 { color: var(--primary); margin: 0; font-size: 1.6rem; }
-        .section { background: var(--card); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #333; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        h2 { font-size: 1.2rem; color: var(--primary); margin-top: 0; display: flex; align-items: center; gap: 10px; }
+        
+        /* HEADER CORPORATIVO */
+        .header { 
+            background: var(--principal); 
+            color: var(--blanco); 
+            padding: 30px; 
+            border-radius: 15px 15px 0 0;
+            display: flex; 
+            align-items: center; 
+            gap: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo-box { 
+            width: 70px; 
+            height: 70px; 
+            background: var(--blanco); 
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+
+        .header h1 { margin: 0; font-size: 1.6rem; letter-spacing: 1px; }
+        .header p { margin: 5px 0 0 0; opacity: 0.8; font-size: 0.9rem; }
+
+        /* SECCIONES Y TARJETAS */
+        .section { 
+            background: var(--blanco); 
+            padding: 25px; 
+            margin-bottom: 20px; 
+            border: 1px solid var(--gris-opcional);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        h2 { 
+            color: var(--principal); 
+            font-size: 1.2rem; 
+            border-left: 5px solid var(--principal); 
+            padding-left: 15px;
+            margin-top: 0;
+        }
+
+        /* TABLAS DE ACTIVIDADES */
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #333; }
-        th { color: #888; font-size: 0.85rem; text-transform: uppercase; }
-        .badge { padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
-        .status-proceso { background: #f39c12; color: #000; }
-        .status-fin { background: var(--primary); color: #000; }
-        .calc-box { display: flex; gap: 10px; margin-top: 15px; }
-        input { background: #333; border: 1px solid #444; color: white; padding: 8px; border-radius: 4px; width: 100%; }
-        .res-comision { color: var(--primary); font-weight: bold; margin-top: 10px; display: block; }
+        th { text-align: left; background: var(--secundario); color: var(--blanco); padding: 12px; font-size: 0.8rem; }
+        td { padding: 15px 12px; border-bottom: 1px solid var(--gris-opcional); font-size: 0.95rem; }
+        
+        .badge { padding: 5px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+        .bg-proceso { background: var(--gris-opcional); color: var(--secundario); }
+        .bg-exito { background: var(--principal); color: var(--blanco); }
+
+        /* CALCULADORA DE COMISIÓN 60% */
+        .calc-wrapper {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px dashed var(--principal);
+            text-align: center;
+        }
+
+        input { 
+            width: 80%; 
+            padding: 12px; 
+            border: 2px solid var(--gris-opcional); 
+            border-radius: 5px;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--principal); }
+
+        .res-display { 
+            margin-top: 20px; 
+            font-size: 1.4rem; 
+            font-weight: bold; 
+            color: var(--principal); 
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>MONTECLARO SAS - Panel Interno</h1>
-            <p>Control de Actividades y Comisiones 2026</p>
-        </div>
-
-        <div class="section">
-            <h2>🚀 Actividades de Socios</h2>
-            <table>
-                <thead>
-                    <tr><th>Actividad</th><th>Responsable</th><th>Estatus</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Lanzamiento App Interna</td><td>Socio A</td><td><span class="badge status-fin">COMPLETADO</span></td></tr>
-                    <tr><td>Cierre Negocio Casa Campestre</td><td>Socio B</td><td><span class="badge status-proceso">EN PROCESO</span></td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="section" style="border-left: 5px solid #3498db;">
-            <h2>💰 Trámites FINANCIAL GROUP</h2>
-            <p style="font-size: 0.9rem; color: #888;">Seguimiento de honorarios compartidos (Participación: 60%)</p>
-            <table>
-                <thead>
-                    <tr><th>Cliente</th><th>Trámite</th><th>Estado Crédito</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Familia Pérez</td><td>Crédito Hipotecario</td><td>✅ Radicado</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="section">
-            <h2>🧮 Calculadora de Honorarios</h2>
-            <p style="font-size: 0.85rem;">Ingresa el valor total cobrado por el trámite:</p>
-            <div class="calc-box">
-                <input type="number" id="valorTramite" placeholder="Valor total $" oninput="calcular()">
+            <div class="logo-box">
+                <span style="color: var(--principal); font-weight: bold; font-size: 2rem;">M</span>
             </div>
-            <span class="res-comision" id="resultado">Comisión Monteclaro (60%): $0</span>
+            <div>
+                <h1>MONTECLARO SAS</h1>
+                <p>Gestión Interna de Socios 2026</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Actividades de la Sociedad</h2>
+            <table>
+                <thead>
+                    <tr><th>Tarea</th><th>Asignado</th><th>Estado</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Ajuste Visual Aplicación</td><td>Socio A</td><td><span class="badge bg-exito">LISTO</span></td></tr>
+                    <tr><td>Trámites FINANCIAL GROUP</td><td>Socio B</td><td><span class="badge bg-proceso">PENDIENTE</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>💰 Calculadora de Honorarios (60%)</h2>
+            <div class="calc-wrapper">
+                <p style="color: var(--secundario); margin-bottom: 15px;">Proyección de ingresos compartidos</p>
+                <input type="number" id="valor" placeholder="Ingrese el valor total $" oninput="calc()">
+                <div class="res-display" id="resultado">Comisión Socio: $0</div>
+            </div>
         </div>
     </div>
 
     <script>
-        function calcular() {
-            const valor = document.getElementById('valorTramite').value;
-            const comision = valor * 0.60;
-            document.getElementById('resultado').innerText = "Comisión Monteclaro (60%): $" + comision.toLocaleString();
+        function calc() {
+            const v = document.getElementById('valor').value;
+            const res = v * 0.60;
+            document.getElementById('resultado').innerText = "Comisión Socio (60%): $" + res.toLocaleString('es-CO');
         }
     </script>
 </body>
