@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monteclaro SAS - Gestión Integral</title>
+    <title>Monteclaro SAS - Dashboard Real</title>
     <link rel="icon" type="image/png" href="MONTECLARO5.png">
     <style>
         :root { --principal: #2638bf; --blanco: #ffffff; --fondo-gris: #f0f2f5; }
@@ -48,15 +48,16 @@
 
     <div id="tab-actividades" class="section active">
         <div class="form-card" id="addBoxAct">
+            <h3 style="margin-top:0; color:var(--principal); font-size: 14px;">NUEVA ACTIVIDAD</h3>
             <form id="taskForm">
                 <div class="grid">
-                    <div><label>Cliente</label><select id="t_cliente" required><option value="">Cargando...</option></select></div>
+                    <div><label>Cliente</label><select id="t_cliente" required><option value="">Cargando clientes...</option></select></div>
                     <div><label>Actividad</label><input type="text" id="t_actividad" required></div>
                     <div><label>Responsable</label><select id="t_resp" required><option value="Juan Romero">Juan Romero</option><option value="Sebas Cuervo">Sebas Cuervo</option></select></div>
                     <div><label>Estado</label><select id="t_estado"><option value="PENDIENTE">PENDIENTE</option><option value="EN PROCESO">EN PROCESO</option><option value="COMPLETADA">COMPLETADA</option></select></div>
                     <div style="grid-column: span 2;"><label>Notas Iniciales</label><textarea id="t_notas" rows="1"></textarea></div>
                 </div>
-                <button type="submit" class="btn-submit">Sincronizar Gestión</button>
+                <button type="submit" class="btn-submit">Guardar en Hoja 1</button>
             </form>
         </div>
         <div class="table-wrapper"><table><thead><tr><th>Acción</th><th>Fecha</th><th>Cliente</th><th>Actividad</th><th>Responsable</th><th>Estado</th><th>Notas</th><th>Actualización</th></tr></thead><tbody id="bodyTasks"></tbody></table></div>
@@ -64,23 +65,20 @@
 
     <div id="tab-clientes" class="section">
         <div class="form-card">
-            <h3 style="margin-top:0; color:#444; font-size: 14px;">REGISTRAR CLIENTE NUEVO</h3>
+            <h3 style="margin-top:0; color:#444; font-size: 14px;">REGISTRAR CLIENTE</h3>
             <form id="clientForm">
                 <div class="grid">
                     <div><label>Nombre</label><input type="text" id="c_nombre" required></div>
                     <div><label>NIT / Cédula</label><input type="text" id="c_cedula" required></div>
-                    <div><label>Teléfono</label><input type="text" id="c_tel"></div>
-                    <div><label>Correo</label><input type="email" id="c_correo"></div>
-                    <div><label>Dirección</label><input type="text" id="c_dir"></div>
                     <div><label>Servicio</label><select id="c_servicio">
                         <option value="VENTA">VENTA</option>
                         <option value="ADMINISTRACION">ADMINISTRACION</option>
                         <option value="CREDITO/FINANCIAL GROUP">CREDITO / FINANCIAL GROUP</option>
                     </select></div>
                     <div><label>Presupuesto</label><input type="number" id="c_presupuesto"></div>
-                    <div style="grid-column: span 1;"><label>Notas Iniciales</label><textarea id="c_notas" rows="1"></textarea></div>
+                    <div style="grid-column: span 1;"><label>Notas</label><textarea id="c_notas" rows="1"></textarea></div>
                 </div>
-                <button type="submit" class="btn-submit" style="background:#444">Registrar en Base</button>
+                <button type="submit" class="btn-submit" style="background:#444">Registrar Cliente</button>
             </form>
         </div>
         <div class="table-wrapper"><table><thead><tr><th>Acción</th><th>NIT</th><th>Nombre</th><th>Servicio</th><th>Estado</th><th>Notas</th><th>Actualización</th></tr></thead><tbody id="bodyClients"></tbody></table></div>
@@ -100,7 +98,7 @@
 
     async function loadAll() {
         try {
-            // LECTURA DE CLIENTES
+            // CARGA DE CLIENTES
             const resC = await fetch(`${API}?sheet=CLIENTES`);
             const dataC = await resC.json();
             const bC = document.getElementById('bodyClients');
@@ -110,65 +108,64 @@
             selT.innerHTML = '<option value="">-- Seleccione Cliente --</option>';
             
             dataC.forEach(c => {
-                // Sincronizar select de actividades
                 selT.innerHTML += `<option value="${c.NOMBRE}">${c.NOMBRE}</option>`;
-                
-                // Pintar tabla de clientes
-                const stClass = "st-" + (c.ESTADO_CLIENTE || "PENDIENTE").replace(/ /g, "-");
+                const nit = c.CEDULA_NIT || c.NIT || c["CEDULA / NIT"] || "N/A";
+                const serv = c.TIPO_SERVICIO || c.SERVICIO || "N/A";
+                const est = c.ESTADO_CLIENTE || c.ESTADO || "PENDIENTE";
+                const stClass = "st-" + est.replace(/ /g, "-");
+
                 bC.innerHTML += `<tr>
                     <td><button class="btn-edit">GESTIONAR</button></td>
-                    <td><b>${c.CEDULA_NIT || c.NIT || 'N/A'}</b></td>
+                    <td><b>${nit}</b></td>
                     <td>${c.NOMBRE}</td>
-                    <td>${c.TIPO_SERVICIO || c.SERVICIO}</td>
-                    <td><span class="badge ${stClass}">${c.ESTADO_CLIENTE || 'PENDIENTE'}</span></td>
+                    <td>${serv}</td>
+                    <td><span class="badge ${stClass}">${est}</span></td>
                     <td>${c.NOTAS || ''}</td>
                     <td class="actualizacion">${c.ACTUALIZACION || 'N/A'}</td>
                 </tr>`;
             });
 
-            // LECTURA DE ACTIVIDADES
+            // CARGA DE ACTIVIDADES
             const resT = await fetch(`${API}?sheet=Hoja 1`);
             const dataT = await resT.json();
             const bT = document.getElementById('bodyTasks');
             bT.innerHTML = "";
             dataT.slice().reverse().forEach(t => {
-                const stClass = "st-" + (t.ESTADO || "PENDIENTE").replace(/ /g, "-");
+                const estT = t.ESTADO || "PENDIENTE";
+                const stClassT = "st-" + estT.replace(/ /g, "-");
                 bT.innerHTML += `<tr>
                     <td><button class="btn-edit" style="background:var(--principal)">NOTAS</button></td>
                     <td>${t.FECHA}</td>
                     <td><b>${t.CLIENTE}</b></td>
                     <td>${t.ACTIVIDAD}</td>
                     <td>${t.RESPONSABLE}</td>
-                    <td><span class="badge ${stClass}">${t.ESTADO}</span></td>
+                    <td><span class="badge ${stClassT}">${estT}</span></td>
                     <td>${t.NOTAS || ''}</td>
                     <td class="actualizacion">${t.ACTUALIZACION || 'N/A'}</td>
                 </tr>`;
             });
-        } catch(e) { console.error("Error cargando datos:", e); }
+        } catch(e) { 
+            console.error("Error cargando datos:", e);
+            document.getElementById('bodyClients').innerHTML = "<tr><td colspan='7'>Error al conectar con Google Sheets. Verifica la API.</td></tr>";
+        }
     }
 
     document.getElementById('clientForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = e.target.querySelector('button');
         btn.disabled = true; btn.innerText = "Guardando...";
-        
         const data = { 
             NOMBRE: document.getElementById('c_nombre').value, 
             CEDULA_NIT: document.getElementById('c_cedula').value, 
-            TELEFONO: document.getElementById('c_tel').value, 
-            CORREO: document.getElementById('c_correo').value,
-            DIRECCION: document.getElementById('c_dir').value, 
             TIPO_SERVICIO: document.getElementById('c_servicio').value, 
             PRESUPUESTO: document.getElementById('c_presupuesto').value,
             ESTADO_CLIENTE: 'PENDIENTE', 
-            ID_CLIENTE: Date.now().toString().slice(-5), 
             NOTAS: document.getElementById('c_notas').value, 
             ACTUALIZACION: new Date().toLocaleString('es-CO')
         };
-        
         await fetch(`${API}?sheet=CLIENTES`, { method: 'POST', mode: 'no-cors', body: JSON.stringify({data:[data]}) });
-        alert("✅ Cliente registrado en Monteclaro SAS");
-        e.target.reset(); btn.disabled = false; btn.innerText = "Registrar en Base";
+        alert("✅ Cliente registrado");
+        e.target.reset(); btn.disabled = false; btn.innerText = "Registrar Cliente";
         await loadAll();
     });
 
