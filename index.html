@@ -13,22 +13,15 @@
         .logo { max-width: 250px; height: auto; }
         .header-azul p { color: rgba(255,255,255,0.9); margin-top: 10px; font-weight: bold; }
         .nav-container { display: flex; gap: 8px; margin-bottom: 15px; }
-        .nav-btn { flex: 1; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background: white; color: #444; }
+        .nav-btn { flex: 1; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background: white; color: #444; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .nav-btn.active { background: var(--principal); color: white; }
         .section { background: var(--blanco); padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: none; }
         .section.active { display: block; }
         .form-card { background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 25px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
         label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 5px; color: #555; text-transform: uppercase; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; box-sizing: border-box; }
         .btn-submit { background: var(--principal); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
-        
-        /* FILTROS */
-        .filter-row { display: flex; gap: 10px; margin: 20px 0 10px 0; background: #e9ecef; padding: 12px; border-radius: 10px; flex-wrap: wrap; align-items: flex-end; }
-        .filter-group { display: flex; flex-direction: column; }
-        .filter-group label { font-size: 9px; color: #777; margin-bottom: 2px; }
-        .filter-row select { padding: 8px; border-radius: 5px; border: 1px solid #ccc; min-width: 150px; font-size: 12px; }
-
         .badge { padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 10px; color: black; min-width: 85px; text-align: center; display: inline-block; text-transform: uppercase; }
         .st-PENDIENTE { background-color: #fadb03 !important; } 
         .st-EN-PROCESO { background-color: #b0f605 !important; } 
@@ -45,7 +38,7 @@
 
 <div class="header-azul">
     <img src="MONTECLARO5.png" alt="Logo Monteclaro" class="logo">
-    <p>Gestión y Seguimiento Monteclaro SAS | FINANCIAL GROUP</p>
+    <p>Gestión Hoja 1 y Clientes - Monteclaro SAS | FINANCIAL GROUP</p>
 </div>
 
 <div class="container">
@@ -56,10 +49,10 @@
 
     <div id="tab-actividades" class="section active">
         <div class="form-card" id="editBoxAct" style="display:none; border: 2px solid var(--principal);">
-            <h3 style="margin-top:0; color:var(--principal); font-size: 14px;">ACTUALIZAR GESTIÓN: <span id="editTitleAct"></span></h3>
+            <h3 style="margin-top:0; color:var(--principal); font-size: 14px;">EDITAR ACTIVIDAD: <span id="editTitleAct"></span></h3>
             <div class="grid">
                 <input type="hidden" id="editIdAct">
-                <div><label>Estado</label><select id="editEstAct">
+                <div><label>Nuevo Estado</label><select id="editEstAct">
                     <option value="PENDIENTE">PENDIENTE</option>
                     <option value="EN PROCESO">EN PROCESO</option>
                     <option value="COMPLETADA">COMPLETADA</option>
@@ -73,6 +66,7 @@
         </div>
 
         <div class="form-card" id="addBoxAct">
+            <h3 style="margin-top:0; color:var(--principal); font-size: 14px;">ADICIONAR NUEVA ACTIVIDAD</h3>
             <form id="taskForm">
                 <div class="grid">
                     <div><label>Cliente</label><select id="t_cliente" required><option value="">Cargando...</option></select></div>
@@ -84,13 +78,6 @@
                 <button type="submit" class="btn-submit">Sincronizar Gestión</button>
             </form>
         </div>
-
-        <div class="filter-row">
-            <div class="filter-group"><label>FECHA</label><select id="f_fecha_act" onchange="applyActFilters()"><option value="">📅 Todas</option></select></div>
-            <div class="filter-group"><label>RESPONSABLE</label><select id="f_resp_act" onchange="applyActFilters()"><option value="">👤 Todos</option><option value="Juan Romero">Juan Romero</option><option value="Sebas Cuervo">Sebas Cuervo</option></select></div>
-            <div class="filter-group"><label>ESTADO</label><select id="f_estado_act" onchange="applyActFilters()"><option value="">🔘 Todos</option><option value="PENDIENTE">PENDIENTE</option><option value="EN PROCESO">EN PROCESO</option><option value="COMPLETADA">COMPLETADA</option></select></div>
-        </div>
-
         <div class="table-wrapper"><table><thead><tr><th>Acción</th><th>Fecha</th><th>Cliente</th><th>Actividad</th><th>Responsable</th><th>Estado</th><th>Notas</th><th>Actualización</th></tr></thead><tbody id="bodyTasks"></tbody></table></div>
     </div>
 
@@ -99,12 +86,12 @@
             <h3 style="margin-top:0; color:#444; font-size: 14px;">GESTIÓN CLIENTE: <span id="editTitleCli"></span></h3>
             <div class="grid">
                 <input type="hidden" id="editIdCli">
-                <div><label>Estado</label><select id="editEstCli">
+                <div><label>Estado Cliente</label><select id="editEstCli">
                     <option value="PENDIENTE">PENDIENTE</option>
                     <option value="EN PROCESO">EN PROCESO</option>
                     <option value="ACTIVO">ACTIVO</option>
                 </select></div>
-                <div style="grid-column: span 2;"><label>Notas Seguimiento</label><textarea id="editNotasCli" rows="2"></textarea></div>
+                <div style="grid-column: span 2;"><label>Notas de Documentación</label><textarea id="editNotasCli" rows="2"></textarea></div>
             </div>
             <div style="display:flex; gap:10px; margin-top:10px;">
                 <button class="btn-submit" style="background:#444" onclick="saveEditCli()">Actualizar Registro</button>
@@ -112,18 +99,32 @@
             </div>
         </div>
 
-        <div class="filter-row">
-            <div class="filter-group"><label>NIT</label><select id="f_nit_cli" onchange="applyCliFilters()"><option value="">🆔 Todos</option></select></div>
-            <div class="filter-group"><label>SERVICIO</label><select id="f_serv_cli" onchange="applyCliFilters()"><option value="">💼 Todos</option><option value="VENTA">VENTA</option><option value="ADMINISTRACION">ADMINISTRACION</option><option value="CREDITO/FINANCIAL GROUP">CREDITO / FINANCIAL GROUP</option></select></div>
+        <div class="form-card" id="addBoxCli">
+            <h3 style="margin-top:0; color:#444; font-size: 14px;">REGISTRAR CLIENTE NUEVO</h3>
+            <form id="clientForm">
+                <div class="grid">
+                    <div><label>Nombre</label><input type="text" id="c_nombre" required></div>
+                    <div><label>NIT / Cédula</label><input type="text" id="c_cedula" required></div>
+                    <div><label>Teléfono</label><input type="text" id="c_tel"></div>
+                    <div><label>Correo</label><input type="email" id="c_correo"></div>
+                    <div><label>Dirección</label><input type="text" id="c_dir"></div>
+                    <div><label>Servicio</label><select id="c_servicio">
+                        <option value="VENTA">VENTA</option>
+                        <option value="ADMINISTRACION">ADMINISTRACION</option>
+                        <option value="CREDITO/FINANCIAL GROUP">CREDITO / FINANCIAL GROUP</option>
+                    </select></div>
+                    <div><label>Presupuesto</label><input type="number" id="c_presupuesto"></div>
+                    <div style="grid-column: span 1;"><label>Notas Iniciales</label><textarea id="c_notas" rows="1"></textarea></div>
+                </div>
+                <button type="submit" class="btn-submit" style="background:#444">Registrar en Base</button>
+            </form>
         </div>
-
         <div class="table-wrapper"><table><thead><tr><th>Acción</th><th>NIT</th><th>Nombre</th><th>Servicio</th><th>Estado</th><th>Notas</th><th>Actualización</th></tr></thead><tbody id="bodyClients"></tbody></table></div>
     </div>
 </div>
 
 <script>
     const API = "https://script.google.com/macros/s/AKfycbyF_nD0ndhOy4moClkKMVUievv_1VlIBYyxoq9X3AGudfQT4IBatokMlYMSy_e7HZOA/exec"; 
-    
     let dataActividades = [];
     let dataClientes = [];
     const getNow = () => new Date().toLocaleString('es-CO');
@@ -136,53 +137,25 @@
         closeEdit(); await loadAll();
     }
 
-    function applyActFilters() {
-        const fF = document.getElementById('f_fecha_act').value;
-        const fR = document.getElementById('f_resp_act').value;
-        const fE = document.getElementById('f_estado_act').value;
-        const rows = document.getElementById('bodyTasks').getElementsByTagName('tr');
-        for (let r of rows) {
-            const c = r.getElementsByTagName('td');
-            r.style.display = (!fF || c[1].innerText === fF) && (!fR || c[4].innerText === fR) && (!fE || c[5].innerText.includes(fE)) ? '' : 'none';
-        }
-    }
-
-    function applyCliFilters() {
-        const fN = document.getElementById('f_nit_cli').value;
-        const fS = document.getElementById('f_serv_cli').value;
-        const rows = document.getElementById('bodyClients').getElementsByTagName('tr');
-        for (let r of rows) {
-            const c = r.getElementsByTagName('td');
-            r.style.display = (!fN || c[1].innerText === fN) && (!fS || c[3].innerText === fS) ? '' : 'none';
-        }
-    }
-
     async function loadAll() {
         try {
             const resC = await fetch(`${API}?sheet=CLIENTES`);
             dataClientes = await resC.json();
             const bC = document.getElementById('bodyClients');
             const selT = document.getElementById('t_cliente');
-            const fN = document.getElementById('f_nit_cli');
             bC.innerHTML = ""; selT.innerHTML = '<option value="">-- Seleccione Cliente --</option>';
-            fN.innerHTML = '<option value="">🆔 Todos</option>';
             dataClientes.forEach(c => {
                 selT.innerHTML += `<option value="${c.NOMBRE}">${c.NOMBRE}</option>`;
-                fN.innerHTML += `<option value="${c.CEDULA_NIT}">${c.CEDULA_NIT}</option>`;
-                const stClass = "st-" + (c.ESTADO_CLIENTE || "").replace(/ /g, "-");
+                const stClass = "st-" + (c.ESTADO_CLIENTE || "PENDIENTE").replace(/ /g, "-");
                 bC.innerHTML += `<tr><td><button class="btn-edit" onclick="openEditCli('${c.CEDULA_NIT}')">GESTIONAR</button></td><td><b>${c.CEDULA_NIT}</b></td><td>${c.NOMBRE}</td><td>${c.TIPO_SERVICIO}</td><td><span class="badge ${stClass}">${c.ESTADO_CLIENTE}</span></td><td>${c.NOTAS || ''}</td><td class="actualizacion">${c.ACTUALIZACION || 'N/A'}</td></tr>`;
             });
 
             const resT = await fetch(`${API}?sheet=Hoja 1`);
             dataActividades = await resT.json();
             const bT = document.getElementById('bodyTasks');
-            const fF = document.getElementById('f_fecha_act');
-            fF.innerHTML = '<option value="">📅 Todas</option>';
-            [...new Set(dataActividades.map(t => t.FECHA))].forEach(f => fF.innerHTML += `<option value="${f}">${f}</option>`);
-            
             bT.innerHTML = "";
             dataActividades.slice().reverse().forEach(t => {
-                const stClass = "st-" + (t.ESTADO || "").replace(/ /g, "-");
+                const stClass = "st-" + (t.ESTADO || "PENDIENTE").replace(/ /g, "-");
                 bT.innerHTML += `<tr><td><button class="btn-edit" style="background:var(--principal)" onclick="openEditAct('${t.ID}')">NOTAS</button></td><td>${t.FECHA}</td><td><b>${t.CLIENTE}</b></td><td>${t.ACTIVIDAD}</td><td>${t.RESPONSABLE}</td><td><span class="badge ${stClass}">${t.ESTADO}</span></td><td>${t.NOTAS || ''}</td><td class="actualizacion">${t.ACTUALIZACION || 'N/A'}</td></tr>`;
             });
         } catch(e) { console.error(e); }
@@ -203,12 +176,13 @@
         const item = dataActividades.find(a => a.ID == id);
         const data = { ...item, ESTADO: document.getElementById('editEstAct').value, NOTAS: document.getElementById('editNotasAct').value, ACTUALIZACION: getNow() };
         await fetch(`${API}?sheet=Hoja 1`, { method: 'POST', mode: 'no-cors', body: JSON.stringify({data:[data]}) });
-        alert("✅ Gestión Actualizada"); closeEdit(); await loadAll();
+        alert("✅ Gestión guardada"); closeEdit(); await loadAll();
     }
 
     function openEditCli(nit) {
         const item = dataClientes.find(c => c.CEDULA_NIT == nit);
         document.getElementById('editBoxCli').style.display = "block";
+        document.getElementById('addBoxCli').style.display = "none";
         document.getElementById('editTitleCli').innerText = item.NOMBRE;
         document.getElementById('editIdCli').value = nit;
         document.getElementById('editEstCli').value = item.ESTADO_CLIENTE;
@@ -220,20 +194,39 @@
         const cli = dataClientes.find(c => c.CEDULA_NIT == nit);
         const data = { ...cli, ESTADO_CLIENTE: document.getElementById('editEstCli').value, NOTAS: document.getElementById('editNotasCli').value, ACTUALIZACION: getNow() };
         await fetch(`${API}?sheet=CLIENTES`, { method: 'POST', mode: 'no-cors', body: JSON.stringify({data:[data]}) });
-        alert("✅ Cliente Actualizado"); closeEdit(); await loadAll();
+        alert("✅ Seguimiento actualizado"); closeEdit(); await loadAll();
     }
 
     function closeEdit() {
         document.getElementById('editBoxAct').style.display = "none";
         document.getElementById('addBoxAct').style.display = "block";
         document.getElementById('editBoxCli').style.display = "none";
+        document.getElementById('addBoxCli').style.display = "block";
     }
+
+    document.getElementById('clientForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = { 
+            NOMBRE: document.getElementById('c_nombre').value, CEDULA_NIT: document.getElementById('c_cedula').value, 
+            TELEFONO: document.getElementById('c_tel').value, CORREO: document.getElementById('c_correo').value,
+            DIRECCION: document.getElementById('c_dir').value, TIPO_SERVICIO: document.getElementById('c_servicio').value, 
+            PRESUPUESTO: document.getElementById('c_presupuesto').value, ESTADO_CLIENTE: 'PENDIENTE', 
+            ID_CLIENTE: Date.now().toString().slice(-5), NOTAS: document.getElementById('c_notas').value, ACTUALIZACION: getNow()
+        };
+        await fetch(`${API}?sheet=CLIENTES`, { method: 'POST', mode: 'no-cors', body: JSON.stringify({data:[data]}) });
+        alert("✅ Cliente registrado"); e.target.reset(); await loadAll();
+    });
 
     document.getElementById('taskForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const data = { FECHA: new Date().toLocaleDateString('es-CO'), CLIENTE: document.getElementById('t_cliente').value, ACTIVIDAD: document.getElementById('t_actividad').value, RESPONSABLE: document.getElementById('t_resp').value, ESTADO: document.getElementById('t_estado').value, NOTAS: document.getElementById('t_notas').value, ID: Date.now().toString(), ACTUALIZACION: getNow() };
+        const data = { 
+            FECHA: new Date().toLocaleDateString('es-CO'), CLIENTE: document.getElementById('t_cliente').value, 
+            ACTIVIDAD: document.getElementById('t_actividad').value, RESPONSABLE: document.getElementById('t_resp').value, 
+            ESTADO: document.getElementById('t_estado').value, NOTAS: document.getElementById('t_notas').value,
+            ID: Date.now().toString(), ACTUALIZACION: getNow()
+        };
         await fetch(`${API}?sheet=Hoja 1`, { method: 'POST', mode: 'no-cors', body: JSON.stringify({data:[data]}) });
-        alert("✅ Sincronizado"); e.target.reset(); await loadAll();
+        alert("✅ Actividad guardada"); e.target.reset(); await loadAll();
     });
 
     window.onload = loadAll;
