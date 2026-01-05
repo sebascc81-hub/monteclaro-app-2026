@@ -3,41 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monteclaro SAS - Gestión Integral</title>
+    <title>Monteclaro SAS - Gestión</title>
     <style>
         :root { --principal: #2638bf; --juan: #0a53a8; --sebas: #11734b; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 10px; }
         .container { max-width: 1100px; margin: auto; }
         
-        /* BOTONES DE NAVEGACIÓN SUPERIOR */
-        .nav-container { display: flex; gap: 8px; margin-bottom: 15px; background: white; padding: 12px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .nav-btn { flex: 1; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; background: #e9ecef; color: #495057; transition: 0.3s; }
+        /* BOTONES DE NAVEGACIÓN */
+        .nav-tabs { display: flex; gap: 8px; margin-bottom: 15px; background: white; padding: 10px; border-radius: 12px; }
+        .nav-btn { flex: 1; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background: #e9ecef; transition: 0.3s; }
         .nav-btn.active { background: var(--principal); color: white; }
 
         .section { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: none; }
         .section.active { display: block; }
 
         /* FORMULARIOS */
-        .form-card { background: #f8f9fa; padding: 18px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 25px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .form-card { background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
         label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 5px; color: #555; text-transform: uppercase; }
         input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
-        .btn-submit { background: var(--principal); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 15px; width: 100%; }
+        .btn-submit { background: var(--principal); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; }
 
-        /* TABLAS Y ESTADOS */
-        .table-wrapper { overflow-x: auto; margin-top: 15px; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 800px; }
+        /* TABLAS */
+        .table-wrapper { overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
         th { background: #333; color: white; padding: 12px; text-align: left; }
-        td { padding: 12px; border-bottom: 1px solid #dee2e6; vertical-align: top; }
+        td { padding: 12px; border-bottom: 1px solid #eee; vertical-align: top; }
         
         .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 10px; display: inline-block; }
-        .st-PENDIENTE { background: #fadb03; color: black; } 
-        .st-EN-PROCESO { background: #b0f605; color: black; } 
-        .st-COMPLETADA { background: #00ff20; color: black; }
+        .st-PENDIENTE { background: #fadb03; } 
+        .st-EN-PROCESO { background: #b0f605; } 
+        .st-COMPLETADA { background: #00ff20; } 
         .st-CANCELADA { background: #b10202; color: white; }
-
-        .resp-juan { border-left: 5px solid var(--juan); color: var(--juan); font-weight: bold; padding-left: 10px; }
-        .resp-sebas { border-left: 5px solid var(--sebas); color: var(--sebas); font-weight: bold; padding-left: 10px; }
     </style>
 </head>
 <body>
@@ -45,27 +42,27 @@
 <div class="container">
     <div style="text-align:center; padding: 15px;">
         <h2 style="color:var(--principal); margin:0;">MONTECLARO INMOBILIARIA SAS</h2>
-        <small>Gestión Interna Socios</small>
+        <small>Gestión de Socios: Juan Romero & Sebas Cuervo</small>
     </div>
 
-    <div class="nav-container">
-        <button class="nav-btn active" onclick="switchTab('tab-actividades', this)">📋 ACTIVIDADES INTERNAS</button>
-        <button class="nav-btn" onclick="switchTab('tab-clientes', this)">👥 BASE DE DATOS CLIENTES</button>
+    <div class="nav-tabs">
+        <button class="nav-btn active" onclick="showTab('actividades', this)">📋 ACTIVIDADES INTERNAS</button>
+        <button class="nav-btn" onclick="showTab('clientes', this)">👥 BASE DE DATOS CLIENTES</button>
     </div>
 
-    <div id="tab-actividades" class="section active">
+    <div id="actividades" class="section active">
         <div class="form-card">
-            <h3 style="margin-top:0; color:var(--principal)">Registro de Gestión</h3>
+            <h3 style="margin-top:0">Registro de Actividad</h3>
             <form id="taskForm">
                 <input type="hidden" id="task_id">
                 <div class="grid">
                     <div>
-                        <label>Seleccionar Cliente</label>
-                        <select id="task_cliente" required><option value="">-- Elija un cliente --</option></select>
+                        <label>CLIENTE (De la base de datos)</label>
+                        <select id="task_cliente" required><option value="">Cargando clientes...</option></select>
                     </div>
-                    <div><label>Actividad / Trámite</label><input type="text" id="task_actividad" required></div>
+                    <div><label>ACTIVIDAD / TRÁMITE</label><input type="text" id="task_actividad" required></div>
                     <div>
-                        <label>Responsable de Tarea *</label>
+                        <label>RESPONSABLE DE TAREA *</label>
                         <select id="task_resp" required>
                             <option value="">-- Seleccionar Socio --</option>
                             <option value="Juan Romero">Juan Romero</option>
@@ -73,7 +70,7 @@
                         </select>
                     </div>
                     <div>
-                        <label>Estado de la Gestión</label>
+                        <label>ESTADO DE LA GESTIÓN</label>
                         <select id="task_estado">
                             <option value="PENDIENTE" selected>🟡 PENDIENTE</option>
                             <option value="EN PROCESO">🟢 EN PROCESO</option>
@@ -81,26 +78,24 @@
                             <option value="CANCELADA">❌ CANCELADA</option>
                         </select>
                     </div>
-                    <div style="grid-column: 1 / -1;"><label>Notas del Proceso</label><textarea id="task_notas" rows="2"></textarea></div>
+                    <div style="grid-column: 1 / -1;"><label>NOTAS Y OBSERVACIONES</label><textarea id="task_notas" rows="2"></textarea></div>
                 </div>
-                <button type="submit" id="btnSubmitTask" class="btn-submit">Sincronizar Actividad</button>
+                <button type="submit" class="btn-submit">Sincronizar con Actividades</button>
             </form>
         </div>
-        <div class="table-wrapper">
-            <table id="tableTasks">
-                <thead><tr><th>Registro</th><th>Cliente</th><th>Actividad</th><th>Responsable</th><th>Estado</th><th>Notas</th><th>Acción</th></tr></thead>
-                <tbody id="bodyTasks"></tbody>
-            </table>
-        </div>
+        <div class="table-wrapper"><table id="tableTasks">
+            <thead><tr><th>Fecha</th><th>Cliente</th><th>Actividad</th><th>Responsable</th><th>Estado</th><th>Acción</th></tr></thead>
+            <tbody id="bodyTasks"></tbody>
+        </table></div>
     </div>
 
-    <div id="tab-clientes" class="section">
+    <div id="clientes" class="section">
         <div class="form-card">
-            <h3 style="margin-top:0; color:var(--principal)">Ficha Maestra de Cliente</h3>
+            <h3 style="margin-top:0">Ficha Maestra de Cliente</h3>
             <form id="clientForm">
                 <div class="grid">
                     <div><label>Nombre Completo</label><input type="text" id="c_nombre" required></div>
-                    <div><label>Cédula / NIT</label><input type="text" id="c_id_num"></div>
+                    <div><label>Cédula / NIT</label><input type="text" id="c_cedula"></div>
                     <div><label>Teléfono</label><input type="text" id="c_tel"></div>
                     <div><label>Correo</label><input type="email" id="c_mail"></div>
                     <div><label>Dirección Inmueble</label><input type="text" id="c_dir"></div>
@@ -112,115 +107,107 @@
                             <option value="CREDITO">CRÉDITO / FINANCIAL GROUP</option>
                         </select>
                     </div>
-                    <div><label>Estado Cliente</label><input type="text" id="c_estado" placeholder="Ej: Prospecto"></div>
-                    <div><label>Presupuesto/Valor</label><input type="text" id="c_valor"></div>
+                    <div><label>Estado Cliente</label><input type="text" id="c_est_cli" placeholder="Ej: Prospecto"></div>
+                    <div><label>Presupuesto / Valor</label><input type="text" id="c_presupuesto"></div>
                 </div>
-                <button type="submit" id="btnSubmitClient" class="btn-submit" style="background:#444">Registrar en Base de Datos</button>
+                <button type="submit" class="btn-submit" style="background:#444">Registrar en Clientes</button>
             </form>
         </div>
-        <div class="table-wrapper">
-            <table id="tableClients">
-                <thead><tr><th>Nombre</th><th>Cédula</th><th>Tipo</th><th>Teléfono</th><th>Dirección</th><th>Valor</th></tr></thead>
-                <tbody id="bodyClients"></tbody>
-            </table>
-        </div>
+        <div class="table-wrapper"><table id="tableClients">
+            <thead><tr><th>Nombre</th><th>Cédula</th><th>Servicio</th><th>Teléfono</th><th>Dirección</th></tr></thead>
+            <tbody id="bodyClients"></tbody>
+        </table></div>
     </div>
 </div>
 
 <script>
     const API = "https://sheetdb.io/api/v1/t3m7h0xll0hgh";
-    let clientesCache = [];
-    let tareasCache = [];
+    let dataClientes = [];
+    let dataTareas = [];
 
-    function switchTab(id, btn) {
+    function showTab(tab, btn) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+        document.getElementById(tab).classList.add('active');
         btn.classList.add('active');
-        if(id === 'tab-actividades') loadTasks(); else loadClients();
     }
 
-    async function loadClients() {
-        try {
-            const res = await fetch(`${API}?sheet=CLIENTES`);
-            clientesCache = await res.json();
-            const body = document.getElementById('bodyClients');
-            const select = document.getElementById('task_cliente');
-            body.innerHTML = "";
-            select.innerHTML = '<option value="">-- Elija un cliente --</option>';
-            clientesCache.forEach(c => {
-                body.innerHTML += `<tr><td><b>${c.NOMBRE}</b></td><td>${c.CEDULA_NIT || ''}</td><td>${c.TIPO_SERVICIO}</td><td>${c.TELEFONO}</td><td>${c.DIRECCION}</td><td>${c.PRESUPUESTO}</td></tr>`;
-                select.innerHTML += `<option value="${c.NOMBRE}">${c.NOMBRE} (${c.TIPO_SERVICIO})</option>`;
-            });
-        } catch (e) { console.error("Error cargando clientes"); }
-    }
+    async function loadAll() {
+        // Clientes
+        const resC = await fetch(`${API}?sheet=CLIENTES`);
+        dataClientes = await resC.json();
+        const select = document.getElementById('task_cliente');
+        const bodyC = document.getElementById('bodyClients');
+        select.innerHTML = '<option value="">-- Seleccione Cliente --</option>';
+        bodyC.innerHTML = "";
+        dataClientes.forEach(c => {
+            select.innerHTML += `<option value="${c.NOMBRE}">${c.NOMBRE}</option>`;
+            bodyC.innerHTML += `<tr><td><b>${c.NOMBRE}</b></td><td>${c.CEDULA_NIT}</td><td>${c.TIPO_SERVICIO}</td><td>${c.TELEFONO}</td><td>${c.DIRECCION}</td></tr>`;
+        });
 
-    async function loadTasks() {
-        try {
-            const res = await fetch(API);
-            tareasCache = await res.json();
-            const body = document.getElementById('bodyTasks');
-            body.innerHTML = "";
-            tareasCache.slice().reverse().forEach(t => {
-                const rClass = t.RESPONSABLE === 'Juan Romero' ? 'resp-juan' : 'resp-sebas';
-                const sClass = "st-" + (t.ESTADO || "PENDIENTE").replace(/ /g, "-");
-                body.innerHTML += `<tr>
-                    <td style="font-size:11px">${t.FECHA}<br>Act: ${t.ACTUALIZACION || '-'}</td>
-                    <td><b>${t.CLIENTE}</b></td>
-                    <td>${t.ACTIVIDAD}</td>
-                    <td class="${rClass}">${t.RESPONSABLE}</td>
-                    <td><span class="badge ${sClass}">${t.ESTADO}</span></td>
-                    <td style="max-width:150px">${t.NOTAS || ''}</td>
-                    <td><button onclick="editTask('${t.ID}')">Editar</button></td>
-                </tr>`;
-            });
-        } catch (e) { console.error("Error cargando tareas"); }
+        // Actividades
+        const resT = await fetch(API);
+        dataTareas = await resT.json();
+        const bodyT = document.getElementById('bodyTasks');
+        bodyT.innerHTML = "";
+        dataTareas.slice().reverse().forEach(t => {
+            const sClass = "st-" + (t.ESTADO || "PENDIENTE").replace(/ /g, "-");
+            bodyT.innerHTML += `<tr>
+                <td style="font-size:11px">${t.FECHA}<br><small>${t.ACTUALIZACION || ''}</small></td>
+                <td><b>${t.CLIENTE}</b></td>
+                <td>${t.ACTIVIDAD}</td>
+                <td>${t.RESPONSABLE}</td>
+                <td><span class="badge ${sClass}">${t.ESTADO}</span></td>
+                <td><button onclick="editT('${t.ID}')">Editar</button></td>
+            </tr>`;
+        });
     }
 
     document.getElementById('clientForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = document.getElementById('btnSubmitClient'); btn.disabled = true;
         const row = { 
             NOMBRE: document.getElementById('c_nombre').value, 
-            CEDULA_NIT: document.getElementById('c_id_num').value,
-            TELEFONO: document.getElementById('c_tel').value,
-            CORREO: document.getElementById('c_mail').value,
-            DIRECCION: document.getElementById('c_dir').value,
-            TIPO_SERVICIO: document.getElementById('c_servicio').value,
-            ESTADO_CLIENTE: document.getElementById('c_estado').value,
-            PRESUPUESTO: document.getElementById('c_valor').value,
+            CEDULA_NIT: document.getElementById('c_cedula').value, 
+            TELEFONO: document.getElementById('c_tel').value, 
+            CORREO: document.getElementById('c_mail').value, 
+            DIRECCION: document.getElementById('c_dir').value, 
+            TIPO_SERVICIO: document.getElementById('c_servicio').value, 
+            ESTADO_CLIENTE: document.getElementById('c_est_cli').value, 
+            PRESUPUESTO: document.getElementById('c_presupuesto').value, 
             ID_CLIENTE: Date.now().toString() 
         };
         await fetch(`${API}?sheet=CLIENTES`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({data:[row]}) });
-        document.getElementById('clientForm').reset();
-        btn.disabled = false; loadClients();
+        loadAll(); e.target.reset();
     });
 
     document.getElementById('taskForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = document.getElementById('btnSubmitTask');
         const id = document.getElementById('task_id').value;
-        btn.disabled = true;
-        const row = { CLIENTE: document.getElementById('task_cliente').value, ACTIVIDAD: document.getElementById('task_actividad').value, RESPONSABLE: document.getElementById('task_resp').value, ESTADO: document.getElementById('task_estado').value, NOTAS: document.getElementById('task_notas').value, ACTUALIZACION: new Date().toLocaleString() };
+        const row = { 
+            CLIENTE: document.getElementById('task_cliente').value, 
+            ACTIVIDAD: document.getElementById('task_actividad').value, 
+            RESPONSABLE: document.getElementById('task_resp').value, 
+            ESTADO: document.getElementById('task_estado').value, 
+            NOTAS: document.getElementById('task_notas').value, 
+            ACTUALIZACION: new Date().toLocaleString() 
+        };
         if(id) { await fetch(`${API}/ID/${id}`, { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({data:row}) }); }
         else { row.ID = Date.now().toString(); row.FECHA = new Date().toLocaleDateString(); await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({data:[row]}) }); }
-        document.getElementById('taskForm').reset(); document.getElementById('task_id').value = ""; btn.disabled = false; loadTasks();
+        loadAll(); e.target.reset(); document.getElementById('task_id').value = "";
     });
 
-    function editTask(id) {
-        const item = tareasCache.find(t => t.ID === id);
-        if(!item) return;
+    function editT(id) {
+        const item = dataTareas.find(t => t.ID === id);
         document.getElementById('task_id').value = item.ID;
         document.getElementById('task_cliente').value = item.CLIENTE;
         document.getElementById('task_actividad').value = item.ACTIVIDAD;
         document.getElementById('task_resp').value = item.RESPONSABLE;
         document.getElementById('task_estado').value = item.ESTADO;
         document.getElementById('task_notas').value = item.NOTAS;
-        document.getElementById('btnSubmitTask').innerText = "Actualizar Actividad";
         window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    window.onload = () => { loadClients(); loadTasks(); };
+    window.onload = loadAll;
 </script>
 </body>
 </html>
