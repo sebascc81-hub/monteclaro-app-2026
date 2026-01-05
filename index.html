@@ -179,8 +179,10 @@
             <div class="modal-body">
                 <input type="hidden" id="actId">
                 <input type="hidden" id="actModo"> <div class="form-group">
-                    <label>Cliente:</label>
-                    <input type="text" id="actCliente" placeholder="Nombre del cliente">
+                    <label>Cliente (Base de Datos):</label>
+                    <select id="actCliente">
+                        <option value="">Cargando clientes...</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Actividad (Descripción):</label>
@@ -267,9 +269,10 @@
         let dataActividades = [];
         let dataClientes = [];
 
-        // AL CARGAR
+        // AL CARGAR: Cargar AMBOS datos para tener los clientes listos
         window.onload = () => {
             cargarActividades();
+            cargarClientes(true); // true = carga silenciosa (sin bloquear pantalla si ya cargó actividades)
         };
 
         function switchTab(tabName) {
@@ -281,7 +284,7 @@
             document.getElementById(`module-${tabName}`).classList.add('active');
             event.target.classList.add('active');
 
-            // Cargar datos si es necesario
+            // Recargar solo si está vacío, aunque window.onload ya debió iniciarlo
             if (tabName === 'actividades' && dataActividades.length === 0) cargarActividades();
             if (tabName === 'clientes' && dataClientes.length === 0) cargarClientes();
         }
@@ -301,7 +304,7 @@
                     dataActividades = json.data;
                     renderActividades();
                 }
-            } catch (e) { console.error(e); alert("Error cargando actividades"); }
+            } catch (e) { console.error(e); }
             showLoading(false);
         }
 
@@ -315,11 +318,8 @@
             const fEst = document.getElementById('filtroActEstado').value;
 
             const filtrados = dataActividades.filter(item => {
-                // Formato fecha viene de Sheet, intentamos matching simple de string o fecha
-                // La fecha en Sheet suele venir como string, ej "2026-01-05T..." o "5/1/2026"
                 let fechaMatch = true;
                 if (fFecha) {
-                    // Convertimos la fecha del item a string ISO para comparar o incluimos
                     fechaMatch = item.FECHA.includes(fFecha) || new Date(item.FECHA).toISOString().slice(0,10) === fFecha;
                 }
                 const respMatch = !fResp || item.RESPONSABLE === fResp;
@@ -336,7 +336,6 @@
                 const tr = document.createElement('tr');
                 tr.onclick = () => abrirModalActividad(false, item);
                 
-                // Formato Fecha Bonita
                 let fechaCorta = item.FECHA; 
                 try { fechaCorta = new Date(item.FECHA).toLocaleDateString(); } catch(e){}
 
@@ -352,51 +351,70 @@
             });
         }
 
+        // FUNCIÓN CLAVE MODIFICADA: LLENAR SELECT DE CLIENTES
         function abrirModalActividad(esNuevo, item = null) {
             const modal = document.getElementById('modalActividad');
             const titulo = document.getElementById('tituloModalAct');
             const inpModo = document.getElementById('actModo');
             
+            // 1. LLENAR SELECT CLIENTES
+            const selectCliente = document.getElementById('actCliente');
+            selectCliente.innerHTML = '<option value="">Seleccione un Cliente...</option>';
+            
+            // Ordenar alfabéticamente
+            const clientesOrdenados = [...dataClientes].sort((a,b) => a.NOMBRE.localeCompare(b.NOMBRE));
+
+            if (clientesOrdenados.length === 0) {
+                selectCliente.innerHTML = '<option value="">No hay clientes creados</option>';
+            } else {
+                clientesOrdenados.forEach(cli => {
+                    const opt = document.createElement('option');
+                    opt.value = cli.NOMBRE;
+                    opt.text = cli.NOMBRE; // Muestra el nombre
+                    selectCliente.appendChild(opt);
+                });
+            }
+
             modal.style.display = 'block';
 
             if (esNuevo) {
                 titulo.innerText = "Nueva Actividad";
                 inpModo.value = "create";
-                // Limpiar
                 document.getElementById('actId').value = "";
-                document.getElementById('actCliente').value = "";
+                
+                // Resetear campos
+                selectCliente.value = ""; // Dropdown vacío
                 document.getElementById('actDescripcion').value = "";
                 document.getElementById('actResponsable').value = "";
                 document.getElementById('actNotas').value = "";
                 document.getElementById('actEstado').value = "PENDIENTE";
 
-                // Habilitar campos de creación
                 document.getElementById('actCliente').disabled = false;
                 document.getElementById('actDescripcion').disabled = false;
                 document.getElementById('actResponsable').disabled = false;
 
-                // Ocultar o bloquear campos que son automáticos al crear
-                document.getElementById('groupActEstado').style.display = 'none'; // Estado automático
-                document.getElementById('groupActNotas').style.display = 'none';  // Notas vacías al inicio
+                document.getElementById('groupActEstado').style.display = 'none';
+                document.getElementById('groupActNotas').style.display = 'none';
 
             } else {
                 titulo.innerText = "Editar Actividad";
                 inpModo.value = "edit";
                 
-                // Llenar datos
                 document.getElementById('actId').value = item.ID;
-                document.getElementById('actCliente').value = item.CLIENTE;
+                
+                // Intentar seleccionar el cliente actual (si existe en la lista)
+                selectCliente.value = item.CLIENTE;
+                
                 document.getElementById('actDescripcion').value = item.ACTIVIDAD;
                 document.getElementById('actResponsable').value = item.RESPONSABLE;
                 document.getElementById('actEstado').value = item.ESTADO;
                 document.getElementById('actNotas').value = item.NOTAS;
 
-                // BLOQUEOS (Reglas de Negocio)
-                document.getElementById('actCliente').disabled = true;
+                // BLOQUEOS
+                document.getElementById('actCliente').disabled = true; // Cliente fijo al editar
                 document.getElementById('actDescripcion').disabled = true;
                 document.getElementById('actResponsable').disabled = true;
 
-                // Habilitar edición
                 document.getElementById('groupActEstado').style.display = 'block';
                 document.getElementById('groupActNotas').style.display = 'block';
             }
@@ -406,9 +424,10 @@
             const modo = document.getElementById('actModo').value;
             const btn = document.querySelector('#modalActividad .btn-save');
             
-            // Validaciones Creación
             if (modo === 'create') {
+                const cli = document.getElementById('actCliente').value;
                 const resp = document.getElementById('actResponsable').value;
+                if (!cli) return alert("Debes seleccionar un Cliente.");
                 if (!resp) return alert("El Responsable es obligatorio.");
             }
 
@@ -418,7 +437,7 @@
             const formData = new FormData();
             if (modo === 'create') {
                 formData.append('action', 'create_actividad');
-                formData.append('cliente', document.getElementById('actCliente').value);
+                formData.append('cliente', document.getElementById('actCliente').value); // Valor del Select
                 formData.append('actividad', document.getElementById('actDescripcion').value);
                 formData.append('responsable', document.getElementById('actResponsable').value);
             } else {
@@ -432,11 +451,8 @@
                 await fetch(API_URL, { method: 'POST', body: formData });
                 alert("Guardado correctamente");
                 cerrarModales();
-                cargarActividades(); // Recargar tabla
-            } catch (e) {
-                console.error(e);
-                alert("Error al guardar");
-            }
+                cargarActividades();
+            } catch (e) { console.error(e); alert("Error al guardar"); }
             btn.disabled = false;
             btn.innerText = "Guardar";
         }
@@ -444,8 +460,8 @@
 
         // --- LÓGICA CLIENTES ---
 
-        async function cargarClientes() {
-            showLoading(true);
+        async function cargarClientes(silent = false) {
+            if(!silent) showLoading(true);
             try {
                 const res = await fetch(`${API_URL}?action=read_clientes`);
                 const json = await res.json();
@@ -453,8 +469,8 @@
                     dataClientes = json.data;
                     renderClientes();
                 }
-            } catch (e) { console.error(e); alert("Error cargando clientes"); }
-            showLoading(false);
+            } catch (e) { console.error(e); if(!silent) alert("Error cargando clientes"); }
+            if(!silent) showLoading(false);
         }
 
         function renderClientes() {
@@ -498,7 +514,6 @@
             
             modal.style.display = 'block';
             
-            // Campos a controlar
             const camposDatos = ['cliNombre', 'cliCedula', 'cliTelefono', 'cliCorreo', 'cliDireccion', 'cliPresupuesto', 'cliTipo'];
 
             if (esNuevo) {
@@ -506,14 +521,12 @@
                 inpModo.value = "create";
                 document.getElementById('cliId').value = "";
                 
-                // Limpiar y Habilitar campos
                 camposDatos.forEach(id => {
                     const el = document.getElementById(id);
                     el.value = "";
                     el.disabled = false;
                 });
                 
-                // Ocultar Estado y Notas (Son automáticos/vacíos al inicio)
                 document.getElementById('groupCliEstado').style.display = 'none';
                 document.getElementById('groupCliNotas').style.display = 'none';
 
@@ -521,7 +534,6 @@
                 titulo.innerText = "Gestionar Cliente";
                 inpModo.value = "edit";
 
-                // Llenar datos
                 document.getElementById('cliId').value = item.ID_CLIENTE;
                 document.getElementById('cliNombre').value = item.NOMBRE;
                 document.getElementById('cliCedula').value = item.CEDULA_NIT;
@@ -534,12 +546,10 @@
                 document.getElementById('cliEstado').value = item.ESTADO_CLIENTE;
                 document.getElementById('cliNotas').value = item.NOTAS;
 
-                // BLOQUEAR DATOS (Regla de negocio estricta)
                 camposDatos.forEach(id => {
                     document.getElementById(id).disabled = true;
                 });
 
-                // Habilitar Estado y Notas
                 document.getElementById('groupCliEstado').style.display = 'block';
                 document.getElementById('groupCliNotas').style.display = 'block';
             }
@@ -573,17 +583,13 @@
                 await fetch(API_URL, { method: 'POST', body: formData });
                 alert("Guardado correctamente");
                 cerrarModales();
-                cargarClientes();
-            } catch (e) {
-                console.error(e);
-                alert("Error al guardar");
-            }
+                // Recargar clientes y también la lista en Actividades por si hubo uno nuevo
+                cargarClientes(); 
+            } catch (e) { console.error(e); alert("Error al guardar"); }
             btn.disabled = false;
             btn.innerText = "Guardar";
         }
 
-
-        // --- UTILIDADES ---
         function cerrarModales() {
             document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
         }
@@ -598,7 +604,6 @@
             return '';
         }
 
-        // Clic fuera del modal para cerrar
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
                 cerrarModales();
