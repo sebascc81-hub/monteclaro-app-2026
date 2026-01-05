@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monteclaro SAS - Unificado</title>
+    <title>Monteclaro SAS - Finanzas</title>
     <style>
         :root { --principal: #2638bf; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
@@ -18,7 +18,6 @@
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
         .btn-submit { background: var(--principal); color: white; border: none; padding: 14px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; }
         
-        /* SEMÁFORO UNIFICADO */
         .badge { padding: 6px 10px; border-radius: 5px; font-weight: bold; font-size: 10px; color: black; min-width: 90px; text-align: center; display: inline-block; }
         .st-PENDIENTE { background: #fadb03; } 
         .st-EN-PROCESO { background: #b0f605; } 
@@ -26,9 +25,10 @@
         .st-CANCELADA { background: #b10202; color: white; }
 
         .table-wrapper { overflow-x: auto; margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 900px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1000px; }
         th { background: #333; color: white; padding: 12px; text-align: left; }
         td { padding: 12px; border-bottom: 1px solid #eee; }
+        .valor-celda { font-family: 'Courier New', monospace; font-weight: bold; color: #11734b; }
     </style>
 </head>
 <body>
@@ -36,7 +36,7 @@
 <div class="container">
     <div style="text-align:center; padding: 15px;">
         <h2 style="color:var(--principal); margin:0;">MONTECLARO INMOBILIARIA SAS</h2>
-        <small>Sistema Unificado | Juan Romero & Sebas Cuervo</small>
+        <small>Gestión Financiera | Juan Romero & Sebas Cuervo</small>
     </div>
 
     <div class="nav-container">
@@ -87,18 +87,23 @@
                             <option value="CANCELADA">❌ CANCELADA</option>
                         </select>
                     </div>
-                    <div><label>Presupuesto</label><input type="text" id="c_presupuesto"></div>
+                    <div><label>Presupuesto (Solo Números)</label><input type="number" id="c_presupuesto" placeholder="Ej: 150000000"></div>
                 </div>
                 <button type="submit" class="btn-submit" style="background:#444">Registrar Cliente</button>
             </form>
         </div>
-        <div class="table-wrapper"><table><thead><tr><th>ID No.</th><th>Nombre</th><th>Servicio</th><th>Estado</th></tr></thead><tbody id="bodyClients"></tbody></table></div>
+        <div class="table-wrapper"><table><thead><tr><th>ID</th><th>Nombre</th><th>Servicio</th><th>Estado</th><th>Presupuesto</th></tr></thead><tbody id="bodyClients"></tbody></table></div>
     </div>
 </div>
 
 <script>
     const API = "https://script.google.com/macros/s/AKfycbw96ZCP__jJ4lE5Y195QJR1pVsQxqLMY6eeS160hNcRLL1W8fCsG6mT-DObV7QXII-9/exec";
     let totalClientes = 0;
+
+    const formatPesos = (valor) => {
+        if (!valor) return "$0";
+        return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(valor);
+    };
 
     async function switchTab(id, btn) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -124,7 +129,7 @@
             bC.innerHTML = "";
             dataC.forEach(c => {
                 sel.innerHTML += `<option value="${c.NOMBRE}">${c.NOMBRE}</option>`;
-                bC.innerHTML += `<tr><td><b>${c.ID_CLIENTE}</b></td><td><b>${c.NOMBRE}</b></td><td>${c.TIPO_SERVICIO}</td><td>${getBadge(c.ESTADO_CLIENTE)}</td></tr>`;
+                bC.innerHTML += `<tr><td><b>${c.ID_CLIENTE}</b></td><td><b>${c.NOMBRE}</b></td><td>${c.TIPO_SERVICIO}</td><td>${getBadge(c.ESTADO_CLIENTE)}</td><td class="valor-celda">${formatPesos(c.PRESUPUESTO)}</td></tr>`;
             });
 
             const resT = await fetch(`${API}?sheet=Sheet1`);
