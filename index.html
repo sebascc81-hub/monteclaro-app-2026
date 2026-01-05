@@ -3,154 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Interno | Monteclaro SAS</title>
+    <title>Panel Histórico | Monteclaro SAS</title>
     <style>
-        /* PALETA OFICIAL MONTECLARO */
-        :root {
-            --principal: #2638bf; /* Azul Real */
-            --secundario: #000000; /* Negro */
-            --blanco: #ffffff;
-            --gris-opcional: #b2b8bf;
-            --fondo: #f4f7f6;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            background-color: var(--fondo); 
-            color: var(--secundario); 
-            margin: 0; 
-            padding: 20px; 
-        }
-
+        :root { --principal: #2638bf; --secundario: #000000; --blanco: #ffffff; --gris: #b2b8bf; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
         .container { max-width: 900px; margin: auto; }
+        .header { background: var(--principal); color: var(--blanco); padding: 20px; border-radius: 15px 15px 0 0; display: flex; align-items: center; gap: 20px; }
+        .logo-box { width: 70px; height: 70px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .section { background: var(--blanco); padding: 20px; border-radius: 0 0 15px 15px; border: 1px solid var(--gris); }
+        h2 { color: var(--principal); border-left: 5px solid var(--principal); padding-left: 15px; }
         
-        /* HEADER CORPORATIVO */
-        .header { 
-            background: var(--principal); 
-            color: var(--blanco); 
-            padding: 25px; 
-            border-radius: 15px 15px 0 0;
-            display: flex; 
-            align-items: center; 
-            gap: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        /* CONTENEDOR DEL LOGO */
-        .logo-box { 
-            width: 90px; 
-            height: 90px; 
-            background: var(--blanco); 
-            border-radius: 12px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            overflow: hidden;
-            border: 2px solid var(--gris-opcional);
-        }
-
-        .logo-box img {
-            max-width: 85%;
-            max-height: 85%;
-            object-fit: contain;
-        }
-
-        .header h1 { margin: 0; font-size: 1.6rem; letter-spacing: 1px; text-transform: uppercase; }
-        .header p { margin: 5px 0 0 0; opacity: 0.9; font-size: 0.9rem; }
-
-        /* SECCIONES */
-        .section { 
-            background: var(--blanco); 
-            padding: 25px; 
-            margin-bottom: 20px; 
-            border: 1px solid var(--gris-opcional);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        h2 { 
-            color: var(--principal); 
-            font-size: 1.2rem; 
-            border-left: 5px solid var(--principal); 
-            padding-left: 15px;
-            margin-top: 0;
-        }
-
-        /* TABLAS */
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th { text-align: left; background: var(--secundario); color: var(--blanco); padding: 12px; font-size: 0.8rem; }
-        td { padding: 15px 12px; border-bottom: 1px solid var(--gris-opcional); font-size: 0.95rem; }
+        th { text-align: left; background: var(--secundario); color: white; padding: 12px; font-size: 0.8rem; }
+        td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
         
-        .badge { padding: 5px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
-        .bg-proceso { background: var(--gris-opcional); color: var(--secundario); }
-        .bg-exito { background: var(--principal); color: var(--blanco); }
-
-        /* CALCULADORA */
-        .calc-wrapper {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px dashed var(--principal);
-            text-align: center;
-        }
-
-        input { 
-            width: 80%; 
-            padding: 12px; 
-            border: 2px solid var(--gris-opcional); 
-            border-radius: 5px;
-            font-size: 1.1rem;
-            text-align: center;
-        }
-
-        .res-display { 
-            margin-top: 20px; 
-            font-size: 1.4rem; 
-            font-weight: bold; 
-            color: var(--principal); 
-        }
+        .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.7rem; }
+        .pendiente { background: #ffeaa7; color: #d35400; }
+        .completado { background: #d1f7d1; color: #1a5c37; }
+        .historico { color: #888; font-style: italic; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo-box">
-                <img src="MONTECLARO1.png" alt="Logo Monteclaro SAS">
-            </div>
-            <div>
-                <h1>MONTECLARO SAS</h1>
-                <p>Panel Interno de Gestión de Socios</p>
-            </div>
+            <div class="logo-box"><img src="MONTECLARO1.png" alt="Logo" style="width: 90%;"></div>
+            <div><h1>MONTECLARO SAS</h1><p>Historial de Gestión Interna</p></div>
         </div>
 
         <div class="section">
-            <h2>📊 Actividades de la Sociedad</h2>
+            <h2>📊 Bitácora de Actividades</h2>
             <table>
                 <thead>
-                    <tr><th>Tarea</th><th>Asignado</th><th>Estado</th></tr>
+                    <tr><th>Fecha</th><th>Actividad</th><th>Responsable</th><th>Estado</th></tr>
                 </thead>
-                <tbody>
-                    <tr><td>Configuración de Aplicación</td><td>Socio A</td><td><span class="badge bg-exito">FINALIZADO</span></td></tr>
-                    <tr><td>Trámites FINANCIAL GROUP</td><td>Socio B</td><td><span class="badge bg-proceso">PENDIENTE</span></td></tr>
-                </tbody>
+                <tbody id="tabla-actividades">
+                    </tbody>
             </table>
-        </div>
-
-        <div class="section">
-            <h2>💰 Calculadora de Honorarios (60%)</h2>
-            <div class="calc-wrapper">
-                <p style="color: var(--secundario); margin-bottom: 15px;">Proyección rápida de ingresos compartidos</p>
-                <input type="number" id="valor" placeholder="Ingrese el valor total $" oninput="calc()">
-                <div class="res-display" id="resultado">Comisión Monteclaro: $0</div>
-            </div>
         </div>
     </div>
 
     <script>
-        function calc() {
-            const v = document.getElementById('valor').value;
-            const res = v * 0.60;
-            document.getElementById('resultado').innerText = "Comisión Monteclaro (60%): $" + res.toLocaleString('es-CO');
-        }
+        // --- ESTA ES TU "BASE DE DATOS" EN GITHUB ---
+        // Para agregar una actividad, solo copia la última línea y pégala abajo.
+        const actividades = [
+            { fecha: "2026-01-04", tarea: "Creación de panel administrativo", resp: "Socio A", estado: "COMPLETADO" },
+            { fecha: "2026-01-05", tarea: "Subir logo corporativo", resp: "Socio A", estado: "COMPLETADO" },
+            { fecha: "2026-01-05", tarea: "Revisión convenios Financial Group", resp: "Socio B", estado: "PENDIENTE" },
+            // <-- PEGA AQUÍ LA NUEVA LÍNEA
+        ];
+
+        const tabla = document.getElementById('tabla-actividades');
+        
+        // Renderizamos de la más nueva a la más antigua
+        actividades.reverse().forEach(item => {
+            const fila = `<tr>
+                <td class="historico">${item.fecha}</td>
+                <td>${item.tarea}</td>
+                <td>${item.resp}</td>
+                <td><span class="badge ${item.estado === 'COMPLETADO' ? 'completado' : 'pendiente'}">${item.estado}</span></td>
+            </tr>`;
+            tabla.innerHTML += fila;
+        });
     </script>
 </body>
 </html>
