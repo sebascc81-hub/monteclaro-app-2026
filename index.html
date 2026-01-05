@@ -18,32 +18,57 @@
         }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--bg); color: #333; }
         
-        /* HEADER Y LOGO */
+        /* --- HEADER Y LOGO (MODIFICADO) --- */
         header { 
             background: var(--primary); 
             color: white; 
-            padding: 0.8rem 2rem; 
+            padding: 1.5rem 1rem; 
             display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            flex-direction: column; /* Apila elementos verticalmente */
+            align-items: center;    /* Centra todo horizontalmente */
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15); 
+            text-align: center;
         }
         .header-branding {
             display: flex;
+            flex-direction: column; /* Imagen arriba, texto abajo */
             align-items: center;
-            gap: 15px; 
+            gap: 10px; 
+            width: 100%;
         }
         .logo {
-            height: 55px; /* Tamaño del logo */
-            width: auto;
-            /* Si el logo es oscuro y no contrasta, descomenta esto: */
-            /* background-color: white; padding: 5px; border-radius: 8px; */
+            width: 400px; /* Tamaño solicitado */
+            max-width: 90%; /* Para que no se salga en celulares */
+            height: auto;
+            object-fit: contain;
         }
-        .header-text h1 { margin: 0; font-size: 1.4rem; line-height: 1.2; }
-        .header-text small { font-size: 0.9rem; opacity: 0.9; }
+        /* Estilos específicos del título y subtítulo */
+        .header-text h1 { 
+            margin: 10px 0 5px 0; 
+            font-size: 1.8rem; 
+            font-weight: 800; /* Negrita fuerte */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.2; 
+        }
+        .header-text div { 
+            font-size: 1.1rem; 
+            font-weight: 400;
+            opacity: 0.95; 
+        }
         
+        /* Indicador de carga */
+        #loading {
+            margin-top: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
         /* NAVEGACIÓN */
-        .tabs { display: flex; background: white; padding: 0 2rem; border-bottom: 1px solid #ddd; }
+        .tabs { display: flex; background: white; padding: 0 2rem; border-bottom: 1px solid #ddd; justify-content: center; }
         .tab-btn { background: none; border: none; padding: 15px 25px; cursor: pointer; font-weight: bold; color: #666; border-bottom: 3px solid transparent; transition: 0.3s; }
         .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
         .tab-btn:hover { color: var(--primary); }
@@ -103,7 +128,7 @@
             
             <div class="header-text">
                 <h1>GESTION INMOBILIARIA</h1>
-                <small>MONTECLARO INMOBILIARIA SAS</small>
+                <div>MONTECLARO INMOBILIARIA</div>
             </div>
         </div>
 
@@ -238,7 +263,7 @@
     </div>
 
     <script>
-        // --- TU URL DE APPS SCRIPT ---
+        // --- TU URL DE APPS SCRIPT (CONSERVADA) ---
         const API = "https://script.google.com/macros/s/AKfycbxomLdB31kWJ6rsv5Uat6G6E3k1nvM_s2mr855DB1Oh4gSVoW1huSk2BOEqZa__WwMe/exec";
 
         let dAct = [], dCli = [];
