@@ -18,27 +18,25 @@
         }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--bg); color: #333; }
         
-        /* --- HEADER Y LOGO (NUEVO) --- */
+        /* HEADER Y LOGO */
         header { 
             background: var(--primary); 
             color: white; 
-            padding: 0.8rem 2rem; /* Un poco más compacto */
+            padding: 0.8rem 2rem; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
         }
-        /* Contenedor para alinear Logo y Texto */
         .header-branding {
             display: flex;
             align-items: center;
-            gap: 15px; /* Espacio entre logo y texto */
+            gap: 15px; 
         }
-        /* Estilo del Logo */
         .logo {
-            height: 55px; /* Ajusta la altura según necesites */
-            width: auto; /* Mantiene la proporción */
-            /* Si tu logo es oscuro y no se ve bien, descomenta la siguiente línea para darle un fondo blanco: */
+            height: 55px; /* Tamaño del logo */
+            width: auto;
+            /* Si el logo es oscuro y no contrasta, descomenta esto: */
             /* background-color: white; padding: 5px; border-radius: 8px; */
         }
         .header-text h1 { margin: 0; font-size: 1.4rem; line-height: 1.2; }
@@ -101,7 +99,7 @@
 
     <header>
         <div class="header-branding">
-            <img src="RUTA_DE_TU_LOGO.png" alt="Logo Monteclaro" class="logo">
+            <img src="MONTECLARO5.png" alt="Logo Monteclaro" class="logo">
             
             <div class="header-text">
                 <h1>GESTION INMOBILIARIA</h1>
@@ -285,11 +283,10 @@
             let fR = document.getElementById('fActResp').value;
             let fE = document.getElementById('fActEstado').value;
 
-            // Filtros usando MAYÚSCULAS (porque el script ahora devuelve todo en mayúsculas)
+            // Filtros usando MAYÚSCULAS
             let fil = dAct.filter(i => {
                 let fechaOk = true;
                 if(fF) {
-                    // Intento de match fecha (string o ISO)
                     fechaOk = (i.FECHA && i.FECHA.includes(fF)) || (new Date(i.FECHA).toISOString().startsWith(fF));
                 }
                 let respOk = !fR || i.RESPONSABLE == fR;
@@ -315,7 +312,7 @@
             let fT = document.getElementById('fCliTipo').value;
             let fE = document.getElementById('fCliEstado').value;
 
-            // Usando claves MAYÚSCULAS (TIPO_SERVICIO, ESTADO_CLIENTE)
+            // Usando claves MAYÚSCULAS
             let fil = dCli.filter(i => (!fT || i.TIPO_SERVICIO == fT) && (!fE || i.ESTADO_CLIENTE == fE));
             
             if(fil.length === 0) tb.innerHTML = "<tr><td colspan='6' style='text-align:center'>No hay datos</td></tr>";
@@ -369,7 +366,7 @@
                 document.getElementById('actModo').value = "edit";
                 document.getElementById('actId').value = item.ID;
                 
-                // Cargar datos (Usando claves MAYÚSCULAS)
+                // Cargar datos
                 sel.value = item.CLIENTE;
                 document.getElementById('actDesc').value = item.ACTIVIDAD;
                 document.getElementById('actResp').value = item.RESPONSABLE;
@@ -409,7 +406,7 @@
                 document.getElementById('tModalCli').innerText = "Editar Cliente";
                 document.getElementById('cliModo').value = "edit";
                 
-                // Cargar datos (Claves MAYÚSCULAS)
+                // Cargar datos
                 document.getElementById('cliId').value = item.ID_CLIENTE;
                 document.getElementById('cliNom').value = item.NOMBRE;
                 document.getElementById('cliCed').value = item.CEDULA_NIT;
@@ -473,7 +470,6 @@
                 fd.append('estado', document.getElementById('cliEst').value);
                 fd.append('notas', document.getElementById('cliNotas').value);
             }
-            // Al guardar cliente, recargamos clientes Y actividades (por si cambia el nombre)
             await enviar(fd, btn, () => { cargarClientes(); cargarActividades(); });
         }
 
