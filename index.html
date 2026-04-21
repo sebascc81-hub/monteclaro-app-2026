@@ -890,44 +890,72 @@
             let modo = document.getElementById('proModo').value;
             let btn = document.querySelector('#modalPropiedad .btn-save');
 
-            let fd = new FormData();
+            let datos;
             if(modo=='create') {
                 if(!document.getElementById('proTitulo').value) return alert("Ingrese el título de la propiedad");
-                fd.append('action','create_propiedad');
-                fd.append('titulo',        document.getElementById('proTitulo').value);
-                fd.append('negocio',       document.getElementById('proNegocio').value);
-                fd.append('tipo',          document.getElementById('proTipo').value);
-                fd.append('estado',        document.getElementById('proEstado').value);
-                fd.append('destacado',     document.getElementById('proDestacado').value);
-                fd.append('pais',          document.getElementById('proPais').value);
-                fd.append('departamento',  document.getElementById('proDepartamento').value);
-                fd.append('ciudad',        document.getElementById('proCiudad').value);
-                fd.append('localidad',     document.getElementById('proLocalidad').value);
-                fd.append('precio',        document.getElementById('proPrecio').value);
-                fd.append('area',          document.getElementById('proArea').value);
-                fd.append('alcobas',       document.getElementById('proAlcobas').value);
-                fd.append('banos',         document.getElementById('proBanos').value);
-                fd.append('estrato',       document.getElementById('proEstrato').value);
-                fd.append('piso',          document.getElementById('proPiso').value);
-                fd.append('ano',           document.getElementById('proAno').value);
-                fd.append('admin',         document.getElementById('proAdmin').value);
-                fd.append('garaje',        document.getElementById('proGaraje').value);
-                fd.append('internas',      document.getElementById('proInternas').value);
-                fd.append('externas',      document.getElementById('proExternas').value);
-                fd.append('descripcion',   document.getElementById('proDescripcion').value);
+                datos = {
+                    action:       'create_propiedad',
+                    titulo:       document.getElementById('proTitulo').value,
+                    negocio:      document.getElementById('proNegocio').value,
+                    tipo:         document.getElementById('proTipo').value,
+                    estado:       document.getElementById('proEstado').value,
+                    destacado:    document.getElementById('proDestacado').value,
+                    pais:         document.getElementById('proPais').value,
+                    departamento: document.getElementById('proDepartamento').value,
+                    ciudad:       document.getElementById('proCiudad').value,
+                    localidad:    document.getElementById('proLocalidad').value,
+                    precio:       document.getElementById('proPrecio').value,
+                    area:         document.getElementById('proArea').value,
+                    alcobas:      document.getElementById('proAlcobas').value,
+                    banos:        document.getElementById('proBanos').value,
+                    estrato:      document.getElementById('proEstrato').value,
+                    piso:         document.getElementById('proPiso').value,
+                    ano:          document.getElementById('proAno').value,
+                    admin:        document.getElementById('proAdmin').value,
+                    garaje:       document.getElementById('proGaraje').value,
+                    internas:     document.getElementById('proInternas').value,
+                    externas:     document.getElementById('proExternas').value,
+                    descripcion:  document.getElementById('proDescripcion').value
+                };
             } else {
-                fd.append('action','update_propiedad');
-                fd.append('id',            document.getElementById('proId').value);
-                fd.append('estado',        document.getElementById('proEstado').value);
-                fd.append('precio',        document.getElementById('proPrecio').value);
-                fd.append('admin',         document.getElementById('proAdmin').value);
-                fd.append('garaje',        document.getElementById('proGaraje').value);
-                fd.append('internas',      document.getElementById('proInternas').value);
-                fd.append('externas',      document.getElementById('proExternas').value);
-                fd.append('destacado',     document.getElementById('proDestacado').value);
-                fd.append('descripcion',   document.getElementById('proDescripcion').value);
+                datos = {
+                    action:      'update_propiedad',
+                    id:          document.getElementById('proId').value,
+                    estado:      document.getElementById('proEstado').value,
+                    precio:      document.getElementById('proPrecio').value,
+                    admin:       document.getElementById('proAdmin').value,
+                    garaje:      document.getElementById('proGaraje').value,
+                    internas:    document.getElementById('proInternas').value,
+                    externas:    document.getElementById('proExternas').value,
+                    destacado:   document.getElementById('proDestacado').value,
+                    descripcion: document.getElementById('proDescripcion').value
+                };
             }
-            await enviar(fd, btn, cargarPropiedades, API_PROP);
+            await enviarJSON(datos, btn, cargarPropiedades);
+        }
+
+        async function enviarJSON(datos, btn, callback) {
+            btn.disabled = true;
+            btn.innerText = "Guardando...";
+            try {
+                let r = await fetch(API_PROP, {
+                    method: 'POST',
+                    body: JSON.stringify(datos)
+                });
+                let j = await r.json();
+                if(j.status === 'success') {
+                    alert("Guardado exitosamente");
+                    cerrarModales();
+                    if(callback) callback();
+                } else {
+                    alert("Error: " + (j.message || 'Error desconocido'));
+                }
+            } catch(e) {
+                console.error(e);
+                alert("Hubo un error al guardar: " + e.message);
+            }
+            btn.disabled = false;
+            btn.innerText = "Guardar";
         }
 
         async function guardarCliente() {
