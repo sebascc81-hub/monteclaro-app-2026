@@ -521,8 +521,12 @@
     </div>
 
     <script>
+        // API principal (Actividades y Clientes)
         const API = "https://script.google.com/macros/s/AKfycbyhFfbZnfsNcw_lWSOP04TLHASe8EcZ27YTW3ywQpkT7HS3NnJy9hxuZuh4iUBZYSH5/exec";
         
+        // API exclusivo para Propiedades
+        const API_PROP = "https://script.google.com/macros/s/AKfycbxl9HkxY4sl0qFur1xDJcXSl-jqzu94r2zHBpMFTmlIuf9Vrq0te2aSbUItR8LDew9x/exec";
+
         // CSV del Sheet nuevo de Propiedades
         const CSV_PROPIEDADES = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRtjvmrg08yraJvooDmMPA6kJ46J66ur70Ykx_1DDOUJap23arMVX-HSdZA5OVHCMeI_yIkkZlWh83R/pub?output=csv&sheet=PROPIEDADES";
 
@@ -923,7 +927,7 @@
                 fd.append('destacado',     document.getElementById('proDestacado').value);
                 fd.append('descripcion',   document.getElementById('proDescripcion').value);
             }
-            await enviar(fd, btn, cargarPropiedades);
+            await enviar(fd, btn, cargarPropiedades, API_PROP);
         }
 
         async function guardarCliente() {
@@ -949,11 +953,12 @@
             await enviar(fd, btn, () => { cargarClientes(); cargarActividades(); });
         }
 
-        async function enviar(fd, btn, callback) {
+        async function enviar(fd, btn, callback, apiUrl) {
+            let url = apiUrl || API;
             btn.disabled = true;
             btn.innerText = "Guardando...";
             try {
-                await fetch(API, {method:'POST', body:fd});
+                await fetch(url, {method:'POST', body:fd});
                 alert("Guardado exitosamente");
                 cerrarModales();
                 if(callback) callback();
